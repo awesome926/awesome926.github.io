@@ -377,10 +377,10 @@
 
   <main class="wrap pb-10">
     <!-- ================= HERO ================= -->
-    <section class="pt-5">
-      <div class="flex items-center gap-4 mb-4">
-        <div id="chips" class="flex items-center gap-2 overflow-x-auto no-sb py-1 -my-1 min-w-0"></div>
-        <div class="hidden md:flex items-center gap-2 ml-auto mono-xs muted whitespace-nowrap"><span class="ping"><i></i><i></i></span><span id="svcCount">10</span>&nbsp;<span data-i18n="chips_right">направлений · ответ в Telegram</span></div>
+    <section class="pt-3">
+      <div class="flex items-center gap-4 mb-5">
+        <div id="chips" class="flex items-center gap-2 overflow-x-auto no-sb py-2 -my-2 min-w-0"></div>
+        <div class="hidden md:flex items-center gap-2 ml-auto mono-xs muted whitespace-nowrap"><span class="ping"><i></i><i></i></span><span><span id="svcCount">10</span> <span data-i18n="chips_right">направлений · ответ в Telegram</span></span></div>
       </div>
 
       <div id="stage" class="stage">
@@ -1421,7 +1421,7 @@ gsap.ticker.add((time, deltaMs) => {
 const intro = gsap.timeline({ paused: true, defaults: { ease: 'power3.out', force3D: true } });
 intro.from('.rail', { x: -52, duration: .8 })
   .from('.topbar', { y: -16, opacity: 0, duration: .7 }, '<.1')
-  .from('.chip', { y: 10, opacity: 0, stagger: .05, duration: .5 }, '<.1')
+  .from('.chip', { x: 18, opacity: 0, stagger: .04, duration: .6, clearProps: 'transform' }, '<.1')
   .from('#stage', { opacity: 0, scale: .985, duration: 1.1 }, '<')
   .from('.hero-badges > *', { y: 12, opacity: 0, stagger: .06, duration: .6 }, '<.3')
   .from('.t-hero .line > span', { yPercent: 115, duration: 1.2, stagger: .1, ease: 'expo.out' }, '<.05')
