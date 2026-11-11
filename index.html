@@ -17,7 +17,7 @@
 <script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-<script src="i18n.js?v=684b4dcef7"></script>
+<script src="i18n.js?v=74c568c0c4"></script>
 <script>setTimeout(function(){document.documentElement.classList.remove("preload")},2500)</script>
 <style>
   :root{
@@ -232,7 +232,7 @@
     background:rgba(10,10,12,.66); border:1px solid rgba(255,255,255,.1); color:#e8e8e9; }
   .tag.hot{ color:#f5c66b; border-color:rgba(245,198,107,.3); }
   .tag.blue{ color:#7cc4ff; border-color:rgba(124,196,255,.3); }
-  .svc-grid{ display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:12px; perspective:1400px; }
+  .svc-grid{ display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); grid-auto-flow:row dense; gap:12px; perspective:1400px; }
   @media (max-width:1180px){ .svc-grid{ grid-template-columns:repeat(3,minmax(0,1fr)); } }
   @media (max-width:860px){ .svc-grid{ grid-template-columns:repeat(2,minmax(0,1fr)); } }
   @media (max-width:560px){ .svc-grid{ grid-template-columns:1fr; } }
@@ -337,7 +337,7 @@
   .preload .rail, .preload .topbar, .preload #chips, .preload .hero-content > *, .preload .plate, .preload .hud{ opacity:0; }
   @media (prefers-reduced-motion: reduce){ .plate-float, .halo-glow, .halo-ring, .shimmer, .ping i:first-child{ animation:none; } }
 </style>
-<link rel="stylesheet" href="assets/site.css?v=684b4dcef7">
+<link rel="stylesheet" href="assets/site.css?v=74c568c0c4">
 </head>
 <body>
 
@@ -970,8 +970,8 @@ const GEN = {
    DATA
    ========================================================= */
 const SERVICES = DATA.services, CASES = DATA.cases;
-const CATS = ['all', 'discord', 'telegram', 'parsers', 'web', 'games', 'ai'];
-const TINTS = { all: [129, 216, 208], discord: [120, 150, 255], telegram: [96, 200, 255], parsers: [90, 230, 200], web: [170, 160, 255], games: [130, 220, 140], ai: [240, 150, 210] };
+const CATS = ['all', 'discord', 'telegram', 'parsers', 'web', 'mods', 'games', 'ai'];
+const TINTS = { all: [129, 216, 208], discord: [120, 150, 255], telegram: [96, 200, 255], parsers: [90, 230, 200], web: [170, 160, 255], mods: [250, 176, 110], games: [130, 220, 140], ai: [240, 150, 210] };
 const artFor = it => GEN[it.gen](rng(it.seed));
 const ARROW = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>';
 const EXT = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M8 7h9v9"/></svg>';
@@ -1240,8 +1240,8 @@ function renderServices() {
   svcGrid.innerHTML = SERVICES.map((s, i) => {
     const q = [s.t.ru, s.t.en, s.t.pt, s.t.ja, s.d[LANG], s.cat, ...s.tags, 'бот bot'].join(' ').toLowerCase();
     return `
-    <article class="svc spot ${s.hot ? 'hot' : ''}" data-cat="${s.cat}" data-q="${esc(q)}" data-tilt="${s.hot ? 3 : 5}">
-      <div class="svc-art" data-lb="${i}" role="button" tabindex="0" aria-label="${esc(T('svc_zoom'))}">${s.img && s.img[0] ? `<img src="assets/svc/${s.img[0]}.webp?v=684b4dcef7" alt="${esc(L(s.t))}" loading="lazy" decoding="async" style="object-position:${s.pos || 'center'}">` : (s.gen && GEN[s.gen] ? artFor(s) : '')}<div class="case-top"><span class="tag">${esc(T('cat_' + s.cat))}</span><span class="flex gap-1.5">${s.hot ? `<span class="tag hot">★ ${esc(T('svc_hot'))}</span>` : ''}<span class="tag demo">${esc(T('svc_demo'))}</span></span></div><span class="zoom"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></span></div>
+    <article class="svc spot ${s.hot || s.feat ? 'hot' : ''}" data-cat="${s.cat}" data-q="${esc(q)}" data-tilt="${s.hot || s.feat ? 3 : 5}">
+      <div class="svc-art" data-lb="${i}" role="button" tabindex="0" aria-label="${esc(T('svc_zoom'))}">${s.img && s.img[0] ? `<img src="assets/svc/${s.img[0]}.webp?v=74c568c0c4" alt="${esc(L(s.t))}" loading="lazy" decoding="async" style="object-position:${s.pos || 'center'}">` : (s.gen && GEN[s.gen] ? artFor(s) : '')}<div class="case-top"><span class="tag">${esc(T('cat_' + s.cat))}</span><span class="flex gap-1.5">${s.hot ? `<span class="tag hot">★ ${esc(T('svc_hot'))}</span>` : s.feat ? `<span class="tag hot">◆ ${esc(T('svc_feat'))}</span>` : ''}<span class="tag demo">${esc(T('svc_demo'))}</span></span></div><span class="zoom"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></span></div>
       <div class="svc-body">
         <h3 class="svc-title">${esc(L(s.t))}</h3>
         <p class="svc-desc">${esc(L(s.d))}</p>
@@ -1281,7 +1281,7 @@ let lbOpen = false, lbSvc = 0, lbIdx = 0;
 function lbShow() {
   const s = SERVICES[lbSvc], many = s.img.length > 1;
   if (!s.img || !s.img.length) return;
-  lbImg.src = `assets/svc/${s.img[lbIdx]}-full.webp?v=684b4dcef7`; lbImg.alt = L(s.t);
+  lbImg.src = `assets/svc/${s.img[lbIdx]}-full.webp?v=74c568c0c4`; lbImg.alt = L(s.t);
   $('#lbCap').textContent = L(s.t) + (many ? `  ·  ${lbIdx + 1} / ${s.img.length}` : '');
   $('#lbHint').textContent = T('lb_hint');
   $$('.nav', lb).forEach(b => { b.style.display = many ? '' : 'none'; });
