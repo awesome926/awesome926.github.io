@@ -238,8 +238,21 @@
   .svc{ border-radius:16px; background:#141415; border:1px solid rgba(255,255,255,.06); overflow:hidden; display:flex; flex-direction:column; --spot-a:.12; transition:filter .5s, opacity .5s, border-color .3s; }
   .svc.dim{ filter:grayscale(1) brightness(.38); opacity:.55; }
   .svc-art{ position:relative; aspect-ratio:16/9; overflow:hidden; flex:none; }
-  .svc-art svg{ width:100%; height:100%; display:block; transition:transform .9s cubic-bezier(.2,.7,.2,1); }
-  .svc:hover .svc-art svg{ transform:scale(1.06); }
+  .svc-art{ cursor:zoom-in; background:#0b0c0e; }
+  .svc-art img{ width:100%; height:100%; object-fit:cover; display:block; transition:transform 1.1s cubic-bezier(.2,.7,.2,1); }
+  .svc:hover .svc-art img{ transform:scale(1.045); }
+  .svc-art .zoom{ position:absolute; right:10px; bottom:12px; z-index:3; width:30px; height:30px; border-radius:9px; display:grid; place-items:center; background:rgba(10,10,12,.7); border:1px solid rgba(255,255,255,.12); color:#e8fffc; opacity:0; transform:translateY(4px); transition:opacity .3s, transform .3s; }
+  .svc:hover .svc-art .zoom{ opacity:1; transform:none; }
+  .tag.demo{ color:#81d8d0; border-color:rgba(129,216,208,.32); }
+  .lb{ position:fixed; inset:0; z-index:110; display:grid; place-items:center; padding:28px; visibility:hidden; pointer-events:none; }
+  .lb.open{ visibility:visible; pointer-events:auto; }
+  .lb .bd{ position:absolute; inset:0; background:rgba(5,5,6,.82); -webkit-backdrop-filter:blur(8px); backdrop-filter:blur(8px); opacity:0; }
+  .lb figure{ position:relative; max-width:min(1400px, 100%); opacity:0; }
+  .lb img{ display:block; max-width:100%; max-height:calc(100vh - 120px); border-radius:14px; border:1px solid #26272d; box-shadow:0 60px 140px -40px rgba(0,0,0,.95); }
+  .lb figcaption{ display:flex; justify-content:space-between; gap:16px; margin-top:12px; font-family:var(--mono); font-size:12px; letter-spacing:.05em; text-transform:uppercase; color:var(--muted); }
+  .lb .nav{ position:absolute; top:50%; width:42px; height:42px; margin-top:-21px; border-radius:50%; display:grid; place-items:center; background:rgba(20,20,22,.85); border:1px solid #2a2c33; color:#fff; }
+  .lb .nav.p{ left:-56px; } .lb .nav.n{ right:-56px; }
+  @media (max-width:860px){ .lb .nav.p{ left:6px; } .lb .nav.n{ right:6px; } }
   .svc-art::after{ content:''; position:absolute; inset:auto 0 0 0; height:55%; background:linear-gradient(rgba(20,20,21,0), #141415); pointer-events:none; }
   .svc-art .case-top{ top:10px; left:10px; right:10px; }
   .svc-body{ padding:2px 18px 16px; display:flex; flex-direction:column; gap:8px; flex:1; }
@@ -676,6 +689,8 @@
     </div>
   </div>
 </div>
+
+<div id="lb" class="lb" aria-hidden="true" role="dialog" aria-modal="true"><div class="bd" data-lbclose></div><figure><button class="nav p" data-lbstep="-1" aria-label="Prev"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg></button><img id="lbImg" alt=""><button class="nav n" data-lbstep="1" aria-label="Next"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button><figcaption><span id="lbCap"></span><span id="lbHint"></span></figcaption></figure></div>
 
 <div id="toast" class="toast"><span class="ping"><i></i><i></i></span><span id="toastText">Saved</span></div>
 
@@ -1225,7 +1240,7 @@ function renderServices() {
     const q = [s.t.ru, s.t.en, s.t.pt, s.t.ja, s.d[LANG], s.cat, ...s.tags, 'бот bot'].join(' ').toLowerCase();
     return `
     <article class="svc spot ${s.hot ? 'hot' : ''}" data-cat="${s.cat}" data-q="${esc(q)}" data-tilt="${s.hot ? 3 : 5}">
-      <div class="svc-art">${artFor(s)}<div class="case-top"><span class="tag">${esc(T('cat_' + s.cat))}</span>${s.hot ? `<span class="tag hot">★ ${esc(T('svc_hot'))}</span>` : ''}</div></div>
+      <div class="svc-art" data-lb="${i}" role="button" tabindex="0" aria-label="${esc(T('svc_zoom'))}"><img src="assets/svc/${s.img[0]}.webp" alt="${esc(L(s.t))}" loading="lazy" decoding="async" style="object-position:${s.pos || 'center'}"><div class="case-top"><span class="tag">${esc(T('cat_' + s.cat))}</span><span class="flex gap-1.5">${s.hot ? `<span class="tag hot">★ ${esc(T('svc_hot'))}</span>` : ''}<span class="tag demo">${esc(T('svc_demo'))}</span></span></div><span class="zoom"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></span></div>
       <div class="svc-body">
         <h3 class="svc-title">${esc(L(s.t))}</h3>
         <p class="svc-desc">${esc(L(s.d))}</p>
@@ -1256,6 +1271,34 @@ $('#search').addEventListener('input', () => {
   const r = svcGrid.getBoundingClientRect();
   if (!searchJump && (r.top > innerHeight || r.bottom < 0)) { searchJump = true; scrollToSel('#services'); setTimeout(() => { searchJump = false; }, 1800); }
 });
+
+/* =========================================================
+   SCREENSHOT LIGHTBOX
+   ========================================================= */
+const lb = $('#lb'), lbImg = $('#lbImg'), lbFig = $('figure', lb), lbBd = $('.bd', lb);
+let lbOpen = false, lbSvc = 0, lbIdx = 0;
+function lbShow() {
+  const s = SERVICES[lbSvc], many = s.img.length > 1;
+  lbImg.src = `assets/svc/${s.img[lbIdx]}-full.webp`; lbImg.alt = L(s.t);
+  $('#lbCap').textContent = L(s.t) + (many ? `  ·  ${lbIdx + 1} / ${s.img.length}` : '');
+  $('#lbHint').textContent = T('lb_hint');
+  $$('.nav', lb).forEach(b => { b.style.display = many ? '' : 'none'; });
+}
+function lbOpenAt(i) {
+  lbSvc = i; lbIdx = 0; lbShow(); lbOpen = true;
+  lb.classList.add('open'); lb.setAttribute('aria-hidden', 'false'); lenis.stop();
+  gsap.fromTo(lbBd, { opacity: 0 }, { opacity: 1, duration: .3 });
+  gsap.fromTo(lbFig, { opacity: 0, y: 24, scale: .97 }, { opacity: 1, y: 0, scale: 1, duration: .5, ease: 'expo.out' });
+}
+function lbClose() {
+  if (!lbOpen) return; lbOpen = false;
+  gsap.to(lbBd, { opacity: 0, duration: .25 });
+  gsap.to(lbFig, { opacity: 0, y: 12, duration: .25, onComplete: () => { lb.classList.remove('open'); lb.setAttribute('aria-hidden', 'true'); lenis.start(); } });
+}
+function lbStep(d) { const n = SERVICES[lbSvc].img.length; if (n < 2) return; lbIdx = (lbIdx + d + n) % n; gsap.fromTo(lbImg, { opacity: .2, x: 24 * d }, { opacity: 1, x: 0, duration: .45, ease: 'power3.out' }); lbShow(); }
+lb.addEventListener('click', e => { const st = e.target.closest('[data-lbstep]'); if (st) lbStep(+st.dataset.lbstep); else if (e.target.closest('[data-lbclose]')) lbClose(); });
+svcGrid.addEventListener('click', e => { const a = e.target.closest('[data-lb]'); if (a) lbOpenAt(+a.dataset.lb); });
+svcGrid.addEventListener('keydown', e => { const a = e.target.closest('[data-lb]'); if (a && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); lbOpenAt(+a.dataset.lb); } });
 
 /* =========================================================
    REVIEWS
@@ -1308,7 +1351,8 @@ modal.addEventListener('click', e => { if (e.target.closest('[data-close]')) clo
 document.addEventListener('keydown', e => {
   const typing = document.activeElement && document.activeElement.tagName === 'INPUT';
   if (e.key === '/' && !typing) { e.preventDefault(); $('#search').focus(); }
-  else if (e.key === 'Escape') { if (modalOpen) closeModal(); else if (typing) document.activeElement.blur(); }
+  else if (e.key === 'Escape') { if (lbOpen) lbClose(); else if (modalOpen) closeModal(); else if (typing) document.activeElement.blur(); }
+  else if (lbOpen && (e.key === 'ArrowRight' || e.key === 'ArrowLeft')) lbStep(e.key === 'ArrowRight' ? 1 : -1);
 });
 
 /* =========================================================
@@ -1354,7 +1398,7 @@ function watchSvgs() { $$('.svc-art svg, .m-thumb svg').forEach(s => { if (!s._i
 const offIO = new IntersectionObserver(es => es.forEach(e => e.target.classList.toggle('off', !e.isIntersecting)), { rootMargin: '80px' });
 ['#stage', '#contact', '#caseGrid', '#metrics', '#reviews', 'footer'].forEach(sel => { const el = $(sel); if (el) offIO.observe(el); });
 
-function renderAll() { applyStatic(); renderChips(); renderMetrics(); renderCases(); renderServices(); renderReviews(); renderFAQ(); if (modalOpen) fillModal(modalIdx); watchSvgs(); }
+function renderAll() { applyStatic(); renderChips(); renderMetrics(); renderCases(); renderServices(); renderReviews(); renderFAQ(); if (modalOpen) fillModal(modalIdx); if (lbOpen) lbShow(); watchSvgs(); }
 function setLang(l) {
   if (l === LANG || !LANGS.includes(l)) return;
   LANG = l; store.set('lang', l);
