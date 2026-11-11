@@ -1,0 +1,1579 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Paper vs Skills</title>
+<meta name="description" content="3D scrollytelling landing: the diploma burns, skills remain.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800;900&family=JetBrains+Mono:wght@400;500&family=Playfair+Display:ital,wght@1,400;1,600;1,800&display=swap" rel="stylesheet">
+
+<!-- Three.js r128 + postprocessing -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/shaders/CopyShader.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/shaders/LuminosityHighPassShader.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/EffectComposer.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/RenderPass.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/ShaderPass.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/SavePass.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/UnrealBloomPass.js"></script>
+<!-- Motion -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
+<!-- base64 copies of models/*.glb: lets the page work when opened straight from disk (file:// blocks fetch) -->
+<script src="models/models-inline.js"></script>
+
+<style>
+:root{
+  --bg:#060101;
+  --ink:#f6efe4;
+  --ink-dim:rgba(246,239,228,.55);
+  --accent:#ff6a2b;
+  --accent-2:#ffd29a;
+  --line:rgba(246,239,228,.18);
+  --serif:'Playfair Display', Georgia, serif;
+  --sans:'Inter', system-ui, sans-serif;
+  --mono:'JetBrains Mono', ui-monospace, monospace;
+  --gutter:clamp(16px, 2.4vw, 36px);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html.lenis, html.lenis body{height:auto}
+.lenis.lenis-smooth{scroll-behavior:auto !important}
+.lenis.lenis-stopped{overflow:hidden}
+html,body{background:var(--bg);color:var(--ink)}
+body{font-family:var(--sans);overflow-x:hidden;-webkit-font-smoothing:antialiased}
+::selection{background:var(--accent);color:#000}
+@media (pointer:fine){ html, body, a, button{cursor:none} }
+button{font:inherit;color:inherit}
+
+/* ---------- Background layers ---------- */
+.bg{position:fixed;inset:0;z-index:0;pointer-events:none}
+.bg-fire{
+  background:
+    radial-gradient(60% 55% at 50% 62%, rgba(232,86,30,.85) 0%, rgba(170,26,10,.8) 28%, rgba(56,5,3,.92) 62%, #060101 100%);
+}
+.bg-fire::after{
+  content:"";position:absolute;inset:-20%;
+  background:radial-gradient(35% 30% at 30% 80%, rgba(255,140,50,.3), transparent 70%),
+             radial-gradient(30% 30% at 75% 25%, rgba(160,10,30,.3), transparent 70%);
+  animation:drift 18s ease-in-out infinite alternate;
+}
+.bg-green{
+  opacity:0;
+  background:
+    radial-gradient(55% 50% at 50% 42%, rgba(220,180,80,.42) 0%, rgba(12,118,76,.82) 30%, rgba(4,48,32,.95) 62%, #010b07 100%);
+}
+.bg-green::after{
+  content:"";position:absolute;inset:-20%;
+  background:radial-gradient(30% 30% at 70% 75%, rgba(232,195,106,.24), transparent 70%),
+             radial-gradient(35% 35% at 20% 20%, rgba(0,200,140,.2), transparent 70%);
+  animation:drift 22s ease-in-out infinite alternate-reverse;
+}
+@keyframes drift{0%{transform:translate3d(-3%,2%,0) scale(1)}100%{transform:translate3d(3%,-3%,0) scale(1.08)}}
+
+#webgl{position:fixed;inset:0;width:100vw;height:100vh;z-index:1;pointer-events:none;display:block}
+
+/* ---------- Grain & vignette ---------- */
+.grain{position:fixed;inset:-100%;width:300%;height:300%;z-index:50;pointer-events:none;opacity:.16;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  animation:grain .9s steps(6) infinite}
+@keyframes grain{
+  0%{transform:translate(0,0)}17%{transform:translate(-4%,3%)}33%{transform:translate(3%,-5%)}
+  50%{transform:translate(-6%,-2%)}67%{transform:translate(5%,4%)}83%{transform:translate(-2%,6%)}100%{transform:translate(0,0)}}
+.vignette{position:fixed;inset:0;z-index:49;pointer-events:none;
+  background:radial-gradient(ellipse at center, transparent 45%, rgba(0,0,0,.55) 80%, rgba(0,0,0,.88) 100%)}
+
+/* ---------- HUD ---------- */
+.hud{position:fixed;z-index:60;font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink);pointer-events:none;mix-blend-mode:difference}
+.hud-tl{top:var(--gutter);left:var(--gutter);display:flex;gap:14px;align-items:baseline}
+.hud-tl .brand{font-family:var(--sans);font-weight:800;font-size:15px;letter-spacing:-.02em;text-transform:none}
+.hud-tl .brand em{font-family:var(--serif);font-weight:400;font-size:17px}
+.hud-tr{top:var(--gutter);right:var(--gutter);text-align:right}
+.hud-tr .pct{font-size:13px}
+.hud-bl{bottom:var(--gutter);left:var(--gutter)}
+.hud-bl .sec{font-size:13px}
+.hud-bl .secname{opacity:.6;margin-left:10px}
+.hud-br{bottom:var(--gutter);right:var(--gutter);text-align:right;display:flex;flex-direction:column;gap:8px;align-items:flex-end}
+.bars{display:flex;gap:3px;align-items:flex-end;height:14px}
+.bars i{display:block;width:3px;height:30%;background:currentColor;transform-origin:bottom}
+.coords{opacity:.6}
+.progress{position:fixed;left:var(--gutter);top:50%;transform:translateY(-50%);width:1px;height:28vh;background:var(--line);z-index:60;pointer-events:none}
+.progress i{position:absolute;left:0;top:0;width:1px;height:100%;background:var(--ink);transform-origin:top;transform:scaleY(0)}
+.progress::before,.progress::after{content:"";position:absolute;left:-3px;width:7px;height:1px;background:var(--ink)}
+.progress::before{top:0}.progress::after{bottom:0}
+.rec{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--accent);margin-right:8px;animation:blink 1.2s steps(2) infinite;vertical-align:middle}
+@keyframes blink{50%{opacity:0}}
+
+.sound-btn{position:fixed;z-index:61;top:calc(var(--gutter) - 6px);left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:10px;padding:6px 12px;border:1px solid rgba(255,255,255,.22);border-radius:99px;background:rgba(0,0,0,.18);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;outline:none}
+.sound-btn .eq{display:flex;gap:2px;align-items:flex-end;height:10px}
+.sound-btn .eq i{display:block;width:2px;height:30%;background:var(--accent)}
+.sound-btn.on .eq i{animation:eq .9s ease-in-out infinite}
+.sound-btn.on .eq i:nth-child(2){animation-delay:-.3s}
+.sound-btn.on .eq i:nth-child(3){animation-delay:-.6s}
+.sound-btn.on .eq i:nth-child(4){animation-delay:-.15s}
+@keyframes eq{0%,100%{height:25%}50%{height:100%}}
+
+/* ---------- Cursor ---------- */
+.cursor-dot,.cursor-ring{position:fixed;left:0;top:0;z-index:100;pointer-events:none;border-radius:50%;mix-blend-mode:difference}
+.cursor-dot{width:6px;height:6px;background:#fff;margin:-3px 0 0 -3px}
+.cursor-ring{width:40px;height:40px;border:1px solid #fff;margin:-20px 0 0 -20px;transition:width .35s cubic-bezier(.2,.8,.2,1),height .35s cubic-bezier(.2,.8,.2,1),margin .35s cubic-bezier(.2,.8,.2,1),background .35s}
+.cursor-ring.hover{width:84px;height:84px;margin:-42px 0 0 -42px;background:rgba(255,255,255,.95)}
+@media (pointer:coarse){.cursor-dot,.cursor-ring{display:none}}
+
+/* ---------- Loader ---------- */
+#loader{position:fixed;inset:0;z-index:200;background:#050101;display:flex;flex-direction:column;justify-content:flex-end;padding:var(--gutter);font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase}
+#loader .big{font-family:var(--sans);font-weight:900;font-size:clamp(64px,16vw,240px);letter-spacing:-.06em;line-height:.8;font-variant-numeric:tabular-nums}
+#loader .bar{height:1px;background:rgba(255,255,255,.15);margin-top:20px;position:relative;overflow:hidden}
+#loader .bar i{position:absolute;inset:0;background:var(--accent);transform-origin:left;transform:scaleX(0)}
+#loader .row{display:flex;justify-content:space-between;margin-bottom:14px;color:var(--ink-dim)}
+
+/* ---------- Sections ---------- */
+main{position:relative;z-index:2}
+section{position:relative;height:100vh;width:100%;display:flex;align-items:center;justify-content:center;overflow:hidden;padding:0 var(--gutter)}
+.label{font-family:var(--mono);font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--ink-dim)}
+.label b{color:var(--accent);font-weight:500}
+
+/* Scene 1 */
+.hero-wrap{text-align:center;filter:drop-shadow(0 10px 60px rgba(255,80,20,.35));will-change:transform,filter}
+.hero-top{font-weight:800;font-size:clamp(26px,6vw,96px);line-height:1;letter-spacing:-.045em;text-transform:uppercase;display:flex;gap:.28em;justify-content:center;align-items:baseline}
+.hero-top .thin{font-weight:300}
+.hero-big{font-family:var(--serif);font-style:italic;font-weight:400;font-size:clamp(84px,21vw,380px);line-height:.86;letter-spacing:-.025em;margin-top:-.04em;white-space:nowrap}
+.hero-big .ch{display:inline-block;background:linear-gradient(180deg,#fff8ea 0%,#ffd7a1 40%,#ff8a3d 78%,#d63a12 100%);-webkit-background-clip:text;background-clip:text;color:transparent;padding:0 .02em .12em;will-change:transform,opacity,filter}
+.hero-big .ch.ast{font-family:var(--sans);font-style:normal;font-weight:300;font-size:.42em;vertical-align:.95em;background:none;color:var(--accent);-webkit-text-fill-color:var(--accent)}
+.hero-label{position:absolute;top:calc(var(--gutter) + 46px);left:50%;transform:translateX(-50%);white-space:nowrap}
+.hero-meta{position:absolute;bottom:calc(var(--gutter) + 90px);font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-dim);max-width:240px;line-height:1.6}
+.hero-meta.l{left:calc(var(--gutter) + 24px)}
+.hero-meta.r{right:var(--gutter);text-align:right}
+.round-btn{position:absolute;bottom:6vh;left:50%;margin-left:-62px;width:124px;height:124px;border-radius:50%;border:1px solid rgba(255,255,255,.35);background:rgba(255,255,255,.04);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);color:var(--ink);display:grid;place-items:center;outline:none}
+.round-btn svg{position:absolute;inset:0;width:100%;height:100%;animation:spin 14s linear infinite}
+.round-btn text{font-family:var(--mono);font-size:9.2px;letter-spacing:.2em;fill:currentColor;text-transform:uppercase}
+.round-btn .core{width:40px;height:40px;border-radius:50%;background:var(--accent);color:#120200;display:grid;place-items:center;font-size:18px;transition:transform .4s cubic-bezier(.2,.8,.2,1)}
+.round-btn:hover .core{transform:scale(1.35)}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* Scene 2 */
+.s2-inner,.s3-inner,.s4-inner{width:100%;max-width:1600px;position:relative}
+.s2-wrap{display:flex;flex-direction:column;align-items:center;text-align:center;gap:2vh}
+.count{font-weight:900;font-size:clamp(130px,30vw,520px);line-height:.78;letter-spacing:-.07em;font-variant-numeric:tabular-nums;display:flex;align-items:flex-start;justify-content:center}
+.count #pct{display:inline-block;min-width:1.15em;text-align:right;background:linear-gradient(180deg,#fff 0%,#ffe0bd 55%,rgba(255,150,80,.65) 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.count .sign{font-family:var(--serif);font-style:italic;font-weight:400;font-size:.42em;margin-top:.1em;margin-left:.04em;color:var(--accent);letter-spacing:0}
+.year-row{display:flex;align-items:center;gap:18px;font-family:var(--mono);font-size:clamp(14px,1.4vw,18px);letter-spacing:.12em;color:var(--ink-dim)}
+.year-row #year{font-size:clamp(28px,4vw,60px);color:var(--ink);letter-spacing:.02em;font-variant-numeric:tabular-nums}
+.ruler{position:relative;width:min(760px,90vw);height:44px;overflow:hidden;-webkit-mask-image:linear-gradient(90deg,transparent,#000 20%,#000 80%,transparent);mask-image:linear-gradient(90deg,transparent,#000 20%,#000 80%,transparent)}
+.ruler-track{position:absolute;left:50%;top:0;height:100%;will-change:transform}
+.ruler-track .t{position:absolute;bottom:0;width:1px;height:10px;background:rgba(255,255,255,.4)}
+.ruler-track .t.major{height:22px;background:#fff}
+.ruler-track .t span{position:absolute;top:-22px;left:50%;transform:translateX(-50%);font-family:var(--mono);font-size:10px;letter-spacing:.1em;color:var(--ink-dim)}
+.ruler::after{content:"";position:absolute;left:50%;bottom:0;width:1px;height:34px;background:var(--accent);box-shadow:0 0 12px var(--accent)}
+.s2-caption{font-family:var(--serif);font-style:italic;font-size:clamp(20px,2.6vw,40px);line-height:1.2;max-width:22ch;opacity:0}
+.s2-caption em{color:var(--accent-2)}
+.side-note{position:absolute;top:50%;font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-dim);line-height:1.8;transform:translateY(-50%)}
+.side-note.l{left:calc(var(--gutter) + 20px)}
+.side-note.r{right:0;text-align:right}
+.side-note b{display:block;color:var(--ink);font-weight:500}
+@media (max-width:900px){.side-note{display:none}}
+
+/* Scene 3 */
+.s3-wrap{text-align:center;display:flex;flex-direction:column;align-items:center;gap:3vh}
+.l1,.l2{line-height:.95}
+.l1 .w,.l2 .w{display:inline-block;font-weight:800;text-transform:uppercase;letter-spacing:-.045em;font-size:clamp(30px,5.6vw,100px);margin:0 .12em;will-change:transform,opacity,filter}
+.l2 .w.it{font-family:var(--serif);font-style:italic;font-weight:400;text-transform:none;letter-spacing:-.01em}
+.paper{display:block;font-family:var(--serif);font-style:italic;font-weight:400;font-size:clamp(56px,10vw,180px);line-height:.95;background:linear-gradient(180deg,#fff6df,#e8c36a 60%,#9c7a2e);-webkit-background-clip:text;background-clip:text;color:transparent;padding-bottom:.08em}
+.skills{display:block;font-family:var(--serif);font-style:italic;font-weight:400;font-size:clamp(90px,19vw,340px);line-height:.85;letter-spacing:-.02em;background:linear-gradient(180deg,#f9f2d8 0%,#e8c36a 38%,#26d89a 78%,#0b7a52 100%);-webkit-background-clip:text;background-clip:text;color:transparent;padding:0 .06em .1em;filter:drop-shadow(0 10px 50px rgba(30,220,150,.25))}
+
+/* Scene 4 */
+#s4{height:110vh}
+.s4-wrap{display:flex;flex-direction:column;align-items:center;text-align:center;gap:3vh}
+.s4-line{font-weight:800;font-size:clamp(32px,6vw,110px);letter-spacing:-.045em;text-transform:uppercase;line-height:.95}
+.s4-line em{font-family:var(--serif);font-weight:400;text-transform:none;letter-spacing:-.01em;color:#e8c36a}
+.s4-line .w{display:inline-block;margin:0 .1em}
+.round-btn.static{position:relative;bottom:auto;left:auto;margin:4vh 0 0}
+.foot{position:absolute;bottom:calc(var(--gutter) + 40px);left:0;right:0;display:flex;justify-content:space-between;padding:0 calc(var(--gutter) + 24px);font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-dim)}
+@media (max-width:700px){.foot{display:none}.hero-meta{display:none}}
+</style>
+</head>
+<body>
+
+<div id="loader">
+  <div class="row"><span><span class="rec"></span>Igniting the scene</span><span>Click anywhere for sound</span></div>
+  <div class="big"><span id="loadNum">000</span></div>
+  <div class="bar"><i id="loadBar"></i></div>
+</div>
+
+<div class="bg bg-fire"></div>
+<div class="bg bg-green" id="bgGreen"></div>
+<canvas id="webgl"></canvas>
+<div class="vignette"></div>
+<div class="grain"></div>
+
+<!-- HUD -->
+<div class="hud hud-tl"><span class="brand">vibe<em>coded</em>®</span><span>©2026</span></div>
+<div class="hud hud-tr"><div>Scroll</div><div class="pct"><span id="hudPct">000</span>%</div></div>
+<div class="hud hud-bl"><span class="sec"><span id="hudSec">01</span> / 04</span><span class="secname" id="hudSecName">The Diploma</span></div>
+<div class="hud hud-br">
+  <div class="bars" id="bars"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+  <div class="coords" id="coords">X 0.00 Y 0.00 Z 0.00</div>
+  <div><span class="rec"></span>FPS <span id="fps">60</span> · FOV <span id="fov">45</span></div>
+</div>
+<div class="progress"><i id="progressFill"></i></div>
+<button class="sound-btn" id="soundBtn" data-hover aria-pressed="false">
+  <span class="eq"><i></i><i></i><i></i><i></i></span><span id="soundLabel">Sound off</span>
+</button>
+
+<div class="cursor-ring" id="cursorRing"></div>
+<div class="cursor-dot" id="cursorDot"></div>
+
+<main>
+  <!-- Scene 1 -->
+  <section id="s1">
+    <div class="label hero-label">[ <b>01</b> — The Diploma ]</div>
+    <div class="hero-wrap" id="heroWrap">
+      <div class="hero-top"><span>Feels</span><span class="thin">like</span></div>
+      <div class="hero-big" id="heroBig" aria-label="Bullsh*t">Bullsh*t</div>
+    </div>
+    <div class="hero-meta l">Vol. 01 — On degrees,<br>debt &amp; the price of paper</div>
+    <div class="hero-meta r">Scroll slowly<br>(it burns)</div>
+    <button class="round-btn" id="heroBtn" data-hover aria-label="Scroll down">
+      <svg viewBox="0 0 124 124" aria-hidden="true">
+        <defs><path id="circ" d="M62,62 m-48,0 a48,48 0 1,1 96,0 a48,48 0 1,1 -96,0"/></defs>
+        <text><textPath href="#circ" textLength="298">Scroll to discover • Scroll to discover • </textPath></text>
+      </svg>
+      <span class="core">↓</span>
+    </button>
+  </section>
+
+  <!-- Scene 2 -->
+  <section id="s2">
+    <div class="s2-inner" id="s2Inner">
+      <div class="side-note l"><b>Index</b>Value of paper<br>vs. value of work</div>
+      <div class="side-note r"><b>Δ / year</b><span id="delta">+0.00</span></div>
+      <div class="s2-wrap" id="s2Wrap">
+        <div class="label">[ <b>02</b> — The Math ]</div>
+        <div class="count"><span id="pct">0</span><span class="sign">%</span></div>
+        <div class="year-row"><span>Since</span><span id="year">1975</span><span>→ 1988</span></div>
+        <div class="ruler"><div class="ruler-track" id="rulerTrack"></div></div>
+        <div class="s2-caption" id="s2Caption">of what they sold you was <em>never</em> about what you can actually do.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Scene 3 -->
+  <section id="s3">
+    <div class="s3-inner">
+      <div class="s3-wrap" id="s3Wrap">
+        <div class="label" id="s3Label">[ <b>03</b> — The Market ]</div>
+        <div class="l1" id="l1">
+          <span class="w">University</span><span class="w">sells...</span>
+          <span class="paper" id="paper">Paper.</span>
+        </div>
+        <div class="l2" id="l2">
+          <span class="w it">But</span><span class="w">Companies</span><span class="w">buy</span>
+          <span class="skills" id="skills">Skills</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Scene 4 -->
+  <section id="s4">
+    <div class="s4-inner">
+      <div class="s4-wrap">
+        <div class="label">[ <b>04</b> — The Way Out ]</div>
+        <div class="s4-line"><span class="w">Stop</span><span class="w">buying</span><span class="w"><em>paper.</em></span></div>
+        <div class="s4-line"><span class="w">Start</span><span class="w">shipping</span><span class="w"><em>skills.</em></span></div>
+        <button class="round-btn static" id="topBtn" data-hover aria-label="Back to top">
+          <svg viewBox="0 0 124 124" aria-hidden="true">
+            <defs><path id="circ2" d="M62,62 m-48,0 a48,48 0 1,1 96,0 a48,48 0 1,1 -96,0"/></defs>
+            <text><textPath href="#circ2" textLength="298">Back to the fire • Back to the fire • </textPath></text>
+          </svg>
+          <span class="core">↑</span>
+        </button>
+      </div>
+    </div>
+    <div class="foot"><span>Built with Three.js · GSAP · Lenis · Web Audio</span><span>No diplomas were harmed*</span></div>
+  </section>
+</main>
+
+<script>
+(() => {
+'use strict';
+
+/* =========================================================
+   0. SETUP
+   ========================================================= */
+gsap.registerPlugin(ScrollTrigger);
+const isTouch = window.matchMedia('(pointer: coarse)').matches;
+const lerp = (a, b, t) => a + (b - a) * t;
+const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
+const TAU = Math.PI * 2;
+
+let lenis = null;
+if (typeof Lenis !== 'undefined') {
+  lenis = new Lenis({ lerp: 0.085, smoothWheel: true, wheelMultiplier: 0.9 });
+  lenis.on('scroll', ScrollTrigger.update);
+  gsap.ticker.add(t => lenis.raf(t * 1000));
+  gsap.ticker.lagSmoothing(0);
+  lenis.stop();
+}
+
+const state = {
+  green: 0, greenTarget: 0,
+  burst: 0,
+  burn: 0.2,
+  camT: 0, camTarget: 0,
+  mx: 0, my: 0, tmx: 0, tmy: 0,
+  vel: 0,
+  fov: 45,
+  section: 0
+};
+
+/* =========================================================
+   1. SOUND (Web Audio, fully synthesized)
+   ========================================================= */
+const Sound = (() => {
+  let ctx = null, master = null, drone = null, droneFilter = null, noiseBuf = null;
+  const oscs = [];
+  let enabled = false;
+  const last = { pct: 0, year: 0, crack: 0 };
+  const btn = document.getElementById('soundBtn');
+  const label = document.getElementById('soundLabel');
+
+  function ui() {
+    btn.classList.toggle('on', enabled);
+    btn.setAttribute('aria-pressed', String(enabled));
+    label.textContent = enabled ? 'Sound on' : 'Sound off';
+  }
+
+  function init() {
+    if (ctx) return true;
+    const AC = window.AudioContext || window.webkitAudioContext;
+    if (!AC) return false;
+    ctx = new AC();
+
+    master = ctx.createGain();
+    master.gain.value = 0;
+    const comp = ctx.createDynamicsCompressor();
+    comp.threshold.value = -16; comp.knee.value = 12; comp.ratio.value = 4;
+    comp.attack.value = 0.003; comp.release.value = 0.25;
+    master.connect(comp);
+    comp.connect(ctx.destination);
+
+    // shared white-noise buffer
+    noiseBuf = ctx.createBuffer(1, ctx.sampleRate * 2, ctx.sampleRate);
+    const d = noiseBuf.getChannelData(0);
+    for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
+
+    // --- sub-bass drone ---
+    drone = ctx.createGain();
+    drone.gain.value = 0;
+    droneFilter = ctx.createBiquadFilter();
+    droneFilter.type = 'lowpass';
+    droneFilter.frequency.value = 140;
+    droneFilter.Q.value = 0.9;
+    droneFilter.connect(drone);
+    drone.connect(master);
+
+    [[41.2, 'sine', 0.6], [41.45, 'sine', 0.5], [82.4, 'triangle', 0.1], [61.7, 'sine', 0.14]].forEach(([f, type, g]) => {
+      const o = ctx.createOscillator();
+      o.type = type; o.frequency.value = f;
+      const gg = ctx.createGain(); gg.gain.value = g;
+      o.connect(gg); gg.connect(droneFilter);
+      o.start();
+      oscs.push({ o, base: f });
+    });
+
+    // low rumble from filtered noise
+    const ns = ctx.createBufferSource();
+    ns.buffer = noiseBuf; ns.loop = true;
+    const nf = ctx.createBiquadFilter(); nf.type = 'lowpass'; nf.frequency.value = 85;
+    const ng = ctx.createGain(); ng.gain.value = 0.5;
+    ns.connect(nf); nf.connect(ng); ng.connect(droneFilter);
+    ns.start();
+
+    // slow breathing LFO
+    const lfo = ctx.createOscillator(); lfo.frequency.value = 0.07;
+    const lg = ctx.createGain(); lg.gain.value = 0.1;
+    lfo.connect(lg); lg.connect(drone.gain);
+    lfo.start();
+    return true;
+  }
+
+  function start() {
+    if (!init()) return;
+    if (ctx.state === 'suspended') ctx.resume();
+    enabled = true;
+    const t = ctx.currentTime;
+    master.gain.cancelScheduledValues(t);
+    master.gain.setTargetAtTime(0.9, t, 0.3);
+    drone.gain.cancelScheduledValues(t);
+    drone.gain.setTargetAtTime(0.38, t, 1.6);
+    ui();
+  }
+  function stop() {
+    enabled = false;
+    if (ctx) master.gain.setTargetAtTime(0, ctx.currentTime, 0.15);
+    ui();
+  }
+  function toggle() { enabled ? stop() : start(); }
+
+  function noiseHit(time, freq, q, type, gain, decay) {
+    const src = ctx.createBufferSource();
+    src.buffer = noiseBuf;
+    const f = ctx.createBiquadFilter(); f.type = type; f.frequency.value = freq; f.Q.value = q;
+    const g = ctx.createGain();
+    g.gain.setValueAtTime(gain, time);
+    g.gain.exponentialRampToValueAtTime(0.0001, time + decay);
+    src.connect(f); f.connect(g); g.connect(master);
+    src.start(time, Math.random() * 1.8, decay + 0.02);
+  }
+  function tone(time, f0, f1, type, gain, decay) {
+    const o = ctx.createOscillator(); o.type = type;
+    o.frequency.setValueAtTime(f0, time);
+    o.frequency.exponentialRampToValueAtTime(f1, time + decay * 0.8);
+    const g = ctx.createGain();
+    g.gain.setValueAtTime(gain, time);
+    g.gain.exponentialRampToValueAtTime(0.0001, time + decay);
+    o.connect(g); g.connect(master);
+    o.start(time); o.stop(time + decay + 0.02);
+  }
+
+  // mechanical counter click
+  function tick(kind) {
+    if (!enabled) return;
+    const now = ctx.currentTime;
+    if (now - last[kind] < 0.03) return;
+    last[kind] = now;
+    if (kind === 'year') {
+      noiseHit(now, 950, 3.5, 'bandpass', 0.9, 0.07);
+      tone(now, 190, 55, 'sine', 0.55, 0.09);
+      noiseHit(now + 0.012, 4200, 6, 'bandpass', 0.25, 0.02);
+    } else {
+      noiseHit(now, 3400 + Math.random() * 600, 9, 'bandpass', 0.6, 0.028);
+      tone(now, 1700, 900, 'triangle', 0.12, 0.035);
+    }
+  }
+
+  // fire crackle
+  function crackle(amount) {
+    if (!enabled || amount <= 0) return;
+    if (Math.random() > amount) return;
+    const now = ctx.currentTime;
+    if (now - last.crack < 0.012) return;
+    last.crack = now;
+    noiseHit(now, 1600 + Math.random() * 4000, 0.8, 'highpass', 0.08 + Math.random() * 0.3, 0.004 + Math.random() * 0.02);
+  }
+
+  // sub-bass impact when the money bundle explodes
+  function boom() {
+    if (!enabled) return;
+    const now = ctx.currentTime;
+    tone(now, 110, 28, 'sine', 1.0, 1.1);
+    noiseHit(now, 220, 0.7, 'lowpass', 0.9, 0.5);
+    noiseHit(now, 5200, 0.6, 'highpass', 0.25, 0.25);
+  }
+
+  function update(vel, green) {
+    if (!ctx || !enabled) return;
+    const t = ctx.currentTime;
+    droneFilter.frequency.setTargetAtTime(140 + Math.min(Math.abs(vel) * 14, 900), t, 0.12);
+    const ratio = Math.pow(55 / 41.2, green);
+    for (const { o, base } of oscs) o.frequency.setTargetAtTime(base * ratio, t, 0.6);
+  }
+
+  btn.addEventListener('click', e => { e.stopPropagation(); toggle(); });
+  let userTouched = false;
+  const first = e => {
+    if (userTouched) return;
+    userTouched = true;
+    if (e.target && e.target.closest && e.target.closest('#soundBtn')) return;
+    start();
+  };
+  ['pointerdown', 'keydown', 'touchend'].forEach(ev => window.addEventListener(ev, first, { passive: true }));
+  // browsers only unlock audio on click / key / tap; on wheel we still try, and start if the context is allowed to run
+  window.addEventListener('wheel', () => {
+    if (enabled || userTouched || !init()) return;
+    ctx.resume().catch(() => {});
+    if (ctx.state === 'running') { userTouched = true; start(); }
+  }, { passive: true });
+
+  return { tick, crackle, update, start, boom };
+})();
+
+/* =========================================================
+   2. TEXT PREP
+   ========================================================= */
+const heroBig = document.getElementById('heroBig');
+heroBig.innerHTML = heroBig.textContent.split('').map(c =>
+  `<span class="ch${c === '*' ? ' ast' : ''}">${c}</span>`).join('');
+
+const rulerTrack = document.getElementById('rulerTrack');
+const YEAR_W = 110;
+(function buildRuler(){
+  let html = '';
+  for (let y = 1970; y <= 1993; y++) {
+    for (let k = 0; k < 5; k++) {
+      const x = (y - 1975) * YEAR_W + k * (YEAR_W / 5);
+      if (k === 0) html += `<div class="t major" style="left:${x}px"><span>${y}</span></div>`;
+      else html += `<div class="t" style="left:${x}px"></div>`;
+    }
+  }
+  rulerTrack.innerHTML = html;
+})();
+
+/* =========================================================
+   3. GLSL
+   ========================================================= */
+const NOISE = `
+vec3 mod289(vec3 x){return x-floor(x*(1.0/289.0))*289.0;}
+vec4 mod289(vec4 x){return x-floor(x*(1.0/289.0))*289.0;}
+vec4 permute(vec4 x){return mod289(((x*34.0)+1.0)*x);}
+vec4 taylorInvSqrt(vec4 r){return 1.79284291400159-0.85373472095314*r;}
+float snoise(vec3 v){
+  const vec2 C=vec2(1.0/6.0,1.0/3.0);
+  const vec4 D=vec4(0.0,0.5,1.0,2.0);
+  vec3 i=floor(v+dot(v,C.yyy));
+  vec3 x0=v-i+dot(i,C.xxx);
+  vec3 g=step(x0.yzx,x0.xyz);
+  vec3 l=1.0-g;
+  vec3 i1=min(g.xyz,l.zxy);
+  vec3 i2=max(g.xyz,l.zxy);
+  vec3 x1=x0-i1+C.xxx;
+  vec3 x2=x0-i2+C.yyy;
+  vec3 x3=x0-D.yyy;
+  i=mod289(i);
+  vec4 p=permute(permute(permute(i.z+vec4(0.0,i1.z,i2.z,1.0))+i.y+vec4(0.0,i1.y,i2.y,1.0))+i.x+vec4(0.0,i1.x,i2.x,1.0));
+  float n_=0.142857142857;
+  vec3 ns=n_*D.wyz-D.xzx;
+  vec4 j=p-49.0*floor(p*ns.z*ns.z);
+  vec4 x_=floor(j*ns.z);
+  vec4 y_=floor(j-7.0*x_);
+  vec4 x=x_*ns.x+ns.yyyy;
+  vec4 y=y_*ns.x+ns.yyyy;
+  vec4 h=1.0-abs(x)-abs(y);
+  vec4 b0=vec4(x.xy,y.xy);
+  vec4 b1=vec4(x.zw,y.zw);
+  vec4 s0=floor(b0)*2.0+1.0;
+  vec4 s1=floor(b1)*2.0+1.0;
+  vec4 sh=-step(h,vec4(0.0));
+  vec4 a0=b0.xzyw+s0.xzyw*sh.xxyy;
+  vec4 a1=b1.xzyw+s1.xzyw*sh.zzww;
+  vec3 p0=vec3(a0.xy,h.x);
+  vec3 p1=vec3(a0.zw,h.y);
+  vec3 p2=vec3(a1.xy,h.z);
+  vec3 p3=vec3(a1.zw,h.w);
+  vec4 norm=taylorInvSqrt(vec4(dot(p0,p0),dot(p1,p1),dot(p2,p2),dot(p3,p3)));
+  p0*=norm.x;p1*=norm.y;p2*=norm.z;p3*=norm.w;
+  vec4 m=max(0.6-vec4(dot(x0,x0),dot(x1,x1),dot(x2,x2),dot(x3,x3)),0.0);
+  m=m*m;
+  return 42.0*dot(m*m,vec4(dot(p0,x0),dot(p1,x1),dot(p2,x2),dot(p3,x3)));
+}
+float fbm(vec3 p){
+  float f=0.0; float a=0.5;
+  for(int i=0;i<4;i++){ f+=a*snoise(p); p*=2.03; a*=0.5; }
+  return f;
+}
+`;
+
+/* Burn field of the diploma: 0 at the centre, ~1 at the far ends (shared by surface + sparks) */
+const BURN_FIELD = `
+float burnField(vec3 p){
+  float d = length(vec3(p.x / 1.9, p.y / 1.5, p.z / 1.5));
+  float n1 = snoise(p * 2.3 + vec3(3.1, 1.7, 0.4)) * 0.5 + 0.5;
+  float n2 = snoise(p * 6.5 + vec3(9.2)) * 0.5 + 0.5;
+  return d * 0.78 + n1 * 0.22 + n2 * 0.06;
+}
+`;
+
+/* --- Diploma scroll: plane rolled into a spiral + hanging flap --- */
+const DIP = { LEN: 3.6, R0: 0.18, GAP: 0.035, TURNS: 3.2, ROLL: 0.8, FLAP: 1.05, BETA: 0.305 };
+
+const diplomaVert = `
+uniform float uTime;
+uniform float uLen, uR0, uGap, uTurns, uRoll, uFlap, uBeta;
+varying vec3 vObj;
+varying vec3 vWorld;
+varying vec2 vUv;
+varying float vFlap;
+void main(){
+  // geometry comes from models/diploma.glb (uv.x runs along the sheet, uv.y across it);
+  // the shader only adds paper wrinkles and a breathing wave on the hanging flap
+  float u = uv.x;
+  float v = uv.y;
+  float f = clamp((u - uRoll) / (1.0 - uRoll), 0.0, 1.0);
+  float s = f * uFlap;
+  float wRoll = snoise(vec3(u * 40.0, v * 9.0, 1.3)) * 0.004
+              + snoise(vec3(u * 7.0, v * 3.0, 4.1)) * 0.008;
+  float wFlap = snoise(vec3(u * 25.0, v * 6.0, 7.0)) * 0.012
+              + sin(s * 3.0 - uTime * 1.2 + v * 2.0) * 0.022 * s;
+  vec3 p = position + normal * mix(wRoll, wFlap, step(0.0001, f));
+  vFlap = f;
+  vObj = p;
+  vUv = uv;
+  vec4 wp = modelMatrix * vec4(p, 1.0);
+  vWorld = wp.xyz;
+  gl_Position = projectionMatrix * viewMatrix * wp;
+}`;
+
+const simpleVert = `
+varying vec3 vObj;
+varying vec3 vWorld;
+varying vec2 vUv;
+varying float vFlap;
+void main(){
+  vObj = position;
+  vUv = uv;
+  vFlap = 0.0;
+  vec4 wp = modelMatrix * vec4(position, 1.0);
+  vWorld = wp.xyz;
+  gl_Position = projectionMatrix * viewMatrix * wp;
+}`;
+
+const diplomaFrag = `
+uniform float uTime;
+uniform float uBurn;
+uniform float uMode;     // 0 paper, 1 ribbon, 2 wax seal
+uniform vec3 uColA;
+uniform vec3 uColB;
+varying vec3 vObj;
+varying vec3 vWorld;
+varying vec2 vUv;
+varying float vFlap;
+void main(){
+  vec3 N = normalize(cross(dFdx(vWorld), dFdy(vWorld)));
+  vec3 V = normalize(cameraPosition - vWorld);
+  if (dot(N, V) < 0.0) N = -N;
+
+  // ragged deckle edges on the paper
+  if (uMode < 0.5) {
+    float rag = (snoise(vec3(vUv.x * 80.0, 0.0, 2.0)) * 0.5 + 0.5) * 0.012;
+    if (vUv.y < 0.004 + rag || vUv.y > 0.996 - rag) discard;
+  }
+
+  float grain = snoise(vec3(vUv * vec2(260.0, 70.0), 0.0)) * 0.5 + 0.5;
+  float blot  = snoise(vObj * 3.0 + 5.0) * 0.5 + 0.5;
+  vec3 albedo = mix(uColA, uColB, blot) * (0.9 + 0.1 * grain);
+
+  // printed diploma layout on the hanging flap
+  if (uMode < 0.5 && vFlap > 0.05) {
+    vec3 ink = vec3(0.16, 0.09, 0.04);
+    float f = vFlap;
+    float frame = (1.0 - smoothstep(0.0, 0.004, abs(vUv.y - 0.06))) + (1.0 - smoothstep(0.0, 0.004, abs(vUv.y - 0.94)));
+    frame *= step(0.08, f) * step(f, 0.95);
+    float frameH = (1.0 - smoothstep(0.0, 0.006, abs(f - 0.95))) * step(0.06, vUv.y) * step(vUv.y, 0.94);
+    float title = step(0.44, f) * step(f, 0.52) * step(0.3, vUv.y) * step(vUv.y, 0.7)
+                * step(0.0, snoise(vec3(vUv.y * 40.0, 1.0, 3.0)));
+    float row = f * 26.0;
+    float lines = step(0.58, f) * step(f, 0.9) * step(0.42, fract(row)) * step(fract(row), 0.62)
+                * step(0.15, vUv.y) * step(vUv.y, 0.85)
+                * step(-0.25, snoise(vec3(floor(row), vUv.y * 22.0, 9.0)));
+    float inkAmt = clamp(frame + frameH + title * 0.9 + lines * 0.65, 0.0, 1.0);
+    albedo = mix(albedo, ink, inkAmt * 0.8);
+  }
+
+  // low-key warm lighting (fire from below-front, cool rim from above-back)
+  vec3 L1 = normalize(vec3(-0.35, -0.55, 0.85));
+  vec3 L2 = normalize(vec3(0.6, 0.9, -0.35));
+  float d1 = max(dot(N, L1), 0.0) * 0.75 + 0.25;
+  float d2 = max(dot(N, L2), 0.0);
+  float fres = pow(1.0 - abs(dot(N, V)), 3.0);
+  float spec = pow(max(dot(reflect(-L1, N), V), 0.0), uMode > 0.5 ? 28.0 : 8.0) * (uMode > 0.5 ? 0.9 : 0.12);
+  vec3 col = albedo * (vec3(1.0, 0.74, 0.52) * d1 * 0.72 + vec3(0.3, 0.26, 0.32) * d2 * 0.45 + 0.06)
+           + fres * vec3(1.0, 0.45, 0.15) * 0.22
+           + spec * vec3(1.0, 0.8, 0.6);
+
+  // ----- burn from centre to edges -----
+  float e = burnField(vObj) - uBurn;
+  if (e < 0.0) discard;
+  float scorch = 1.0 - smoothstep(0.07, 0.32, e);
+  col = mix(col, col * vec3(0.42, 0.25, 0.12), scorch * 0.9);
+  float charA = 1.0 - smoothstep(0.025, 0.09, e);
+  col = mix(col, vec3(0.025, 0.012, 0.006), charA);
+  float glow = 1.0 - smoothstep(0.0, 0.035, e);
+  float flick = 0.7 + 0.3 * sin(uTime * 14.0 + vObj.x * 21.0 + vObj.y * 13.0);
+  col += vec3(1.0, 0.36, 0.05) * glow * 3.2 * flick;
+  col += vec3(1.0, 0.85, 0.5) * (1.0 - smoothstep(0.0, 0.008, e)) * 3.0;
+  float emb = step(0.9, snoise(vObj * 30.0 + uTime * 0.7)) * charA * (1.0 - glow);
+  col += vec3(1.0, 0.3, 0.04) * emb * 2.5;
+
+  gl_FragColor = vec4(col, 1.0);
+}`;
+
+/* --- Sparks emitted along the burn front --- */
+const sparkVert = `
+uniform float uTime;
+uniform float uBurn;
+uniform float uPixel;
+uniform mat4 uModel;
+attribute vec3 aOrigin;
+attribute float aSeed;
+varying float vA;
+varying float vHeat;
+void main(){
+  float since = uBurn - burnField(aOrigin);
+  float live = smoothstep(-0.01, 0.02, since) * (1.0 - smoothstep(0.1, 0.4, since));
+  float age = fract(uTime * (0.45 + aSeed * 0.9) + aSeed * 13.0);
+  vec3 p = (uModel * vec4(aOrigin, 1.0)).xyz;
+  vec3 dir = normalize(vec3(sin(aSeed * 91.0), 0.7 + abs(cos(aSeed * 47.0)), cos(aSeed * 33.0)));
+  p += dir * age * (0.6 + aSeed * 1.4) + vec3(0.0, age * age * 1.8, 0.0);
+  p.x += sin(uTime * 3.0 + aSeed * 40.0) * 0.12 * age;
+  vec4 mv = viewMatrix * vec4(p, 1.0);
+  gl_Position = projectionMatrix * mv;
+  gl_PointSize = live > 0.001 ? (1.0 - age) * (0.7 + aSeed * 1.8) * uPixel * (30.0 / max(-mv.z, 0.1)) : 0.0;
+  vA = live * (1.0 - age);
+  vHeat = 1.0 - age;
+}`;
+const sparkFrag = `
+varying float vA;
+varying float vHeat;
+void main(){
+  float d = length(gl_PointCoord - 0.5);
+  float a = smoothstep(0.5, 0.0, d);
+  vec3 col = mix(vec3(0.9, 0.12, 0.02), vec3(1.0, 0.75, 0.3), smoothstep(0.2, 0.7, vHeat));
+  col = mix(col, vec3(1.0, 0.97, 0.85), smoothstep(0.8, 1.0, vHeat));
+  gl_FragColor = vec4(col * 2.2, a * vA);
+}`;
+
+/* --- Ash / ember particles --- */
+const partVert = `
+uniform float uTime;
+uniform float uPixel;
+attribute float aSeed;
+attribute float aSize;
+attribute float aOff;
+varying float vAlpha;
+varying float vSeed;
+void main(){
+  vec3 p = position;
+  float speed = 0.25 + aSeed * 0.9;
+  float yy = mod(aOff + uTime * speed, 16.0) - 8.0;
+  p.y += yy;
+  p.x += sin(uTime * 0.6 + aSeed * 31.0) * 0.45;
+  p.z += cos(uTime * 0.45 + aSeed * 17.0) * 0.35;
+  vec4 mv = modelViewMatrix * vec4(p, 1.0);
+  gl_Position = projectionMatrix * mv;
+  float size = aSize * uPixel * (28.0 / max(-mv.z, 0.1));
+  gl_PointSize = min(size, 64.0);
+  float edge = 1.0 - smoothstep(6.0, 8.0, abs(yy));
+  float flick = 0.55 + 0.45 * sin(uTime * (2.0 + aSeed * 6.0) + aSeed * 60.0);
+  float dist = smoothstep(55.0, 18.0, -mv.z) * smoothstep(0.3, 1.5, -mv.z);
+  vAlpha = edge * flick * dist;
+  vSeed = aSeed;
+}`;
+const partFrag = `
+uniform float uGreen;
+varying float vAlpha;
+varying float vSeed;
+void main(){
+  float d = length(gl_PointCoord - 0.5);
+  float a = smoothstep(0.5, 0.0, d);
+  a = pow(a, 1.6);
+  vec3 fire  = mix(vec3(1.0, 0.32, 0.05), vec3(1.0, 0.82, 0.45), vSeed);
+  vec3 green = mix(vec3(0.15, 0.95, 0.6), vec3(1.0, 0.84, 0.42), vSeed);
+  vec3 col = mix(fire, green, uGreen) * 1.7;
+  if (vSeed > 0.86) col = vec3(0.55, 0.5, 0.48) * 0.35;
+  gl_FragColor = vec4(col, a * vAlpha);
+}`;
+
+/* --- Bills with burn dissolve --- */
+const billVert = `
+uniform float uTime;
+uniform float uSeed;
+varying vec2 vUv;
+varying float vWave;
+void main(){
+  vUv = uv;
+  vec3 p = position;
+  float w = sin(p.x * 2.2 + uTime * 2.0 + uSeed * 6.283) * 0.09
+          + sin(p.y * 4.0 + uTime * 1.3 + uSeed * 3.0) * 0.03;
+  p.z += w + p.x * p.x * 0.06 * sin(uSeed * 10.0);
+  vWave = 0.5 + w * 4.0;
+  gl_Position = projectionMatrix * modelViewMatrix * vec4(p, 1.0);
+}`;
+const billFrag = `
+uniform float uTime;
+uniform float uBurn;
+uniform float uSeed;
+uniform float uGreen;
+uniform sampler2D uMap;
+varying vec2 vUv;
+varying float vWave;
+void main(){
+  vec2 uv = vUv;
+  float asp = 2.31;
+  vec2 q = vec2(uv.x * asp, uv.y);
+  float dEdge = min(min(uv.x, 1.0 - uv.x) * asp, min(uv.y, 1.0 - uv.y));
+
+  // $100 artwork is painted once into a canvas texture (see makeBillTexture)
+  vec2 tuv = gl_FrontFacing ? uv : vec2(1.0 - uv.x, uv.y);
+  float paperN = snoise(vec3(q * 9.0, uSeed)) * 0.5 + 0.5;
+  vec3 col = texture2D(uMap, tuv).rgb * (0.64 + 0.16 * paperN);
+  col *= gl_FrontFacing ? 1.0 : 0.72;
+  col *= 0.75 + 0.32 * vWave;
+
+  float n = fbm(vec3(q * 2.2, uSeed * 7.0 + uTime * 0.06)) * 0.5 + 0.5;
+  float edgeF = 1.0 - smoothstep(0.0, 0.5, dEdge);
+  float field = n * 0.55 + edgeF * 0.45;
+  float b = field - (1.0 - uBurn);
+  if (b > 0.0) discard;
+
+  vec3 glow = mix(vec3(1.0, 0.38, 0.06), vec3(1.0, 0.78, 0.3), uGreen);
+  vec3 hot  = mix(vec3(1.0, 0.92, 0.65), vec3(0.75, 1.0, 0.8), uGreen * 0.7);
+  float charA = smoothstep(-0.17, -0.05, b);
+  col = mix(col, vec3(0.03, 0.02, 0.012), charA);
+  float g = smoothstep(-0.055, 0.0, b);
+  float flick = 0.8 + 0.2 * sin(uTime * 12.0 + uv.x * 30.0 + uSeed * 9.0);
+  col = mix(col, glow * 2.8 * flick, g);
+  col += hot * smoothstep(-0.012, 0.0, b) * 2.2;
+  gl_FragColor = vec4(col, 1.0);
+}`;
+
+/* --- Final composite: keeps canvas transparent so CSS gradients stay visible --- */
+const FinalShader = {
+  uniforms: {
+    tDiffuse: { value: null },
+    tScene: { value: null },
+    uAberr: { value: 0 }
+  },
+  vertexShader: `
+varying vec2 vUv;
+void main(){ vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }`,
+  fragmentShader: `
+uniform sampler2D tDiffuse;
+uniform sampler2D tScene;
+uniform float uAberr;
+varying vec2 vUv;
+void main(){
+  vec2 dir = vUv - 0.5;
+  float k = uAberr * dot(dir, dir) * 4.0;
+  vec4 c = texture2D(tDiffuse, vUv);
+  float r = texture2D(tDiffuse, vUv + dir * k).r;
+  float b = texture2D(tDiffuse, vUv - dir * k).b;
+  vec3 col = vec3(r, c.g, b);
+  float sa = texture2D(tScene, vUv).a;
+  float a = clamp(max(sa, max(col.r, max(col.g, col.b))), 0.0, 1.0);
+  gl_FragColor = vec4(min(col, vec3(a)), a);
+}`
+};
+
+/* =========================================================
+   4. THREE.JS SCENE
+   ========================================================= */
+let renderer = null;
+try {
+  renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('webgl'), antialias: true, alpha: true, powerPreference: 'high-performance' });
+} catch (e) { console.warn('WebGL not available', e); }
+
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(45, innerWidth / innerHeight, 0.1, 200);
+const PIXEL = Math.min(window.devicePixelRatio || 1, 1.5);
+if (renderer) {
+  renderer.setPixelRatio(PIXEL);
+  renderer.setSize(innerWidth, innerHeight);
+  renderer.setClearColor(0x000000, 0);
+}
+
+// Camera spline
+const curve = new THREE.CatmullRomCurve3([
+  new THREE.Vector3(0.0, 0.0, 9.0),
+  new THREE.Vector3(0.8, 0.3, 5.5),
+  new THREE.Vector3(3.1, 0.4, 1.0),
+  new THREE.Vector3(2.4, -0.5, -5.0),
+  new THREE.Vector3(-1.5, 0.4, -12.0),
+  new THREE.Vector3(-2.2, 0.9, -20.0),
+  new THREE.Vector3(0.5, -0.2, -28.0),
+  new THREE.Vector3(1.2, 0.3, -36.0),
+  new THREE.Vector3(0.0, 0.0, -44.0),
+  new THREE.Vector3(0.0, 0.1, -52.0)
+], false, 'catmullrom', 0.5);
+
+/* ---------- Diploma ---------- */
+const dipShared = { uTime: { value: 0 }, uBurn: { value: state.burn } };
+function dipMaterial(vert, mode, a, b) {
+  return new THREE.ShaderMaterial({
+    uniforms: {
+      uTime: dipShared.uTime, uBurn: dipShared.uBurn,
+      uMode: { value: mode },
+      uColA: { value: new THREE.Color(a[0], a[1], a[2]) },
+      uColB: { value: new THREE.Color(b[0], b[1], b[2]) },
+      uLen: { value: DIP.LEN }, uR0: { value: DIP.R0 }, uGap: { value: DIP.GAP },
+      uTurns: { value: DIP.TURNS }, uRoll: { value: DIP.ROLL }, uFlap: { value: DIP.FLAP }, uBeta: { value: DIP.BETA }
+    },
+    vertexShader: NOISE + vert,
+    fragmentShader: NOISE + BURN_FIELD + diplomaFrag,
+    side: THREE.DoubleSide,
+    extensions: { derivatives: true }
+  });
+}
+const dipGroup = new THREE.Group();
+const dipInner = new THREE.Group();
+dipGroup.add(dipInner);
+dipInner.rotation.z = -0.16;
+dipGroup.scale.setScalar(1.3);
+
+scene.add(dipGroup);
+
+/* ---------- GLB loading (fetch over http, embedded base64 over file://) ---------- */
+function b64ToBuffer(b64) {
+  const bin = atob(b64);
+  const out = new Uint8Array(bin.length);
+  for (let i = 0; i < bin.length; i++) out[i] = bin.charCodeAt(i);
+  return out.buffer;
+}
+function loadGLB(name) {
+  return new Promise((resolve, reject) => {
+    if (!THREE.GLTFLoader) return reject(new Error('GLTFLoader missing'));
+    const loader = new THREE.GLTFLoader();
+    const inline = () => {
+      const data = window.MODELS_INLINE && window.MODELS_INLINE[name];
+      if (!data) return reject(new Error('Model not found: ' + name));
+      loader.parse(b64ToBuffer(data), '', resolve, reject);
+    };
+    if (location.protocol === 'file:') return inline();
+    loader.load('models/' + name + '.glb', resolve, undefined, inline);
+  });
+}
+function meshesByName(gltf) {
+  const map = {};
+  gltf.scene.traverse(o => { if (o.isMesh) map[o.name] = o; });
+  return map;
+}
+
+// diploma.glb → Paper / Ribbon / Seal, each re-skinned with the burn shader
+const DIP_SKIN = {
+  Paper:  [diplomaVert, 0, [0.7, 0.6, 0.43], [0.82, 0.73, 0.54]],
+  Ribbon: [simpleVert, 1, [0.42, 0.03, 0.04], [0.58, 0.06, 0.06]],
+  Seal:   [simpleVert, 2, [0.4, 0.03, 0.03], [0.62, 0.08, 0.05]]
+};
+const diplomaReady = loadGLB('diploma').then(gltf => {
+  const parts = meshesByName(gltf);
+  Object.keys(DIP_SKIN).forEach(name => {
+    const src = parts[name];
+    if (!src) return;
+    const [vert, mode, a, b] = DIP_SKIN[name];
+    const mesh = new THREE.Mesh(src.geometry, dipMaterial(vert, mode, a, b));
+    mesh.name = name;
+    mesh.frustumCulled = false;
+    dipInner.add(mesh);
+  });
+});
+
+// same parametric constants the model was built with (used to seed sparks on the sheet)
+const rEnd = DIP.R0 + DIP.GAP * DIP.TURNS;
+const T = new THREE.Vector3(0, -Math.cos(DIP.BETA), Math.sin(DIP.BETA));
+const Nf = new THREE.Vector3(0, T.z, -T.y);
+const E0 = new THREE.Vector3(0, rEnd * Math.sin(DIP.BETA), rEnd * Math.cos(DIP.BETA));
+
+// sample points on the sheet for sparks (same parametric formula as the shader)
+function sheetPoint(u, v, out) {
+  const ax = (v - 0.5) * DIP.LEN;
+  const thMax = DIP.TURNS * TAU;
+  if (u <= DIP.ROLL) {
+    const th = (u / DIP.ROLL) * thMax;
+    const r = DIP.R0 + DIP.GAP * th / TAU;
+    const b = DIP.BETA + (thMax - th);
+    out.set(ax, r * Math.sin(b), r * Math.cos(b));
+  } else {
+    const s = (u - DIP.ROLL) / (1 - DIP.ROLL) * DIP.FLAP;
+    out.set(ax, 0, 0).add(E0).setX(ax).addScaledVector(T, s).addScaledVector(Nf, s * s * 0.06);
+  }
+  return out;
+}
+const SPARKS = isTouch ? 900 : 2000;
+const sGeo = new THREE.BufferGeometry();
+const sOrigin = new Float32Array(SPARKS * 3);
+const sSeed = new Float32Array(SPARKS);
+const sp = new THREE.Vector3();
+const rotZ = new THREE.Matrix4().makeRotationZ(dipInner.rotation.z);
+for (let i = 0; i < SPARKS; i++) {
+  const u = Math.random() < 0.55 ? 0.55 + Math.random() * 0.45 : Math.random();
+  sheetPoint(u, 0.02 + Math.random() * 0.96, sp).applyMatrix4(rotZ);
+  sOrigin[i * 3] = sp.x; sOrigin[i * 3 + 1] = sp.y; sOrigin[i * 3 + 2] = sp.z;
+  sSeed[i] = Math.random();
+}
+sGeo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(SPARKS * 3), 3));
+sGeo.setAttribute('aOrigin', new THREE.BufferAttribute(sOrigin, 3));
+sGeo.setAttribute('aSeed', new THREE.BufferAttribute(sSeed, 1));
+const sparkUniforms = { uTime: dipShared.uTime, uBurn: dipShared.uBurn, uPixel: { value: PIXEL }, uModel: { value: dipGroup.matrixWorld } };
+const sparks = new THREE.Points(sGeo, new THREE.ShaderMaterial({
+  uniforms: sparkUniforms,
+  vertexShader: NOISE + BURN_FIELD.replace('burnField(vec3 p)', 'burnFieldRaw(vec3 p)') + `
+  float burnField(vec3 p){
+    // sparks are sampled in the rotated frame — undo the z tilt before evaluating
+    float c = cos(${(-dipInner.rotation.z).toFixed(5)}), s = sin(${(-dipInner.rotation.z).toFixed(5)});
+    vec3 q = vec3(c * p.x - s * p.y, s * p.x + c * p.y, p.z);
+    return burnFieldRaw(q);
+  }` + sparkVert,
+  fragmentShader: sparkFrag,
+  transparent: true,
+  depthWrite: false,
+  blending: THREE.AdditiveBlending
+}));
+sparks.frustumCulled = false;
+scene.add(sparks);
+
+/* ---------- Ash particles along the spline ---------- */
+const PCOUNT = isTouch ? 1400 : 3000;
+const pGeo = new THREE.BufferGeometry();
+const pPos = new Float32Array(PCOUNT * 3);
+const pSeed = new Float32Array(PCOUNT);
+const pSize = new Float32Array(PCOUNT);
+const pOff = new Float32Array(PCOUNT);
+const tmpV = new THREE.Vector3();
+for (let i = 0; i < PCOUNT; i++) {
+  curve.getPointAt(Math.random(), tmpV);
+  const ang = Math.random() * TAU;
+  const rad = 0.8 + Math.pow(Math.random(), 0.7) * 10.0;
+  pPos[i * 3]     = tmpV.x + Math.cos(ang) * rad;
+  pPos[i * 3 + 1] = tmpV.y;
+  pPos[i * 3 + 2] = tmpV.z + Math.sin(ang) * rad * 0.6 + (Math.random() - 0.5) * 4;
+  pSeed[i] = Math.random();
+  pSize[i] = 0.4 + Math.pow(Math.random(), 3.0) * 2.4;
+  pOff[i] = Math.random() * 16;
+}
+pGeo.setAttribute('position', new THREE.BufferAttribute(pPos, 3));
+pGeo.setAttribute('aSeed', new THREE.BufferAttribute(pSeed, 1));
+pGeo.setAttribute('aSize', new THREE.BufferAttribute(pSize, 1));
+pGeo.setAttribute('aOff', new THREE.BufferAttribute(pOff, 1));
+const partUniforms = { uTime: dipShared.uTime, uPixel: { value: PIXEL }, uGreen: { value: 0 } };
+const particles = new THREE.Points(pGeo, new THREE.ShaderMaterial({
+  uniforms: partUniforms,
+  vertexShader: partVert,
+  fragmentShader: partFrag,
+  transparent: true,
+  depthWrite: false,
+  blending: THREE.AdditiveBlending
+}));
+particles.frustumCulled = false;
+scene.add(particles);
+
+/* ---------- Bills ---------- */
+// stylised (fictional) $100 note, painted on a canvas
+function makeBillTexture() {
+  const W = 1024, H = 444;
+  const c = document.createElement('canvas');
+  c.width = W; c.height = H;
+  const g = c.getContext('2d');
+  const bg = g.createLinearGradient(0, 0, W, H);
+  bg.addColorStop(0, '#7f9274'); bg.addColorStop(0.5, '#93a383'); bg.addColorStop(1, '#748a6c');
+  g.fillStyle = bg; g.fillRect(0, 0, W, H);
+  const ink = '#16301f', soft = 'rgba(22,48,31,.45)';
+  // guilloche waves
+  g.lineWidth = 1;
+  for (let k = 0; k < 46; k++) {
+    g.strokeStyle = `rgba(22,48,31,${0.10 + (k % 3) * 0.05})`;
+    g.beginPath();
+    for (let x = 40; x <= W - 40; x += 6) {
+      const y = H / 2 + Math.sin(x * 0.012 + k * 0.4) * (40 + k * 3) * Math.cos(x * 0.004 + k * 0.13);
+      x === 40 ? g.moveTo(x, y) : g.lineTo(x, y);
+    }
+    g.stroke();
+  }
+  // frames
+  g.strokeStyle = ink; g.lineWidth = 10; g.strokeRect(22, 22, W - 44, H - 44);
+  g.lineWidth = 2; g.strokeRect(40, 40, W - 80, H - 80);
+  g.strokeStyle = soft; g.strokeRect(48, 48, W - 96, H - 96);
+  // centre medallion
+  g.save(); g.translate(W / 2, H / 2);
+  g.fillStyle = '#6d8266'; g.beginPath(); g.ellipse(0, 0, 120, 150, 0, 0, TAU); g.fill();
+  g.strokeStyle = ink; g.lineWidth = 6; g.beginPath(); g.ellipse(0, 0, 120, 150, 0, 0, TAU); g.stroke();
+  g.lineWidth = 1.2; g.strokeStyle = soft;
+  for (let r = 12; r < 116; r += 8) { g.beginPath(); g.ellipse(0, 0, r, r * 1.25, 0, 0, TAU); g.stroke(); }
+  g.fillStyle = ink; g.font = 'italic 700 150px Georgia, serif'; g.textAlign = 'center'; g.textBaseline = 'middle';
+  g.fillText('$', 0, 8);
+  g.restore();
+  // numerals
+  g.fillStyle = ink; g.textBaseline = 'middle'; g.textAlign = 'center';
+  g.font = '900 104px Georgia, serif';
+  [[150, 108], [W - 150, 108], [150, H - 104], [W - 150, H - 104]].forEach(([x, y]) => g.fillText('100', x, y));
+  g.font = '700 30px Georgia, serif';
+  g.fillText('ONE HUNDRED', W / 2 - 250, H / 2 + 6);
+  g.fillText('SKILLS · NOT PAPER', W / 2 + 268, H / 2 + 6);
+  g.font = '600 17px monospace';
+  g.fillText('VB 19751988 C', W / 2 - 250, H / 2 - 34);
+  g.fillText('SERIES 2026', W / 2 + 268, H / 2 - 34);
+  // seals
+  [[W / 2 - 250, H / 2 + 62], [W / 2 + 268, H / 2 + 62]].forEach(([x, y], i) => {
+    g.strokeStyle = i ? '#1f4a33' : '#3a2f12'; g.lineWidth = 3;
+    g.beginPath(); g.arc(x, y, 26, 0, TAU); g.stroke();
+    g.beginPath(); g.arc(x, y, 18, 0, TAU); g.stroke();
+  });
+  const tex = new THREE.CanvasTexture(c);
+  tex.anisotropy = renderer ? renderer.capabilities.getMaxAnisotropy() : 1;
+  return tex;
+}
+const billTex = makeBillTexture();
+
+const billBaseMat = new THREE.ShaderMaterial({
+  uniforms: { uTime: { value: 0 }, uBurn: { value: 0.2 }, uSeed: { value: 0 }, uGreen: { value: 0 }, uMap: { value: billTex } },
+  vertexShader: billVert,
+  fragmentShader: NOISE + billFrag,
+  side: THREE.DoubleSide
+});
+const bills = [];
+const CLUSTER = curve.getPointAt(0.985).clone().add(new THREE.Vector3(0, 0, -3));
+const STACK_POS = curve.getPointAt(0.8).clone();
+const burstCenter = new THREE.Vector3();
+const DRIFT_N = isTouch ? 10 : 16;
+const BURST_N = isTouch ? 24 : 44;
+const rand = (a, b) => a + Math.random() * (b - a);
+
+// money.glb → Bill (instanced as flying notes) + StackFaces / StackSides / Band (the bundle that explodes)
+const stackGroup = new THREE.Group();
+stackGroup.visible = false;
+scene.add(stackGroup);
+const moneyReady = loadGLB('money').then(gltf => {
+  const parts = meshesByName(gltf);
+  const billGeo = parts.Bill.geometry;
+
+  const faces = new THREE.Mesh(parts.StackFaces.geometry, new THREE.MeshBasicMaterial({ map: billTex, color: 0xc8c8c8, side: THREE.DoubleSide }));
+  const sides = new THREE.Mesh(parts.StackSides.geometry, new THREE.ShaderMaterial({
+    side: THREE.DoubleSide,
+    vertexShader: 'varying vec2 vUv; void main(){ vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }',
+    fragmentShader: `varying vec2 vUv;
+      void main(){
+        float l = fract(vUv.y * 64.0);
+        float line = smoothstep(0.0, 0.35, l) * smoothstep(1.0, 0.65, l);
+        vec3 c = mix(vec3(0.12, 0.17, 0.12), vec3(0.5, 0.56, 0.45), line);
+        c *= 0.82 + 0.18 * sin(vUv.x * 46.0 + floor(vUv.y * 64.0) * 1.7);
+        gl_FragColor = vec4(c, 1.0);
+      }`
+  }));
+  const band = new THREE.Mesh(parts.Band.geometry, new THREE.MeshBasicMaterial({ color: 0x6b5a2c, side: THREE.DoubleSide }));
+  stackGroup.add(faces, sides, band);
+
+  buildBills(billGeo);
+});
+
+function buildBills(billGeo) {
+for (let i = 0; i < DRIFT_N + BURST_N; i++) {
+  const kind = i < DRIFT_N ? 'drift' : 'burst';
+  const mat = billBaseMat.clone();
+  mat.uniforms.uMap.value = billTex;
+  const seed = Math.random();
+  mat.uniforms.uSeed.value = seed * 10.0;
+  const mesh = new THREE.Mesh(billGeo, mat);
+  const b = { mesh, kind, seed, base: new THREE.Vector3(), dir: new THREE.Vector3(),
+              spin: new THREE.Vector3(rand(-.4,.4), rand(-.6,.6), rand(-.3,.3)),
+              rotVel: new THREE.Vector3(), axis: new THREE.Vector3(rand(-1,1), rand(-1,1), rand(-1,1)).normalize(),
+              r0: 0, speed: rand(0.6, 1.4) };
+  if (kind === 'drift') {
+    const t = rand(0.14, 0.62);
+    curve.getPointAt(t, b.base);
+    const tan = curve.getTangentAt(t);
+    const side = new THREE.Vector3().crossVectors(tan, new THREE.Vector3(0, 1, 0)).normalize();
+    b.base.addScaledVector(side, (Math.random() < 0.5 ? -1 : 1) * rand(1.6, 4.2));
+    b.base.y += rand(-1.8, 1.8);
+    mesh.scale.setScalar(rand(0.7, 1.15));
+  } else {
+    b.dir.set(rand(-1, 1), rand(-0.8, 0.8), rand(-1, 1)).normalize();
+    b.r0 = rand(0.0, 0.5);
+    mesh.scale.setScalar(rand(0.9, 1.45));
+    mesh.visible = false;
+  }
+  mesh.rotation.set(rand(0, TAU), rand(0, TAU), rand(0, TAU));
+  scene.add(mesh);
+  bills.push(b);
+}
+}
+
+/* ---------- Post-processing: RenderPass → SavePass → UnrealBloomPass → Final ---------- */
+let composer = null, bloomPass = null, finalPass = null, saveRT = null;
+const hasPost = renderer && THREE.EffectComposer && THREE.RenderPass && THREE.UnrealBloomPass && THREE.ShaderPass && THREE.SavePass;
+if (hasPost) {
+  const w = innerWidth, h = innerHeight;
+  const rtOpts = { minFilter: THREE.LinearFilter, magFilter: THREE.LinearFilter, format: THREE.RGBAFormat,
+                   type: renderer.capabilities.isWebGL2 ? THREE.HalfFloatType : THREE.UnsignedByteType };
+  composer = new THREE.EffectComposer(renderer, new THREE.WebGLRenderTarget(w * PIXEL, h * PIXEL, rtOpts));
+  composer.setPixelRatio(PIXEL);
+  composer.setSize(w, h);
+  composer.addPass(new THREE.RenderPass(scene, camera));
+  saveRT = new THREE.WebGLRenderTarget(w * PIXEL, h * PIXEL, { minFilter: THREE.LinearFilter, magFilter: THREE.LinearFilter, format: THREE.RGBAFormat });
+  composer.addPass(new THREE.SavePass(saveRT));
+  bloomPass = new THREE.UnrealBloomPass(new THREE.Vector2(w, h), 1.6, 0.5, 0.2);
+  // soft knee above the 0.2 threshold: lit paper barely glows, fire / sparks (HDR > 1) blaze
+  bloomPass.highPassUniforms.smoothWidth.value = 0.55;
+  composer.addPass(bloomPass);
+  finalPass = new THREE.ShaderPass(FinalShader);
+  finalPass.uniforms.tScene.value = saveRT.texture;
+  composer.addPass(finalPass);
+} else if (renderer) {
+  console.warn('Post-processing scripts missing, rendering without bloom.');
+}
+
+/* =========================================================
+   5. SCROLL CHOREOGRAPHY
+   ========================================================= */
+const tl1 = gsap.timeline({
+  scrollTrigger: { trigger: '#s1', start: 'top top', end: '+=140%', pin: true, scrub: 1 }
+});
+tl1.to('#heroWrap', { scale: 1.25, yPercent: -12, opacity: 0, filter: 'blur(22px)', ease: 'power1.in', duration: 0.7 }, 0)
+   .to('#heroBtn', { scale: 0.5, opacity: 0, ease: 'power2.in', duration: 0.5 }, 0)
+   .to('#s1 .hero-meta, #s1 .hero-label', { opacity: 0, y: -30, ease: 'none', duration: 0.5 }, 0)
+   .to({}, { duration: 0.3 });
+
+gsap.fromTo('#s2Inner', { opacity: 0, y: 140, filter: 'blur(14px)' }, {
+  opacity: 1, y: 0, filter: 'blur(0px)', ease: 'none',
+  scrollTrigger: { trigger: '#s2', start: 'top 90%', end: 'top 10%', scrub: true }
+});
+
+const counter = { p: 0, y: 1975 };
+const pctEl = document.getElementById('pct');
+const yearEl = document.getElementById('year');
+const deltaEl = document.getElementById('delta');
+let lastP = 0, lastY = 1975;
+function renderCounter() {
+  const p = Math.round(counter.p);
+  const y = Math.round(counter.y);
+  if (p !== lastP) {
+    pctEl.textContent = p;
+    gsap.fromTo(pctEl, { y: -6 }, { y: 0, duration: 0.25, ease: 'power2.out', overwrite: true });
+    lastP = p;
+    Sound.tick('pct');
+  }
+  if (y !== lastY) {
+    yearEl.textContent = y;
+    gsap.fromTo(yearEl, { opacity: 0.3 }, { opacity: 1, duration: 0.3, overwrite: true });
+    lastY = y;
+    Sound.tick('year');
+  }
+  rulerTrack.style.transform = `translateX(${-(counter.y - 1975) * YEAR_W}px)`;
+  deltaEl.textContent = '+' + (counter.p / Math.max(counter.y - 1974, 1)).toFixed(2);
+}
+renderCounter();
+
+const tl2 = gsap.timeline({
+  scrollTrigger: { trigger: '#s2', start: 'top top', end: '+=220%', pin: true, scrub: 0.6 }
+});
+tl2.to(counter, { p: 73, y: 1988, duration: 1, ease: 'power1.inOut', onUpdate: renderCounter })
+   .to('#s2Caption', { opacity: 1, y: 0, duration: 0.25 }, 0.75)
+   .to({}, { duration: 0.15 })
+   .to('#s2Wrap', { opacity: 0, scale: 0.9, filter: 'blur(12px)', duration: 0.25, ease: 'power1.in' });
+
+const blurIn = { opacity: 1, filter: 'blur(0px)', yPercent: 0, scale: 1 };
+const tl3 = gsap.timeline({
+  scrollTrigger: { trigger: '#s3', start: 'top top', end: '+=260%', pin: true, scrub: 0.8 }
+});
+tl3.fromTo('#s3Label', { opacity: 0 }, { opacity: 1, duration: 0.1 })
+   .fromTo('#l1 .w', { opacity: 0, filter: 'blur(24px)', yPercent: 45 },
+           { ...blurIn, stagger: 0.08, duration: 0.3, ease: 'power2.out' }, 0)
+   .fromTo('#paper', { opacity: 0, filter: 'blur(36px)', scale: 1.35 },
+           { ...blurIn, duration: 0.35, ease: 'power2.out' }, '>-0.1')
+   .to({}, { duration: 0.2 })
+   .to('#l1', { opacity: 0.22, yPercent: -10, filter: 'blur(2px)', duration: 0.3 })
+   .fromTo('#l2 .w', { opacity: 0, filter: 'blur(24px)', yPercent: 45 },
+           { ...blurIn, stagger: 0.08, duration: 0.3, ease: 'power2.out' }, '<')
+   .fromTo('#skills', { opacity: 0, filter: 'blur(44px)', scale: 0.82, letterSpacing: '0.25em' },
+           { opacity: 1, filter: 'blur(0px)', scale: 1, letterSpacing: '-0.02em', duration: 0.45, ease: 'power3.out' })
+   .to({}, { duration: 0.3 });
+
+ScrollTrigger.create({
+  trigger: '#s3', start: 'top 95%', end: 'top 5%',
+  onUpdate: self => { state.greenTarget = self.progress; }
+});
+
+gsap.fromTo('#s4 .w', { opacity: 0, filter: 'blur(20px)', yPercent: 50 }, {
+  opacity: 1, filter: 'blur(0px)', yPercent: 0, stagger: 0.06, ease: 'none',
+  scrollTrigger: { trigger: '#s4', start: 'top 85%', end: 'top 15%', scrub: true }
+});
+
+const st1 = tl1.scrollTrigger, st2 = tl2.scrollTrigger, st3 = tl3.scrollTrigger;
+let camKeys = [[0, 0], [1, 1]];
+function buildKeys() {
+  const max = ScrollTrigger.maxScroll(window) || 1;
+  camKeys = [[0, 0], [st1.start + (st1.end - st1.start) * 0.35, 0.02], [st1.end, 0.2], [st2.start, 0.3], [st2.end, 0.56],
+             [st3.start, 0.66], [st3.end, 0.95], [max, 1]];
+}
+ScrollTrigger.addEventListener('refresh', buildKeys);
+buildKeys();
+function mapScroll(y) {
+  for (let i = 0; i < camKeys.length - 1; i++) {
+    const [y0, v0] = camKeys[i], [y1, v1] = camKeys[i + 1];
+    if (y <= y1) return lerp(v0, v1, clamp((y - y0) / Math.max(y1 - y0, 1), 0, 1));
+  }
+  return 1;
+}
+
+/* =========================================================
+   6. HUD, CURSOR, BUTTONS
+   ========================================================= */
+const hudPct = document.getElementById('hudPct');
+const hudSec = document.getElementById('hudSec');
+const hudSecName = document.getElementById('hudSecName');
+const progressFill = document.getElementById('progressFill');
+const coordsEl = document.getElementById('coords');
+const fpsEl = document.getElementById('fps');
+const fovEl = document.getElementById('fov');
+const barEls = [...document.querySelectorAll('#bars i')];
+const bgGreen = document.getElementById('bgGreen');
+const SEC_NAMES = ['The Diploma', 'The Math', 'The Market', 'The Way Out'];
+const root = document.documentElement;
+
+const cursorDot = document.getElementById('cursorDot');
+const cursorRing = document.getElementById('cursorRing');
+const setDotX = gsap.quickSetter(cursorDot, 'x', 'px');
+const setDotY = gsap.quickSetter(cursorDot, 'y', 'px');
+const setRingX = gsap.quickSetter(cursorRing, 'x', 'px');
+const setRingY = gsap.quickSetter(cursorRing, 'y', 'px');
+const mouse = { x: innerWidth / 2, y: innerHeight / 2 };
+const ring = { x: mouse.x, y: mouse.y };
+
+window.addEventListener('pointermove', e => {
+  mouse.x = e.clientX; mouse.y = e.clientY;
+  setDotX(mouse.x); setDotY(mouse.y);
+  state.tmx = (e.clientX / innerWidth) * 2 - 1;
+  state.tmy = (e.clientY / innerHeight) * 2 - 1;
+}, { passive: true });
+
+document.querySelectorAll('[data-hover]').forEach(el => {
+  const magnetic = el.classList.contains('round-btn');
+  el.addEventListener('mouseenter', () => cursorRing.classList.add('hover'));
+  el.addEventListener('mouseleave', () => {
+    cursorRing.classList.remove('hover');
+    if (magnetic) gsap.to(el, { x: 0, y: 0, duration: 0.8, ease: 'elastic.out(1, 0.4)' });
+  });
+  if (magnetic) el.addEventListener('mousemove', e => {
+    const r = el.getBoundingClientRect();
+    const dx = e.clientX - (r.left + r.width / 2);
+    const dy = e.clientY - (r.top + r.height / 2);
+    gsap.to(el, { x: dx * 0.35, y: dy * 0.35, duration: 0.4, ease: 'power3.out' });
+  });
+});
+
+document.getElementById('heroBtn').addEventListener('click', () => {
+  const target = st2.start + (st2.end - st2.start) * 0.02;
+  lenis ? lenis.scrollTo(target, { duration: 3 }) : window.scrollTo({ top: target, behavior: 'smooth' });
+});
+document.getElementById('topBtn').addEventListener('click', () => {
+  lenis ? lenis.scrollTo(0, { duration: 3 }) : window.scrollTo({ top: 0, behavior: 'smooth' });
+});
+
+const FIRE_A = [255, 106, 43], GREEN_A = [232, 195, 106];
+const FIRE_B = [255, 210, 154], GREEN_B = [38, 216, 154];
+const mixRGB = (a, b, t) => `rgb(${a.map((v, i) => Math.round(lerp(v, b[i], t))).join(',')})`;
+
+/* =========================================================
+   7. RENDER LOOP
+   ========================================================= */
+const clock = new THREE.Clock();
+const camPos = new THREE.Vector3(), camLook = new THREE.Vector3(), focusPos = new THREE.Vector3(0, 0, 0);
+let spinVel = 0, dipSpin = 0, frame = 0, fpsFrames = 0, fpsTime = 0, lastGreen = -1, prevBurn = state.burn, wasExploded = false;
+const BASE_FOV = 45;
+
+function tick() {
+  const dt = Math.min(clock.getDelta(), 0.05);
+  const t = clock.elapsedTime;
+  frame++;
+
+  // --- scroll state ---
+  const y = window.scrollY;
+  const max = ScrollTrigger.maxScroll(window) || 1;
+  const prog = clamp(y / max, 0, 1);
+  state.camTarget = mapScroll(y);
+  state.camT = lerp(state.camT, state.camTarget, Math.min(1, dt * 3.5));
+  state.green = lerp(state.green, state.greenTarget, Math.min(1, dt * 3));
+  state.burst = lerp(state.burst, st3 ? st3.progress : 0, Math.min(1, dt * 3));
+  state.burn = lerp(state.burn, 0.2 + (st1 ? st1.progress : 0) * 1.05, Math.min(1, dt * 3));
+  state.mx = lerp(state.mx, state.tmx, Math.min(1, dt * 2.5));
+  state.my = lerp(state.my, state.tmy, Math.min(1, dt * 2.5));
+  const v = lenis ? lenis.velocity : 0;
+  state.vel = lerp(state.vel, v, 0.12);
+  const speed = Math.abs(state.vel);
+
+  // --- section index ---
+  const vh = innerHeight;
+  let sec = 0;
+  if (y > st1.end + vh * 0.5) sec = 1;
+  if (y > st2.end + vh * 0.5) sec = 2;
+  if (y > st3.end + vh * 0.3) sec = 3;
+  if (sec !== state.section) {
+    state.section = sec;
+    hudSec.textContent = '0' + (sec + 1);
+    hudSecName.textContent = SEC_NAMES[sec];
+    gsap.fromTo([hudSec, hudSecName], { opacity: 0 }, { opacity: 1, duration: 0.5, stagger: 0.05 });
+  }
+
+  // --- HUD ---
+  hudPct.textContent = String(Math.round(prog * 100)).padStart(3, '0');
+  progressFill.style.transform = `scaleY(${prog})`;
+  for (let i = 0; i < barEls.length; i++) {
+    const h = 0.25 + Math.abs(Math.sin(t * (2 + i * 0.7) + i)) * 0.35 + Math.min(speed * 0.03, 0.4);
+    barEls[i].style.transform = `scaleY(${Math.min(h, 1) * 3.3})`;
+  }
+  fpsFrames++; fpsTime += dt;
+  if (fpsTime > 0.5) { fpsEl.textContent = Math.round(fpsFrames / fpsTime); fpsFrames = 0; fpsTime = 0; }
+
+  // --- colours ---
+  if (Math.abs(state.green - lastGreen) > 0.002) {
+    lastGreen = state.green;
+    bgGreen.style.opacity = state.green.toFixed(3);
+    root.style.setProperty('--accent', mixRGB(FIRE_A, GREEN_A, state.green));
+    root.style.setProperty('--accent-2', mixRGB(FIRE_B, GREEN_B, state.green));
+  }
+
+  // --- cursor ring ---
+  ring.x = lerp(ring.x, mouse.x, Math.min(1, dt * 9));
+  ring.y = lerp(ring.y, mouse.y, Math.min(1, dt * 9));
+  setRingX(ring.x); setRingY(ring.y);
+
+  // --- sound ---
+  const burnRate = Math.abs(state.burn - prevBurn) / Math.max(dt, 0.001);
+  prevBurn = state.burn;
+  const fireAlive = state.burn < 1.2 && state.section === 0;
+  Sound.crackle(fireAlive ? Math.min(0.06 + burnRate * 0.9, 0.7) : 0);
+  Sound.update(state.vel, state.green);
+
+  if (!renderer) return;
+
+  // --- camera: spline + warp FOV + breathing + cinematic mouse tilt ---
+  const ct = clamp(state.camT, 0, 0.995);
+  curve.getPointAt(ct, camPos);
+  curve.getPointAt(Math.min(ct + 0.035, 1), camLook);
+  const focus = 1 - THREE.MathUtils.smoothstep(ct, 0.0, 0.2);
+  camLook.lerp(focusPos, focus);
+  camera.position.copy(camPos);
+  camera.lookAt(camLook);
+  camera.translateX(state.mx * 0.7 + Math.sin(t * 0.63) * 0.05 + Math.sin(t * 1.37) * 0.02);
+  camera.translateY(-state.my * 0.45 + Math.sin(t * 0.91 + 1.3) * 0.04);
+  camera.lookAt(camLook);
+  camera.rotateZ(-state.mx * 0.09 + Math.sin(t * 0.47) * 0.014 + clamp(state.vel * 0.0015, -0.05, 0.05));
+  camera.rotateX(-state.my * 0.025 + Math.sin(t * 0.71) * 0.006);
+
+  const targetFov = BASE_FOV + Math.min(speed * 0.55, 30);
+  state.fov = lerp(state.fov, targetFov, Math.min(1, dt * (targetFov > state.fov ? 4 : 2)));
+  if (Math.abs(camera.fov - state.fov) > 0.01) {
+    camera.fov = state.fov;
+    camera.updateProjectionMatrix();
+  }
+
+  if (frame % 4 === 0) {
+    const p = camera.position;
+    coordsEl.textContent = `X ${p.x.toFixed(2)} Y ${p.y.toFixed(2)} Z ${p.z.toFixed(2)}`;
+    fovEl.textContent = Math.round(state.fov);
+  }
+
+  // --- diploma ---
+  dipShared.uTime.value = t;
+  dipShared.uBurn.value = state.burn;
+  spinVel = lerp(spinVel, state.vel * 0.04, 0.06);
+  dipSpin += dt * spinVel;
+  dipGroup.rotation.set(0.32 + Math.sin(t * 0.33) * 0.05, 0.38 + Math.sin(t * 0.21) * 0.22 + dipSpin, 0);
+  dipGroup.position.y = Math.sin(t * 0.8) * 0.06;
+  const dipAlive = state.burn < 1.3;
+  dipGroup.visible = dipAlive;
+  sparks.visible = state.burn < 1.6;
+
+  // --- particles ---
+  partUniforms.uGreen.value = state.green;
+
+  // --- bills ---
+  const BURST_AT = 0.05;                                   // s3 progress at which the bundle blows up
+  const bp = clamp((state.burst - BURST_AT) / (1 - BURST_AT), 0, 1);
+  const e = 1 - Math.pow(1 - bp, 3);
+  burstCenter.lerpVectors(STACK_POS, CLUSTER, e);
+  const exploded = state.burst > BURST_AT;
+  if (exploded && !wasExploded) Sound.boom();
+  wasExploded = exploded;
+  stackGroup.visible = !exploded && state.camT > 0.4;
+  if (stackGroup.visible) {
+    const pre = clamp(state.burst / BURST_AT, 0, 1);       // swell + shake right before the blast
+    stackGroup.position.copy(STACK_POS);
+    stackGroup.position.y += Math.sin(t * 0.9) * 0.12;
+    stackGroup.position.x += (Math.random() - 0.5) * 0.06 * pre;
+    stackGroup.rotation.set(0.5 + Math.sin(t * 0.4) * 0.1, t * 0.35 + spinVel * 0.5, 0.2);
+    stackGroup.scale.setScalar(1.7 * (1 + pre * 0.25));
+  }
+  const flash = Math.exp(-Math.pow((state.burst - BURST_AT - 0.02) / 0.035, 2));
+  for (let i = 0; i < bills.length; i++) {
+    const b = bills[i];
+    const m = b.mesh;
+    const u = m.material.uniforms;
+    b.rotVel.addScaledVector(b.axis, state.vel * 0.0009);
+    b.rotVel.multiplyScalar(0.965);
+    u.uTime.value = t;
+    u.uGreen.value = state.green;
+    if (b.kind === 'drift') {
+      m.position.set(
+        b.base.x + Math.sin(t * 0.4 + b.seed * 20) * 0.4,
+        b.base.y + Math.sin(t * 0.6 + b.seed * 10) * 0.35,
+        b.base.z + Math.cos(t * 0.3 + b.seed * 5) * 0.3
+      );
+      m.rotation.x += (b.spin.x + b.rotVel.x) * dt;
+      m.rotation.y += (b.spin.y + b.rotVel.y) * dt;
+      m.rotation.z += (b.spin.z + b.rotVel.z) * dt;
+      u.uBurn.value = 0.22 + 0.28 * (0.5 + 0.5 * Math.sin(t * 0.22 + b.seed * 6.28)) + state.green * 0.25;
+    } else {
+      const dist = b.r0 + e * 13 * b.speed;
+      m.position.set(
+        burstCenter.x + b.dir.x * dist + Math.sin(t * 0.5 + b.seed * 9) * 0.25 * e,
+        burstCenter.y + b.dir.y * dist * 0.8 + Math.sin(t * 0.7 + b.seed * 4) * 0.25 * e,
+        burstCenter.z + b.dir.z * dist + e * 7
+      );
+      const spd = 1 + e * 2.5;
+      m.rotation.x += (b.spin.x * spd + b.rotVel.x) * dt;
+      m.rotation.y += (b.spin.y * spd + b.rotVel.y) * dt;
+      m.rotation.z += (b.spin.z * spd + b.rotVel.z) * dt;
+      u.uBurn.value = 0.06 + e * 0.32 + 0.05 * Math.sin(t * 0.5 + b.seed * 6.28);
+      m.visible = exploded;
+    }
+  }
+
+  // --- render ---
+  if (composer) {
+    bloomPass.strength = 1.6 + Math.min(speed * 0.012, 0.6) + flash * 1.4;
+    finalPass.uniforms.uAberr.value = Math.min(speed * 0.0006, 0.02);
+    composer.render(dt);
+  } else {
+    renderer.render(scene, camera);
+  }
+}
+gsap.ticker.add(tick);
+
+window.addEventListener('resize', () => {
+  camera.aspect = innerWidth / innerHeight;
+  camera.updateProjectionMatrix();
+  if (renderer) renderer.setSize(innerWidth, innerHeight);
+  if (composer) {
+    composer.setSize(innerWidth, innerHeight);
+    saveRT.setSize(innerWidth * PIXEL, innerHeight * PIXEL);
+  }
+});
+
+/* =========================================================
+   8. INTRO / LOADER
+   ========================================================= */
+gsap.set('#heroBig .ch', { opacity: 0, yPercent: 60, filter: 'blur(18px)', rotate: 6 });
+gsap.set('.hero-top span', { opacity: 0, yPercent: 100 });
+gsap.set('#heroBtn', { scale: 0, opacity: 0 });
+
+const load = { v: 0 };
+const loadNum = document.getElementById('loadNum');
+const loadBar = document.getElementById('loadBar');
+const fontsReady = (document.fonts && document.fonts.ready) ? document.fonts.ready : Promise.resolve();
+const modelsReady = Promise.all([diplomaReady, moneyReady]).catch(err => console.error('Model loading failed:', err));
+
+gsap.to(load, {
+  v: 100, duration: 1.6, ease: 'power2.inOut',
+  onUpdate: () => {
+    loadNum.textContent = String(Math.round(load.v)).padStart(3, '0');
+    loadBar.style.transform = `scaleX(${load.v / 100})`;
+  },
+  onComplete: () => Promise.all([fontsReady, modelsReady]).then(intro)
+});
+
+function intro() {
+  ScrollTrigger.refresh();
+  const tl = gsap.timeline({ onComplete: () => { if (lenis) lenis.start(); } });
+  tl.to('#loader', { yPercent: -100, duration: 1.1, ease: 'expo.inOut' })
+    .set('#loader', { display: 'none' })
+    .to('.hero-top span', { opacity: 1, yPercent: 0, stagger: 0.08, duration: 1, ease: 'expo.out' }, '-=0.45')
+    .to('#heroBig .ch', { opacity: 1, yPercent: 0, filter: 'blur(0px)', rotate: 0, stagger: 0.055, duration: 1.4, ease: 'expo.out' }, '<0.1')
+    .to('#heroBtn', { scale: 1, opacity: 1, duration: 1, ease: 'back.out(1.7)' }, '-=1');
+}
+
+})();
+</script>
+</body>
+</html>
