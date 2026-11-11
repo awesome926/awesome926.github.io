@@ -13,7 +13,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500&family=Noto+Sans+JP:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/site.css">
+
 <script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
@@ -113,7 +113,7 @@
   .badge .ld{ width:6px; height:6px; border-radius:50%; background:#47bb64; box-shadow:0 0 8px #47bb64; animation:blink 1.6s ease-in-out infinite; }
   @keyframes blink{ 50%{ opacity:.35; } }
   .t-hero .line{ display:block; overflow:hidden; padding-bottom:.07em; margin-bottom:-.07em; }
-  .t-hero .line > span{ display:inline-block; }
+  .t-hero .line > span{ display:inline-block; text-wrap:balance; }
   .shimmer{ background:linear-gradient(90deg,#ffffff 0%,#ffffff 30%,#9fd8ff 45%,#d9c2ff 55%,#ffffff 70%,#ffffff 100%); background-size:250% 100%;
     -webkit-background-clip:text; background-clip:text; color:transparent; animation:shim 6s ease-in-out infinite; }
   @keyframes shim{ 0%{ background-position:100% 0; } 60%,100%{ background-position:-50% 0; } }
@@ -318,6 +318,7 @@
   .preload .rail, .preload .topbar, .preload #chips, .preload .hero-content > *, .preload .plate, .preload .hud{ opacity:0; }
   @media (prefers-reduced-motion: reduce){ .plate-float, .halo-glow, .halo-ring, .shimmer, .ping i:first-child{ animation:none; } }
 </style>
+<link rel="stylesheet" href="assets/site.css">
 </head>
 <body>
 
