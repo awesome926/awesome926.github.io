@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ru">
+<html lang="ru" class="preload">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -13,15 +13,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500&family=Noto+Sans+JP:wght@400;500&display=swap" rel="stylesheet">
-<script src="https://cdn.tailwindcss.com/3.4.16"></script>
-<script>
-  tailwind.config = {
-    theme: { extend: {
-      colors: { canvas:'#101011', elev:'#141415', island:'#17181a', rule:'#26272d', action:'#0786ff', up:'#47bb64', muted:'#acadae' },
-      fontFamily: { sans:['Inter','"Noto Sans JP"','system-ui','sans-serif'], mono:['"IBM Plex Mono"','"Noto Sans JP"','ui-monospace','monospace'] }
-    } }
-  };
-</script>
+<link rel="stylesheet" href="assets/site.css">
 <script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
@@ -51,7 +43,7 @@
   :focus-visible{ outline:2px solid rgba(7,134,255,.8); outline-offset:2px; border-radius:8px; }
 
   /* ---------- tokens / type ---------- */
-  .glass{ background:var(--glass); -webkit-backdrop-filter:blur(40px); backdrop-filter:blur(40px); border:1px solid var(--glass-border); }
+  .glass{ background:rgba(255,255,255,.03); border:1px solid var(--glass-border); }
   .eyebrow{ font-family:var(--mono); font-size:12px; line-height:1.4; text-transform:uppercase; letter-spacing:.05em; font-weight:400; }
   .mono{ font-family:var(--mono); }
   .mono-xs{ font-family:var(--mono); font-size:12px; text-transform:uppercase; letter-spacing:.05em; }
@@ -73,7 +65,7 @@
     background:#1c1d20; border:1px solid #26272d; border-radius:8px; padding:5px 9px; font-size:12px; color:#fff; transition:.2s; }
   .rail-btn:hover .tip{ opacity:1; transform:translate(0,-50%); }
   .shell{ margin-left:52px; min-height:100vh; }
-  .topbar{ position:sticky; top:0; z-index:50; height:64px; background:rgba(20,20,21,.78); -webkit-backdrop-filter:blur(40px); backdrop-filter:blur(40px); border-bottom:1px solid #26272d; }
+  .topbar{ position:sticky; top:0; z-index:50; height:64px; background:rgba(20,20,21,.86); -webkit-backdrop-filter:blur(18px) saturate(140%); backdrop-filter:blur(18px) saturate(140%); border-bottom:1px solid #26272d; }
   .search{ height:40px; border-radius:12px; display:flex; align-items:center; gap:10px; padding:0 8px 0 12px; transition:border-color .25s, box-shadow .25s; }
   .search:focus-within{ border-color:rgba(7,134,255,.6); box-shadow:0 0 0 4px rgba(7,134,255,.12); }
   .search input{ background:transparent; outline:none; flex:1; min-width:0; font-size:14px; color:#fff; }
@@ -134,8 +126,7 @@
   .plate-float{ animation:bob 8s ease-in-out infinite; }
   @keyframes bob{ 0%,100%{ transform:translate3d(0,0,0); } 50%{ transform:translate3d(0,-10px,0); } }
   .plate{ border-radius:14px; padding:8px; position:relative;
-    background:linear-gradient(155deg, rgba(255,255,255,.075), rgba(255,255,255,.015) 45%, rgba(255,255,255,.03));
-    -webkit-backdrop-filter:blur(10px); backdrop-filter:blur(10px);
+    background:linear-gradient(155deg, rgba(44,46,56,.86), rgba(20,21,25,.82) 45%, rgba(30,31,38,.84));
     border:1px solid rgba(56,189,248,0.18);
     box-shadow:inset 0 1px 0 rgba(255,255,255,.12), inset 0 0 0 1px rgba(255,255,255,.02), 0 40px 80px -30px rgba(0,0,0,.95), 0 0 46px -14px rgba(56,189,248,.35); }
   .plate.v{ border-color:rgba(168,85,247,0.15); box-shadow:inset 0 1px 0 rgba(255,255,255,.12), 0 40px 80px -30px rgba(0,0,0,.95), 0 0 46px -14px rgba(168,85,247,.4); }
@@ -147,7 +138,7 @@
   .p-art{ position:relative; border-radius:8px; overflow:hidden; background:#000; box-shadow:inset 0 0 0 1px rgba(255,255,255,.06); }
   .p-art canvas{ display:block; width:100%; height:100%; }
   .p-art::after{ content:''; position:absolute; inset:0; pointer-events:none;
-    background:linear-gradient(135deg, rgba(255,255,255,.28), rgba(255,255,255,0) 32%), radial-gradient(120% 80% at 50% 120%, rgba(0,0,0,.5), transparent 60%); mix-blend-mode:screen; }
+    background:linear-gradient(135deg, rgba(255,255,255,.28), rgba(255,255,255,0) 32%), radial-gradient(120% 80% at 50% 120%, rgba(0,0,0,.5), transparent 60%); opacity:.75; }
   .p-art .xh{ position:absolute; inset:0; pointer-events:none; opacity:.5; }
   .slab-meta{ display:flex; justify-content:space-between; padding:8px 3px 1px; font-family:var(--mono); font-size:10px; letter-spacing:.05em; text-transform:uppercase; color:var(--muted); }
   .slab-meta span:last-child{ color:#fff; }
@@ -160,7 +151,7 @@
 
   /* ---------- halo / buttons ---------- */
   .mag-zone{ display:inline-flex; padding:18px; margin:-18px; }
-  .halo-wrap{ position:relative; display:inline-flex; border-radius:9999px; isolation:isolate; will-change:transform; }
+  .halo-wrap{ position:relative; display:inline-flex; border-radius:9999px; isolation:isolate; }
   .halo-glow, .halo-ring{ border-radius:9999px; background:var(--halo); animation:haloSpin 3.4s linear infinite; }
   .halo-glow{ position:absolute; inset:0; z-index:0; filter:blur(16px); opacity:.7; }
   .halo-ring{ position:relative; z-index:1; display:inline-flex; padding:1px; }
@@ -170,7 +161,7 @@
   .btn-primary::before{ content:''; position:absolute; top:0; bottom:0; left:-60%; width:50%; transform:skewX(-20deg);
     background:linear-gradient(90deg, transparent, rgba(255,255,255,.35), transparent); transition:left .7s cubic-bezier(.2,.7,.2,1); }
   .btn-primary:hover::before{ left:120%; }
-  .btn-secondary{ height:48px; padding:0 24px; border-radius:9999px; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,.08); -webkit-backdrop-filter:blur(40px); backdrop-filter:blur(40px);
+  .btn-secondary{ height:48px; padding:0 24px; border-radius:9999px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,.09);
     color:#fff; font-size:15px; font-weight:500; display:inline-flex; align-items:center; gap:10px; white-space:nowrap; transition:background .3s, border-color .3s; will-change:transform; }
   .btn-secondary:hover{ background:rgba(255,255,255,.08); border-color:rgba(255,255,255,.16); }
   .btn-secondary.off{ opacity:.45; cursor:default; }
@@ -179,7 +170,8 @@
   .btn-sm{ height:40px; padding:0 18px; font-size:14px; }
 
   /* ---------- spotlight / glare ---------- */
-  .spot{ position:relative; isolation:isolate; --mouse-x:50%; --mouse-y:50%; --spot-a:.07; --spot-b:rgba(7,134,255,.95); will-change:transform; }
+  .spot{ position:relative; isolation:isolate; --mouse-x:50%; --mouse-y:50%; --spot-a:.07; --spot-b:rgba(7,134,255,.95); }
+  .spot:hover{ will-change:transform; }
   .spot::before{ content:''; position:absolute; inset:0; border-radius:inherit; pointer-events:none; z-index:5; opacity:0; transition:opacity .45s;
     background:radial-gradient(420px circle at var(--mouse-x) var(--mouse-y), rgba(255,255,255,var(--spot-a)), transparent 42%); }
   .spot::after{ content:''; position:absolute; inset:0; border-radius:inherit; padding:1px; pointer-events:none; z-index:6; opacity:0; transition:opacity .45s;
@@ -231,7 +223,7 @@
 
   /* ---------- services ---------- */
   .tag{ font-family:var(--mono); font-size:10px; letter-spacing:.06em; text-transform:uppercase; height:20px; padding:0 7px; display:inline-flex; align-items:center; border-radius:5px; white-space:nowrap;
-    background:rgba(0,0,0,.35); -webkit-backdrop-filter:blur(12px); backdrop-filter:blur(12px); border:1px solid rgba(255,255,255,.1); color:#e8e8e9; }
+    background:rgba(10,10,12,.66); border:1px solid rgba(255,255,255,.1); color:#e8e8e9; }
   .tag.hot{ color:#f5c66b; border-color:rgba(245,198,107,.3); }
   .tag.blue{ color:#7cc4ff; border-color:rgba(124,196,255,.3); }
   .svc-grid{ display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:12px; perspective:1400px; }
@@ -322,6 +314,8 @@
   @media (max-width:420px){ .t-hero{ font-size:30px; } }
   .toast{ position:fixed; left:50%; bottom:28px; z-index:120; transform:translate(-50%, 20px); opacity:0; pointer-events:none;
     height:44px; padding:0 18px; border-radius:9999px; display:flex; align-items:center; gap:10px; background:rgba(20,20,21,.9); border:1px solid #26272d; font-size:14px; white-space:nowrap; }
+  .off .halo-glow, .off .halo-ring, .off .shimmer, .off .plate-float, .off .ping i, .off .ld, .off .caret{ animation-play-state:paused !important; }
+  .preload .rail, .preload .topbar, .preload #chips, .preload .hero-content > *, .preload .plate, .preload .hud{ opacity:0; }
   @media (prefers-reduced-motion: reduce){ .plate-float, .halo-glow, .halo-ring, .shimmer, .ping i:first-child{ animation:none; } }
 </style>
 </head>
@@ -1017,7 +1011,7 @@ const Field = (() => {
     sctx.fillStyle = gr; sctx.fillRect(0, 0, 48, 48);
   }
   function build() {
-    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
     W = stage.clientWidth; H = stage.clientHeight;
     cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     const sp = Math.sqrt(W * H / 2100), cols = Math.floor(W / sp) + 1, rows = Math.floor(H / sp) + 1;
@@ -1152,6 +1146,7 @@ const plateParallax = $$('.plate-par').map(el => {
     rx: gsap.quickTo(el, 'rotationX', { duration: 1.1, ease: 'power3' }), ry: gsap.quickTo(el, 'rotationY', { duration: 1.1, ease: 'power3' }) };
 });
 window.addEventListener('pointermove', e => {
+  if (!Field.visible) return;
   const nx = e.clientX / innerWidth - .5, ny = e.clientY / innerHeight - .5;
   plateParallax.forEach(p => { p.x(nx * 46 * p.depth); p.y(ny * 34 * p.depth); p.ry(nx * 14 * p.depth); p.rx(-ny * 12 * p.depth); });
 });
@@ -1226,7 +1221,7 @@ const caseGrid = $('#caseGrid');
 function renderCases() {
   caseGrid.innerHTML = CASES.map((c, i) => `
     <article class="case spot" data-case="${i}" data-tilt="4">
-      <div class="case-shot"><img src="${c.img}" alt="${esc(c.title)}" loading="lazy" decoding="async">
+      <div class="case-shot"><img src="${c.img}" alt="${esc(c.title)}" width="1200" height="750" loading="lazy" decoding="async">
         <div class="case-top"><span class="tag blue">${esc(L(c.type))}</span><span class="tag">${c.year}</span></div></div>
       <div class="case-body">
         <h3 class="case-title">${esc(c.title)}</h3>
@@ -1384,7 +1379,15 @@ function moveInd(animate) {
   const props = { x: b.offsetLeft - 3, width: b.offsetWidth };
   animate ? gsap.to(langInd, { ...props, duration: .5, ease: 'expo.out' }) : gsap.set(langInd, props);
 }
-function renderAll() { applyStatic(); renderChips(); renderMetrics(); renderCases(); renderServices(); renderReviews(); renderFAQ(); if (modalOpen) fillModal(modalIdx); }
+/* =========================================================
+   OFFSCREEN PAUSING (SVG SMIL + CSS loops)
+   ========================================================= */
+const svgIO = new IntersectionObserver(es => es.forEach(e => { const s = e.target; try { e.isIntersecting ? s.unpauseAnimations() : s.pauseAnimations(); } catch (_) {} }), { rootMargin: '120px' });
+function watchSvgs() { $$('.svc-art svg, .m-thumb svg').forEach(s => { if (!s._io) { s._io = 1; try { s.pauseAnimations(); } catch (_) {} svgIO.observe(s); } }); }
+const offIO = new IntersectionObserver(es => es.forEach(e => e.target.classList.toggle('off', !e.isIntersecting)), { rootMargin: '80px' });
+['#stage', '#contact', '#caseGrid', '#metrics', '#reviews', 'footer'].forEach(sel => { const el = $(sel); if (el) offIO.observe(el); });
+
+function renderAll() { applyStatic(); renderChips(); renderMetrics(); renderCases(); renderServices(); renderReviews(); renderFAQ(); if (modalOpen) fillModal(modalIdx); watchSvgs(); }
 function setLang(l) {
   if (l === LANG || !LANGS.includes(l)) return;
   LANG = l; store.set('lang', l);
@@ -1415,7 +1418,7 @@ gsap.ticker.add((time, deltaMs) => {
 /* =========================================================
    INTRO + SCROLL REVEALS
    ========================================================= */
-const intro = gsap.timeline({ defaults: { ease: 'power3.out' } });
+const intro = gsap.timeline({ paused: true, defaults: { ease: 'power3.out', force3D: true } });
 intro.from('.rail', { x: -52, duration: .8 })
   .from('.topbar', { y: -16, opacity: 0, duration: .7 }, '<.1')
   .from('.chip', { y: 10, opacity: 0, stagger: .05, duration: .5 }, '<.1')
@@ -1426,7 +1429,10 @@ intro.from('.rail', { x: -52, duration: .8 })
   .from('.hero-ctas > *', { y: 16, opacity: 0, stagger: .08, duration: .8 }, '<.1')
   .from('.plate', { opacity: 0, y: 70, scale: .82, duration: 1.5, stagger: .07, ease: 'expo.out' }, '<-.9')
   .from('.hud', { opacity: 0, duration: .8, stagger: .1 }, '<.4');
-if (REDUCED) intro.progress(1);
+let introGo = false;
+const startIntro = () => { if (introGo) return; introGo = true; intro.progress(0); document.documentElement.classList.remove('preload'); REDUCED ? intro.progress(1) : intro.play(0); };
+(document.fonts && document.fonts.ready ? Promise.race([document.fonts.ready, new Promise(r => setTimeout(r, 700))]) : Promise.resolve()).then(() => requestAnimationFrame(startIntro));
+setTimeout(startIntro, 1500);
 
 gsap.utils.toArray('[data-reveal]').forEach(el => gsap.from(el, { y: 30, opacity: 0, duration: 1, ease: 'power3.out', scrollTrigger: { trigger: el, start: 'top 90%', once: true } }));
 gsap.utils.toArray('[data-reveal-group]').forEach(g => gsap.from(g.children, { y: 34, opacity: 0, duration: 1, stagger: .08, ease: 'power3.out', scrollTrigger: { trigger: g, start: 'top 90%', once: true } }));
