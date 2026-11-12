@@ -27,7 +27,7 @@
 <script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-<script src="i18n.js?v=4b2add477d"></script>
+<script src="i18n.js?v=b04f5aeddf"></script>
 <script>setTimeout(function(){document.documentElement.classList.remove("preload")},2500)</script>
 <style>
   :root{
@@ -198,6 +198,74 @@
   .m-thumb svg{ width:100%; height:100%; display:block; }
   .m-thumb.ico{ display:grid; place-items:center; background:radial-gradient(120% 120% at 28% 20%, rgba(var(--c),.30), rgba(var(--c),.07) 55%, rgba(var(--c),.02)), #121316; box-shadow:inset 0 0 0 1px rgba(var(--c),.28), 0 8px 24px -10px rgba(var(--c),.55); }
   .m-thumb.ico svg{ width:24px; height:24px; color:rgb(var(--c)); filter:drop-shadow(0 0 6px rgba(var(--c),.7)); }
+  /* ---- brief builder ---- */
+  .bf{ display:grid; grid-template-columns:minmax(0,1.7fr) minmax(0,1fr); background:#141415; border:1px solid #26272d; border-radius:24px; overflow:clip; position:relative; }
+  .bf::before{ content:''; position:absolute; inset:0 0 auto 0; height:1px; background:linear-gradient(90deg,transparent,rgba(7,134,255,.5),rgba(168,85,247,.5),transparent); pointer-events:none; }
+  .bf-form{ padding:36px 40px 40px; display:flex; flex-direction:column; gap:12px; min-width:0; }
+  .bf-side{ border-left:1px solid #26272d; background:linear-gradient(180deg,rgba(255,255,255,.018),transparent 45%); padding:36px 36px 40px; min-width:0; }
+  .bf-sticky{ position:sticky; top:96px; display:flex; flex-direction:column; gap:12px; }
+  .bf-step{ display:flex; align-items:center; gap:10px; font-family:var(--mono); font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:#8b8c8e; margin-top:16px; }
+  .bf-step:first-child{ margin-top:0; }
+  .bf-step .bf-n{ color:#0786ff; letter-spacing:.05em; }
+  .bf-step .bf-c{ margin-left:auto; letter-spacing:.05em; color:#5f6062; text-transform:none; }
+  .bf-types{ display:grid; grid-template-columns:repeat(auto-fill,minmax(146px,1fr)); gap:8px; }
+  .bf-type{ text-align:left; padding:12px 14px; border-radius:14px; background:rgba(255,255,255,.025); border:1px solid rgba(255,255,255,.07); display:flex; flex-direction:column; gap:7px; color:#fff; cursor:pointer;
+    transition:border-color .25s, background .25s, transform .2s, box-shadow .3s; }
+  .bf-type:hover{ border-color:rgba(255,255,255,.16); background:rgba(255,255,255,.045); }
+  .bf-type:active{ transform:scale(.98); }
+  .bf-type.on{ border-color:rgba(7,134,255,.75); background:rgba(7,134,255,.09); box-shadow:0 0 0 3px rgba(7,134,255,.12), 0 12px 30px -14px rgba(7,134,255,.6); }
+  .bf-t{ font-size:14px; font-weight:500; line-height:1.3; }
+  .bf-p{ font-family:var(--mono); font-size:11px; color:#8b8c8e; display:flex; align-items:center; gap:7px; }
+  .bf-dot{ width:6px; height:6px; border-radius:50%; background:rgb(var(--c)); box-shadow:0 0 8px rgb(var(--c)); flex:none; }
+  .bf-qs{ display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px 12px; }
+  .bf-qs > .bf-step, .bf-qs > .bf-empty{ grid-column:1/-1; }
+  .bf-f{ display:flex; flex-direction:column; gap:8px; min-width:0; }
+  .bf-f label{ font-size:13px; color:#cfd0d1; display:flex; gap:9px; align-items:flex-start; line-height:1.35; cursor:text; }
+  .bf-ck{ width:16px; height:16px; border-radius:5px; border:1px solid rgba(255,255,255,.18); flex:none; display:grid; place-items:center; margin-top:0; transition:background .25s, border-color .25s; }
+  .bf-ck svg{ opacity:0; transform:scale(.5); transition:opacity .25s, transform .3s cubic-bezier(.3,1.6,.5,1); }
+  .bf-f.ok .bf-ck{ background:#0786ff; border-color:#0786ff; } .bf-f.ok .bf-ck svg{ opacity:1; transform:none; }
+  .bf-in{ display:block; width:100%; background:#101011; border:1px solid rgba(255,255,255,.08); border-radius:12px; padding:11px 14px; font:inherit; font-size:14px; line-height:1.45; color:#fff;
+    resize:none; outline:none; min-height:44px; overflow:hidden; transition:border-color .25s, box-shadow .25s; }
+  .bf-in::placeholder{ color:#5a5b5e; }
+  .bf-in:focus{ border-color:rgba(7,134,255,.6); box-shadow:0 0 0 4px rgba(7,134,255,.12); }
+  textarea.bf-in.big{ min-height:72px; }
+  .bf-empty{ border:1px dashed rgba(255,255,255,.1); border-radius:14px; padding:18px 18px; color:#8b8c8e; font-size:14px; line-height:1.5; display:flex; gap:12px; align-items:center; }
+  .bf-empty svg{ flex:none; color:#0786ff; }
+  .bf-row2{ display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:0 28px; }
+  .bf-opts{ display:flex; flex-wrap:wrap; gap:6px; margin-top:12px; }
+  .bf-opt{ height:34px; padding:0 13px; border-radius:9999px; font-size:13px; color:var(--muted); background:rgba(255,255,255,.03); border:1px solid rgba(255,255,255,.08); white-space:nowrap; cursor:pointer;
+    display:inline-flex; align-items:center; transition:color .25s, border-color .25s, background .25s, transform .2s; }
+  .bf-opt:hover{ color:#fff; border-color:rgba(255,255,255,.18); }
+  .bf-opt:active{ transform:scale(.96); }
+  .bf-opt.on{ background:#fff; color:#101011; border-color:#fff; }
+  .bf-opt .x{ font-family:var(--mono); font-size:10px; opacity:.6; margin-left:6px; }
+  .bf-opt:disabled{ opacity:.35; cursor:default; }
+  .bf-price{ font-size:38px; line-height:1.15; font-weight:500; letter-spacing:-.02em; font-variant-numeric:tabular-nums; min-height:44px; display:flex; align-items:center; }
+  .bf-price .bf-bar0{ width:90px; height:8px; border-radius:4px; background:#2d2e33; }
+  .bf-sub{ font-size:14px; color:var(--muted); min-height:22px; display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+  .bf-urg{ font-family:var(--mono); font-size:10px; color:#f5c66b; border:1px solid rgba(245,198,107,.35); border-radius:9999px; padding:2px 8px; }
+  .bf-note{ font-size:12px; color:#6f7072; line-height:1.5; }
+  .bf-line{ height:1px; background:#26272d; margin:6px 0 4px; }
+  .bf-prog{ height:3px; border-radius:3px; background:#26272d; overflow:hidden; }
+  .bf-prog i{ display:block; height:100%; width:0; background:linear-gradient(90deg,#2dd4bf,#38bdf8,#6366f1,#a855f7); transition:width .55s cubic-bezier(.2,.8,.2,1); }
+  .bf-ph{ display:flex; justify-content:space-between; align-items:center; gap:10px; }
+  .bf-chat{ border-radius:16px; padding:14px 12px; border:1px solid rgba(255,255,255,.06); max-height:330px; overflow:auto; overscroll-behavior:contain;
+    background:radial-gradient(120% 80% at 100% 0%, rgba(43,82,120,.28), transparent 60%), radial-gradient(90% 70% at 0% 100%, rgba(99,102,241,.12), transparent 60%), #0e1117; scrollbar-width:thin; }
+  .bf-bubble{ margin-left:auto; max-width:96%; width:fit-content; background:#2b5278; color:#fff; border-radius:16px 16px 5px 16px; padding:9px 12px 22px; font-size:13.5px; line-height:1.5;
+    white-space:pre-wrap; overflow-wrap:anywhere; position:relative; box-shadow:0 8px 24px -12px rgba(0,0,0,.8); }
+  .bf-bubble b{ font-weight:600; color:#bfe0ff; }
+  .bf-bubble .tm{ position:absolute; right:10px; bottom:5px; font-size:11px; color:#8fb6dc; font-family:var(--mono); }
+  .bf-bubble.ph{ background:rgba(255,255,255,.05); color:#7d7e80; padding-bottom:9px; border-radius:16px; margin:0; max-width:none; width:auto; white-space:normal; }
+  .bf-send{ display:flex; width:100%; justify-content:center; margin-top:2px; }
+  .bf-send.off{ filter:saturate(.25) brightness(.65); }
+  .bf-acts{ display:flex; gap:8px; }
+  .bf-acts .btn-secondary{ flex:1; height:38px; font-size:13px; padding:0 14px; justify-content:center; }
+  .bf-hint{ font-size:12px; line-height:1.55; color:#6f7072; }
+  .bf.pulse .bf-types{ animation:bfPulse .9s ease; }
+  @keyframes bfPulse{ 30%{ transform:translateX(-5px); } 60%{ transform:translateX(4px); } }
+  @media (max-width:1024px){ .bf{ grid-template-columns:minmax(0,1fr); } .bf-side{ border-left:0; border-top:1px solid #26272d; } .bf-sticky{ position:static; } }
+  @media (max-width:640px){ .bf-form, .bf-side{ padding:24px 18px 26px; } .bf-qs, .bf-row2{ grid-template-columns:minmax(0,1fr); } .bf-row2{ row-gap:6px; } .bf-types{ grid-template-columns:repeat(2,minmax(0,1fr)); } .bf-price{ font-size:30px; } }
+  @media (prefers-reduced-motion: reduce){ .bf.pulse .bf-types{ animation:none; } }
   .m-thumb.ico svg.rv{ overflow:visible; }
   .rv-h{ transform-box:fill-box; transform-origin:50% 60%; animation:rvBeat 2.6s ease-in-out infinite; }
   .rv-s{ transform-box:fill-box; transform-origin:center; animation:rvSpark 2.6s ease-in-out infinite; }
@@ -369,7 +437,7 @@
   html[data-q="min"] .halo-glow, html[data-q="min"] .shimmer, html[data-q="min"] .ping i:first-child{ animation:none; }
   @media (prefers-reduced-motion: reduce){ .plate-float, .halo-glow, .halo-ring, .shimmer, .ping i:first-child{ animation:none; } }
 </style>
-<link rel="stylesheet" href="assets/site.css?v=4b2add477d">
+<link rel="stylesheet" href="assets/site.css?v=b04f5aeddf">
 </head>
 <body>
 
@@ -385,6 +453,7 @@
   <a href="#top" data-scroll class="rail-btn active"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1v-9.5Z"/></svg><span class="tip" data-i18n="nav_home">Главная</span></a>
   <a href="#work" data-scroll class="rail-btn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="M3 8h18M8 21h8M12 18v3"/></svg><span class="tip" data-i18n="nav_work">Работы</span></a>
   <a href="#services" data-scroll class="rail-btn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg><span class="tip" data-i18n="nav_services">Услуги</span></a>
+  <a href="#brief" data-scroll class="rail-btn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4V3h6v1M9 10h6M9 14h6M9 18h3"/></svg><span class="tip" data-i18n="nav_brief">ТЗ</span></a>
   <a href="#how" data-scroll class="rail-btn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="m12 2 9 5-9 5-9-5 9-5Z"/><path d="m3 12 9 5 9-5"/><path d="m3 17 9 5 9-5"/></svg><span class="tip" data-i18n="nav_process">Как работаю</span></a>
   <a href="#faq" data-scroll class="rail-btn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .9-1 1.6V14M12 17.5v.01"/></svg><span class="tip" data-i18n="nav_faq">Вопросы</span></a>
   <div class="flex-1"></div>
@@ -549,7 +618,7 @@
       <div class="m-thumb ico" style="--c:245,198,107"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.8l2.75 5.57 6.15.9-4.45 4.33 1.05 6.12L12 16.83l-5.5 2.89 1.05-6.12L3.1 9.27l6.15-.9L12 2.8Z"></path></svg></div>
       <div class="min-w-0 flex-1">
         <div class="mono-xs muted truncate">Рейтинг продавца</div>
-        <div class="text-[18px] font-medium mt-1 whitespace-nowrap leading-tight"><span data-count="5" data-dec="1">5.0</span><span class="muted text-[14px]"> / 5</span></div>
+        <div class="text-[18px] font-medium mt-1 whitespace-nowrap leading-tight"><span data-count="5" data-dec="1">1.9</span><span class="muted text-[14px]"> / 5</span></div>
         
       </div>
       <div class="shrink-0 flex flex-col items-end gap-2"><div class="stars"><i></i><i></i><i></i><i></i><i></i></div></div>
@@ -558,7 +627,7 @@
       <div class="m-thumb ico" style="--c:71,187,100"><svg class="rv" viewBox="0 0 24 24" aria-hidden="true"><path class="rv-b" d="M12 3.5c4.7 0 8.5 3.2 8.5 7.3s-3.8 7.3-8.5 7.3c-1 0-2-.15-2.9-.43L4.5 19.5l1.2-3.6C4.3 14.6 3.5 12.8 3.5 10.8 3.5 6.7 7.3 3.5 12 3.5Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"></path><path class="rv-h" d="M12 14.3s-3.7-2.2-3.7-4.7c0-1.2.9-2.1 2-2.1.75 0 1.35.4 1.7.95.35-.55.95-.95 1.7-.95 1.1 0 2 .9 2 2.1 0 2.5-3.7 4.7-3.7 4.7Z" fill="currentColor"></path><circle class="rv-s" cx="19.6" cy="4.4" r="1.15" fill="currentColor"></circle></svg></div>
       <div class="min-w-0 flex-1">
         <div class="mono-xs muted truncate">Отзывы покупателей</div>
-        <div class="text-[18px] font-medium mt-1 whitespace-nowrap leading-tight"><span data-count="40">40</span><span class="muted text-[14px]"> отзывов</span></div>
+        <div class="text-[18px] font-medium mt-1 whitespace-nowrap leading-tight"><span data-count="40">15</span><span class="muted text-[14px]"> отзывов</span></div>
         
       </div>
       <div class="shrink-0 flex flex-col items-end gap-2"><span class="pos-badge">FunPay <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M8 7h9v9"></path></svg></span></div>
@@ -639,133 +708,133 @@
         <div class="mono-xs muted sm:text-right max-w-[420px]" data-i18n="svc_note">Фильтры сверху и поиск «/» работают по этому списку</div>
       </div>
       <div id="svcGrid" class="svc-grid"><article class="svc spot hot" data-cat="discord" data-q="discord-сервер под ключ discord server, turnkey servidor do discord completo discordサーバー構築 каналы и категории, роли и права, оформление, приветствия, тикеты и авто-роли. для кланов, стримеров и сообществ. отсюда приходит больше всего заказов. discord roles permissions ticket tool carl-bot dyno бот bot" data-tilt="3">
-      <div class="svc-art" data-lb="0" role="button" tabindex="0" aria-label="Смотреть скрин"><img src="assets/svc/discord-server.webp?v=4b2add477d" alt="Discord-сервер под ключ" loading="lazy" decoding="async" fetchpriority="low" style="object-position:left center"><div class="case-top"><span class="tag">Discord</span><span class="flex gap-1.5"><span class="tag hot">★ Чаще всего заказывают</span><span class="tag demo">демо</span></span></div><span class="zoom"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"></path></svg></span></div>
+      <div class="svc-art" data-lb="0" role="button" tabindex="0" aria-label="Смотреть скрин"><img src="assets/svc/discord-server.webp?v=b04f5aeddf" alt="Discord-сервер под ключ" loading="lazy" decoding="async" fetchpriority="low" style="object-position:left center"><div class="case-top"><span class="tag">Discord</span><span class="flex gap-1.5"><span class="tag hot">★ Чаще всего заказывают</span><span class="tag demo">демо</span></span></div><span class="zoom"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"></path></svg></span></div>
       <div class="svc-body">
         <h3 class="svc-title">Discord-сервер под ключ</h3>
         <p class="svc-desc">Каналы и категории, роли и права, оформление, приветствия, тикеты и авто-роли. Для кланов, стримеров и сообществ. Отсюда приходит больше всего заказов.</p>
         <div class="svc-price"><span class="v">от 500 ₽</span><span class="u">до 3&nbsp;000 ₽</span></div>
         <div class="chips-s"><span>Roles</span><span>Permissions</span><span>Ticket Tool</span><span>Carl-bot</span><span>Dyno</span></div>
-        <a class="svc-cta" href="https://t.me/kashewars?text=%D0%9F%D1%80%D0%B8%D0%B2%D0%B5%D1%82!%20%D0%A5%D0%BE%D1%87%D1%83%20%D0%B7%D0%B0%D0%BA%D0%B0%D0%B7%D0%B0%D1%82%D1%8C%20%C2%ABDiscord-%D1%81%D0%B5%D1%80%D0%B2%D0%B5%D1%80%20%D0%BF%D0%BE%D0%B4%20%D0%BA%D0%BB%D1%8E%D1%87%C2%BB%20(%D1%83%D0%B2%D0%B8%D0%B4%D0%B5%D0%BB%20%D0%B2%20%D0%BF%D0%BE%D1%80%D1%82%D1%84%D0%BE%D0%BB%D0%B8%D0%BE).%0A%0A%E2%80%A2%20%D0%A2%D0%B5%D0%BC%D0%B0%D1%82%D0%B8%D0%BA%D0%B0%20%D1%81%D0%B5%D1%80%D0%B2%D0%B5%D1%80%D0%B0%3A%20%0A%E2%80%A2%20%D0%9A%D0%B0%D0%BD%D0%B0%D0%BB%D1%8B%20%D0%B8%20%D0%BA%D0%B0%D1%82%D0%B5%D0%B3%D0%BE%D1%80%D0%B8%D0%B8%3A%20%0A%E2%80%A2%20%D0%A0%D0%BE%D0%BB%D0%B8%20%D0%B8%20%D0%BF%D1%80%D0%B0%D0%B2%D0%B0%3A%20%0A%E2%80%A2%20%D0%91%D0%BE%D1%82%D1%8B%20(%D1%82%D0%B8%D0%BA%D0%B5%D1%82%D1%8B%2C%20%D0%BF%D1%80%D0%B8%D0%B2%D0%B5%D1%82%D1%81%D1%82%D0%B2%D0%B8%D0%B5%2C%20%D0%BC%D0%BE%D0%B4%D0%B5%D1%80%D0%B0%D1%86%D0%B8%D1%8F)%3A%20%0A%E2%80%A2%20%D0%9E%D1%84%D0%BE%D1%80%D0%BC%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5%20(%D0%B0%D0%B2%D0%B0%D1%82%D0%B0%D1%80%2C%20%D0%B1%D0%B0%D0%BD%D0%BD%D0%B5%D1%80)%3A%20%0A%0A%E2%80%A2%20%D0%91%D1%8E%D0%B4%D0%B6%D0%B5%D1%82%3A%20%0A%E2%80%A2%20%D0%A1%D1%80%D0%BE%D0%BA%D0%B8%3A%20" target="_blank" rel="noopener" data-brief="0">Скопировать ТЗ и написать<svg class="tgi" viewBox="0 0 24 24" aria-hidden="true"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"></path></svg><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></a>
+        <a class="svc-cta" href="#brief" data-brief="0">Заполнить ТЗ<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></a>
       </div>
     </article>
     <article class="svc spot " data-cat="discord" data-q="discord-бот на заказ custom discord bot bot de discord sob encomenda discordボット開発 модерация, тикеты, уровни, мини-игры или любая своя логика. исходный код остаётся у тебя. discord moderation tickets levels mini-games бот bot" data-tilt="5">
-      <div class="svc-art" data-lb="1" role="button" tabindex="0" aria-label="Смотреть скрин"><img src="assets/svc/discord-bot.webp?v=4b2add477d" alt="Discord-бот на заказ" loading="lazy" decoding="async" fetchpriority="low" style="object-position:center"><div class="case-top"><span class="tag">Discord</span><span class="flex gap-1.5"><span class="tag demo">демо</span></span></div><span class="zoom"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"></path></svg></span></div>
+      <div class="svc-art" data-lb="1" role="button" tabindex="0" aria-label="Смотреть скрин"><img src="assets/svc/discord-bot.webp?v=b04f5aeddf" alt="Discord-бот на заказ" loading="lazy" decoding="async" fetchpriority="low" style="object-position:center"><div class="case-top"><span class="tag">Discord</span><span class="flex gap-1.5"><span class="tag demo">демо</span></span></div><span class="zoom"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"></path></svg></span></div>
       <div class="svc-body">
         <h3 class="svc-title">Discord-бот на заказ</h3>
         <p class="svc-desc">Модерация, тикеты, уровни, мини-игры или любая своя логика. Исходный код остаётся у тебя.</p>
         <div class="svc-price"><span class="v">от 700 ₽</span><span class="u">до 5&nbsp;000 ₽</span></div>
         <div class="chips-s"><span>Moderation</span><span>Tickets</span><span>Levels</span><span>Mini-games</span></div>
-        <a class="svc-cta" href="https://t.me/kashewars?text=%D0%9F%D1%80%D0%B8%D0%B2%D0%B5%D1%82!%20%D0%A5%D0%BE%D1%87%D1%83%20%D0%B7%D0%B0%D0%BA%D0%B0%D0%B7%D0%B0%D1%82%D1%8C%20%C2%ABDiscord-%D0%B1%D0%BE%D1%82%20%D0%BD%D0%B0%20%D0%B7%D0%B0%D0%BA%D0%B0%D0%B7%C2%BB%20(%D1%83%D0%B2%D0%B8%D0%B4%D0%B5%D0%BB%20%D0%B2%20%D0%BF%D0%BE%D1%80%D1%82%D1%84%D0%BE%D0%BB%D0%B8%D0%BE).%0A%0A%E2%80%A2%20%D0%A7%D1%82%D0%BE%20%D0%B4%D0%BE%D0%BB%D0%B6%D0%B5%D0%BD%20%D0%B4%D0%B5%D0%BB%D0%B0%D1%82%D1%8C%20%D0%B1%D0%BE%D1%82%3A%20%0A%E2%80%A2%20%D0%9A%D0%BE%D0%BC%D0%B0%D0%BD%D0%B4%D1%8B%20%D0%B8%20%D0%BA%D0%BD%D0%BE%D0%BF%D0%BA%D0%B8%3A%20%0A%E2%80%A2%20%D0%9D%D1%83%D0%B6%D0%BD%D0%B0%20%D0%BB%D0%B8%20%D0%B1%D0%B0%D0%B7%D0%B0%20%D0%B4%D0%B0%D0%BD%D0%BD%D1%8B%D1%85%3A%20%0A%E2%80%A2%20%D0%93%D0%B4%D0%B5%20%D0%B1%D1%83%D0%B4%D0%B5%D1%82%20%D1%80%D0%B0%D0%B1%D0%BE%D1%82%D0%B0%D1%82%D1%8C%20(%D0%B5%D1%81%D1%82%D1%8C%20%D0%BB%D0%B8%20VPS)%3A%20%0A%0A%E2%80%A2%20%D0%91%D1%8E%D0%B4%D0%B6%D0%B5%D1%82%3A%20%0A%E2%80%A2%20%D0%A1%D1%80%D0%BE%D0%BA%D0%B8%3A%20" target="_blank" rel="noopener" data-brief="1">Скопировать ТЗ и написать<svg class="tgi" viewBox="0 0 24 24" aria-hidden="true"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"></path></svg><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></a>
+        <a class="svc-cta" href="#brief" data-brief="1">Заполнить ТЗ<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></a>
       </div>
     </article>
     <article class="svc spot " data-cat="discord" data-q="защита сервера server protection proteção do servidor サーバー保護 антирейд, антиспам и фильтр рекламы, логи действий, правильные права у ролей. обычно за полчаса. discord automod anti-raid logs бот bot" data-tilt="5">
-      <div class="svc-art" data-lb="2" role="button" tabindex="0" aria-label="Смотреть скрин"><img src="assets/svc/discord-protect.webp?v=4b2add477d" alt="Защита сервера" loading="lazy" decoding="async" fetchpriority="low" style="object-position:center top"><div class="case-top"><span class="tag">Discord</span><span class="flex gap-1.5"><span class="tag demo">демо</span></span></div><span class="zoom"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"></path></svg></span></div>
+      <div class="svc-art" data-lb="2" role="button" tabindex="0" aria-label="Смотреть скрин"><img src="assets/svc/discord-protect.webp?v=b04f5aeddf" alt="Защита сервера" loading="lazy" decoding="async" fetchpriority="low" style="object-position:center top"><div class="case-top"><span class="tag">Discord</span><span class="flex gap-1.5"><span class="tag demo">демо</span></span></div><span class="zoom"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"></path></svg></span></div>
       <div class="svc-body">
         <h3 class="svc-title">Защита сервера</h3>
         <p class="svc-desc">Антирейд, антиспам и фильтр рекламы, логи действий, правильные права у ролей. Обычно за полчаса.</p>
         <div class="svc-price"><span class="v">от 250 ₽</span><span class="u">до 1&nbsp;500 ₽</span></div>
         <div class="chips-s"><span>AutoMod</span><span>Anti-raid</span><span>Logs</span></div>
-        <a class="svc-cta" href="https://t.me/kashewars?text=%D0%9F%D1%80%D0%B8%D0%B2%D0%B5%D1%82!%20%D0%A5%D0%BE%D1%87%D1%83%20%D0%B7%D0%B0%D0%BA%D0%B0%D0%B7%D0%B0%D1%82%D1%8C%20%C2%AB%D0%97%D0%B0%D1%89%D0%B8%D1%82%D0%B0%20%D1%81%D0%B5%D1%80%D0%B2%D0%B5%D1%80%D0%B0%C2%BB%20(%D1%83%D0%B2%D0%B8%D0%B4%D0%B5%D0%BB%20%D0%B2%20%D0%BF%D0%BE%D1%80%D1%82%D1%84%D0%BE%D0%BB%D0%B8%D0%BE).%0A%0A%E2%80%A2%20%D0%A1%D0%BA%D0%BE%D0%BB%D1%8C%D0%BA%D0%BE%20%D1%83%D1%87%D0%B0%D1%81%D1%82%D0%BD%D0%B8%D0%BA%D0%BE%D0%B2%20%D0%BD%D0%B0%20%D1%81%D0%B5%D1%80%D0%B2%D0%B5%D1%80%D0%B5%3A%20%0A%E2%80%A2%20%D0%A7%D1%82%D0%BE%20%D0%B1%D0%B5%D1%81%D0%BF%D0%BE%D0%BA%D0%BE%D0%B8%D1%82%20(%D1%80%D0%B5%D0%B9%D0%B4%D1%8B%2C%20%D1%81%D0%BF%D0%B0%D0%BC%2C%20%D1%80%D0%B5%D0%BA%D0%BB%D0%B0%D0%BC%D0%B0)%3A%20%0A%E2%80%A2%20%D0%9D%D1%83%D0%B6%D0%BD%D1%8B%20%D0%BB%D0%B8%20%D0%BB%D0%BE%D0%B3%D0%B8%20%D0%B8%20%D0%BA%D1%83%D0%B4%D0%B0%20%D0%B8%D1%85%20%D1%81%D0%BB%D0%B0%D1%82%D1%8C%3A%20%0A%0A%E2%80%A2%20%D0%91%D1%8E%D0%B4%D0%B6%D0%B5%D1%82%3A%20%0A%E2%80%A2%20%D0%A1%D1%80%D0%BE%D0%BA%D0%B8%3A%20" target="_blank" rel="noopener" data-brief="2">Скопировать ТЗ и написать<svg class="tgi" viewBox="0 0 24 24" aria-hidden="true"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"></path></svg><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></a>
+        <a class="svc-cta" href="#brief" data-brief="2">Заполнить ТЗ<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></a>
       </div>
     </article>
     <article class="svc spot " data-cat="telegram" data-q="telegram-бот telegram bot bot de telegram telegramボット меню и кнопки, заявки и запись, каталог, уведомления админу. простой бот — примерно за день. telegram menu forms booking admin alerts бот bot" data-tilt="5">
-      <div class="svc-art" data-lb="3" role="button" tabindex="0" aria-label="Смотреть скрин"><img src="assets/svc/tg-bot.webp?v=4b2add477d" alt="Telegram-бот" loading="lazy" decoding="async" fetchpriority="low" style="object-position:center"><div class="case-top"><span class="tag">Telegram<svg class="tgi" viewBox="0 0 24 24" aria-hidden="true"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"></path></svg></span><span class="flex gap-1.5"><span class="tag demo">демо</span></span></div><span class="zoom"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"></path></svg></span></div>
+      <div class="svc-art" data-lb="3" role="button" tabindex="0" aria-label="Смотреть скрин"><img src="assets/svc/tg-bot.webp?v=b04f5aeddf" alt="Telegram-бот" loading="lazy" decoding="async" fetchpriority="low" style="object-position:center"><div class="case-top"><span class="tag">Telegram<svg class="tgi" viewBox="0 0 24 24" aria-hidden="true"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"></path></svg></span><span class="flex gap-1.5"><span class="tag demo">демо</span></span></div><span class="zoom"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"></path></svg></span></div>
       <div class="svc-body">
         <h3 class="svc-title">Telegram-бот</h3>
         <p class="svc-desc">Меню и кнопки, заявки и запись, каталог, уведомления админу. Простой бот — примерно за день.</p>
         <div class="svc-price"><span class="v">от 700 ₽</span><span class="u">до 4&nbsp;000 ₽</span></div>
         <div class="chips-s"><span>Menu</span><span>Forms</span><span>Booking</span><span>Admin alerts</span></div>
-        <a class="svc-cta" href="https://t.me/kashewars?text=%D0%9F%D1%80%D0%B8%D0%B2%D0%B5%D1%82!%20%D0%A5%D0%BE%D1%87%D1%83%20%D0%B7%D0%B0%D0%BA%D0%B0%D0%B7%D0%B0%D1%82%D1%8C%20%C2%ABTelegram-%D0%B1%D0%BE%D1%82%C2%BB%20(%D1%83%D0%B2%D0%B8%D0%B4%D0%B5%D0%BB%20%D0%B2%20%D0%BF%D0%BE%D1%80%D1%82%D1%84%D0%BE%D0%BB%D0%B8%D0%BE).%0A%0A%E2%80%A2%20%D0%94%D0%BB%D1%8F%20%D1%87%D0%B5%D0%B3%D0%BE%20%D0%B1%D0%BE%D1%82%20(%D0%B7%D0%B0%D0%BF%D0%B8%D1%81%D1%8C%2C%20%D0%B7%D0%B0%D1%8F%D0%B2%D0%BA%D0%B8%2C%20%D0%BA%D0%B0%D1%82%D0%B0%D0%BB%D0%BE%D0%B3)%3A%20%0A%E2%80%A2%20%D0%A1%D1%86%D0%B5%D0%BD%D0%B0%D1%80%D0%B8%D0%B9%20%D0%B8%20%D0%BA%D0%BD%D0%BE%D0%BF%D0%BA%D0%B8%3A%20%0A%E2%80%A2%20%D0%9A%D1%83%D0%B4%D0%B0%20%D0%BF%D1%80%D0%B8%D1%81%D1%8B%D0%BB%D0%B0%D1%82%D1%8C%20%D0%B7%D0%B0%D1%8F%D0%B2%D0%BA%D0%B8%3A%20%0A%E2%80%A2%20%D0%95%D1%81%D1%82%D1%8C%20%D0%BB%D0%B8%20%D1%81%D0%B5%D1%80%D0%B2%D0%B5%D1%80%20%D0%B4%D0%BB%D1%8F%20%D0%B1%D0%BE%D1%82%D0%B0%3A%20%0A%0A%E2%80%A2%20%D0%91%D1%8E%D0%B4%D0%B6%D0%B5%D1%82%3A%20%0A%E2%80%A2%20%D0%A1%D1%80%D0%BE%D0%BA%D0%B8%3A%20" target="_blank" rel="noopener" data-brief="3">Скопировать ТЗ и написать<svg class="tgi" viewBox="0 0 24 24" aria-hidden="true"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"></path></svg><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></a>
+        <a class="svc-cta" href="#brief" data-brief="3">Заполнить ТЗ<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></a>
       </div>
     </article>
     <article class="svc spot " data-cat="telegram" data-q="магазин и автопостинг shop &amp; autoposting loja e autopostagem ショップと自動投稿 telegram-магазин с автовыдачей: оплатил — сразу получил. отложенные посты в канал по расписанию, с кнопками. telegram auto-delivery scheduler buttons бот bot" data-tilt="5">
-      <div class="svc-art" data-lb="4" role="button" tabindex="0" aria-label="Смотреть скрин"><img src="assets/svc/tg-shop.webp?v=4b2add477d" alt="Магазин и автопостинг" loading="lazy" decoding="async" fetchpriority="low" style="object-position:center"><div class="case-top"><span class="tag">Telegram<svg class="tgi" viewBox="0 0 24 24" aria-hidden="true"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"></path></svg></span><span class="flex gap-1.5"><span class="tag demo">демо</span></span></div><span class="zoom"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"></path></svg></span></div>
+      <div class="svc-art" data-lb="4" role="button" tabindex="0" aria-label="Смотреть скрин"><img src="assets/svc/tg-shop.webp?v=b04f5aeddf" alt="Магазин и автопостинг" loading="lazy" decoding="async" fetchpriority="low" style="object-position:center"><div class="case-top"><span class="tag">Telegram<svg class="tgi" viewBox="0 0 24 24" aria-hidden="true"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"></path></svg></span><span class="flex gap-1.5"><span class="tag demo">демо</span></span></div><span class="zoom"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"></path></svg></span></div>
       <div class="svc-body">
         <h3 class="svc-title">Магазин и автопостинг</h3>
         <p class="svc-desc">Telegram-магазин с автовыдачей: оплатил — сразу получил. Отложенные посты в канал по расписанию, с кнопками.</p>
         <div class="svc-price"><span class="v">от 1&nbsp;500 ₽</span><span class="u">до 6&nbsp;000 ₽</span></div>
         <div class="chips-s"><span>Auto-delivery</span><span>Scheduler</span><span>Buttons</span></div>
-        <a class="svc-cta" href="https://t.me/kashewars?text=%D0%9F%D1%80%D0%B8%D0%B2%D0%B5%D1%82!%20%D0%A5%D0%BE%D1%87%D1%83%20%D0%B7%D0%B0%D0%BA%D0%B0%D0%B7%D0%B0%D1%82%D1%8C%20%C2%AB%D0%9C%D0%B0%D0%B3%D0%B0%D0%B7%D0%B8%D0%BD%20%D0%B8%20%D0%B0%D0%B2%D1%82%D0%BE%D0%BF%D0%BE%D1%81%D1%82%D0%B8%D0%BD%D0%B3%C2%BB%20(%D1%83%D0%B2%D0%B8%D0%B4%D0%B5%D0%BB%20%D0%B2%20%D0%BF%D0%BE%D1%80%D1%82%D1%84%D0%BE%D0%BB%D0%B8%D0%BE).%0A%0A%E2%80%A2%20%D0%A7%D1%82%D0%BE%20%D0%BF%D1%80%D0%BE%D0%B4%D0%B0%D1%91%D0%BC%3A%20%0A%E2%80%A2%20%D0%A1%D0%BF%D0%BE%D1%81%D0%BE%D0%B1%20%D0%BE%D0%BF%D0%BB%D0%B0%D1%82%D1%8B%3A%20%0A%E2%80%A2%20%D0%9A%D0%B0%D0%BA%20%D0%B2%D1%8B%D0%B4%D0%B0%D0%B2%D0%B0%D1%82%D1%8C%20%D1%82%D0%BE%D0%B2%D0%B0%D1%80%3A%20%0A%E2%80%A2%20%D0%90%D0%B2%D1%82%D0%BE%D0%BF%D0%BE%D1%81%D1%82%D0%B8%D0%BD%D0%B3%3A%20%D0%BA%D0%B0%D0%BD%D0%B0%D0%BB%20%D0%B8%20%D1%80%D0%B0%D1%81%D0%BF%D0%B8%D1%81%D0%B0%D0%BD%D0%B8%D0%B5%3A%20%0A%0A%E2%80%A2%20%D0%91%D1%8E%D0%B4%D0%B6%D0%B5%D1%82%3A%20%0A%E2%80%A2%20%D0%A1%D1%80%D0%BE%D0%BA%D0%B8%3A%20" target="_blank" rel="noopener" data-brief="4">Скопировать ТЗ и написать<svg class="tgi" viewBox="0 0 24 24" aria-hidden="true"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"></path></svg><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></a>
+        <a class="svc-cta" href="#brief" data-brief="4">Заполнить ТЗ<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></a>
       </div>
     </article>
     <article class="svc spot " data-cat="parsers" data-q="парсеры web scrapers scrapers スクレイパー собираю данные с сайтов в таблицу, csv или базу. можно запускать по расписанию и присылать уведомления в telegram. parsers csv json schedule alerts бот bot" data-tilt="5">
-      <div class="svc-art" data-lb="5" role="button" tabindex="0" aria-label="Смотреть скрин"><img src="assets/svc/parser.webp?v=4b2add477d" alt="Парсеры" loading="lazy" decoding="async" fetchpriority="low" style="object-position:center"><div class="case-top"><span class="tag">Парсеры</span><span class="flex gap-1.5"><span class="tag demo">демо</span></span></div><span class="zoom"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"></path></svg></span></div>
+      <div class="svc-art" data-lb="5" role="button" tabindex="0" aria-label="Смотреть скрин"><img src="assets/svc/parser.webp?v=b04f5aeddf" alt="Парсеры" loading="lazy" decoding="async" fetchpriority="low" style="object-position:center"><div class="case-top"><span class="tag">Парсеры</span><span class="flex gap-1.5"><span class="tag demo">демо</span></span></div><span class="zoom"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"></path></svg></span></div>
       <div class="svc-body">
         <h3 class="svc-title">Парсеры</h3>
         <p class="svc-desc">Собираю данные с сайтов в таблицу, CSV или базу. Можно запускать по расписанию и присылать уведомления в Telegram.</p>
         <div class="svc-price"><span class="v">от 500 ₽</span><span class="u">до 4&nbsp;000 ₽</span></div>
         <div class="chips-s"><span>CSV</span><span>JSON</span><span>Schedule</span><span>Alerts</span></div>
-        <a class="svc-cta" href="https://t.me/kashewars?text=%D0%9F%D1%80%D0%B8%D0%B2%D0%B5%D1%82!%20%D0%A5%D0%BE%D1%87%D1%83%20%D0%B7%D0%B0%D0%BA%D0%B0%D0%B7%D0%B0%D1%82%D1%8C%20%C2%AB%D0%9F%D0%B0%D1%80%D1%81%D0%B5%D1%80%D1%8B%C2%BB%20(%D1%83%D0%B2%D0%B8%D0%B4%D0%B5%D0%BB%20%D0%B2%20%D0%BF%D0%BE%D1%80%D1%82%D1%84%D0%BE%D0%BB%D0%B8%D0%BE).%0A%0A%E2%80%A2%20%D0%A1%D0%B0%D0%B9%D1%82(%D1%8B)%20%D0%B4%D0%BB%D1%8F%20%D0%BF%D0%B0%D1%80%D1%81%D0%B8%D0%BD%D0%B3%D0%B0%3A%20%0A%E2%80%A2%20%D0%9A%D0%B0%D0%BA%D0%B8%D0%B5%20%D0%B4%D0%B0%D0%BD%D0%BD%D1%8B%D0%B5%20%D1%81%D0%BE%D0%B1%D1%80%D0%B0%D1%82%D1%8C%3A%20%0A%E2%80%A2%20%D0%A4%D0%BE%D1%80%D0%BC%D0%B0%D1%82%20(Excel%2C%20CSV%2C%20Google%20Sheets%2C%20%D0%B1%D0%B0%D0%B7%D0%B0)%3A%20%0A%E2%80%A2%20%D0%9A%D0%B0%D0%BA%20%D1%87%D0%B0%D1%81%D1%82%D0%BE%20%D0%B7%D0%B0%D0%BF%D1%83%D1%81%D0%BA%D0%B0%D1%82%D1%8C%3A%20%0A%0A%E2%80%A2%20%D0%91%D1%8E%D0%B4%D0%B6%D0%B5%D1%82%3A%20%0A%E2%80%A2%20%D0%A1%D1%80%D0%BE%D0%BA%D0%B8%3A%20" target="_blank" rel="noopener" data-brief="5">Скопировать ТЗ и написать<svg class="tgi" viewBox="0 0 24 24" aria-hidden="true"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"></path></svg><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></a>
+        <a class="svc-cta" href="#brief" data-brief="5">Заполнить ТЗ<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></a>
       </div>
     </article>
     <article class="svc spot " data-cat="web" data-q="сайты и лендинги websites &amp; landing pages sites e landing pages webサイト・lp制作 одностраничники с живыми анимациями, адаптив под телефон, выкладка на хостинг. примеры — выше, в разделе «работы». web html tailwind gsap three.js бот bot" data-tilt="5">
-      <div class="svc-art" data-lb="6" role="button" tabindex="0" aria-label="Смотреть скрин"><img src="assets/svc/web.webp?v=4b2add477d" alt="Сайты и лендинги" loading="lazy" decoding="async" fetchpriority="low" style="object-position:center"><div class="case-top"><span class="tag">Сайты</span><span class="flex gap-1.5"><span class="tag demo">демо</span></span></div><span class="zoom"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"></path></svg></span></div>
+      <div class="svc-art" data-lb="6" role="button" tabindex="0" aria-label="Смотреть скрин"><img src="assets/svc/web.webp?v=b04f5aeddf" alt="Сайты и лендинги" loading="lazy" decoding="async" fetchpriority="low" style="object-position:center"><div class="case-top"><span class="tag">Сайты</span><span class="flex gap-1.5"><span class="tag demo">демо</span></span></div><span class="zoom"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"></path></svg></span></div>
       <div class="svc-body">
         <h3 class="svc-title">Сайты и лендинги</h3>
         <p class="svc-desc">Одностраничники с живыми анимациями, адаптив под телефон, выкладка на хостинг. Примеры — выше, в разделе «Работы».</p>
         <div class="svc-price"><span class="v">от 2&nbsp;000 ₽</span><span class="u">до 7&nbsp;000 ₽</span></div>
         <div class="chips-s"><span>HTML</span><span>Tailwind</span><span>GSAP</span><span>Three.js</span></div>
-        <a class="svc-cta" href="https://t.me/kashewars?text=%D0%9F%D1%80%D0%B8%D0%B2%D0%B5%D1%82!%20%D0%A5%D0%BE%D1%87%D1%83%20%D0%B7%D0%B0%D0%BA%D0%B0%D0%B7%D0%B0%D1%82%D1%8C%20%C2%AB%D0%A1%D0%B0%D0%B9%D1%82%D1%8B%20%D0%B8%20%D0%BB%D0%B5%D0%BD%D0%B4%D0%B8%D0%BD%D0%B3%D0%B8%C2%BB%20(%D1%83%D0%B2%D0%B8%D0%B4%D0%B5%D0%BB%20%D0%B2%20%D0%BF%D0%BE%D1%80%D1%82%D1%84%D0%BE%D0%BB%D0%B8%D0%BE).%0A%0A%E2%80%A2%20%D0%A2%D0%B8%D0%BF%20%D1%81%D0%B0%D0%B9%D1%82%D0%B0%20(%D0%BB%D0%B5%D0%BD%D0%B4%D0%B8%D0%BD%D0%B3%2C%20%D0%BF%D0%BE%D1%80%D1%82%D1%84%D0%BE%D0%BB%D0%B8%D0%BE%2C%20%D0%BC%D0%B0%D0%B3%D0%B0%D0%B7%D0%B8%D0%BD)%3A%20%0A%E2%80%A2%20%D0%9F%D1%80%D0%B8%D0%BC%D0%B5%D1%80%D1%8B%2C%20%D0%BA%D0%BE%D1%82%D0%BE%D1%80%D1%8B%D0%B5%20%D0%BD%D1%80%D0%B0%D0%B2%D1%8F%D1%82%D1%81%D1%8F%3A%20%0A%E2%80%A2%20%D0%95%D1%81%D1%82%D1%8C%20%D0%BB%D0%B8%20%D1%82%D0%B5%D0%BA%D1%81%D1%82%D1%8B%20%D0%B8%20%D0%BA%D0%B0%D1%80%D1%82%D0%B8%D0%BD%D0%BA%D0%B8%3A%20%0A%E2%80%A2%20%D0%9D%D1%83%D0%B6%D0%BD%D1%8B%20%D0%BB%D0%B8%20%D0%B4%D0%BE%D0%BC%D0%B5%D0%BD%20%D0%B8%20%D1%85%D0%BE%D1%81%D1%82%D0%B8%D0%BD%D0%B3%3A%20%0A%0A%E2%80%A2%20%D0%91%D1%8E%D0%B4%D0%B6%D0%B5%D1%82%3A%20%0A%E2%80%A2%20%D0%A1%D1%80%D0%BE%D0%BA%D0%B8%3A%20" target="_blank" rel="noopener" data-brief="6">Скопировать ТЗ и написать<svg class="tgi" viewBox="0 0 24 24" aria-hidden="true"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"></path></svg><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></a>
+        <a class="svc-cta" href="#brief" data-brief="6">Заполнить ТЗ<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></a>
       </div>
     </article>
     <article class="svc spot hot" data-cat="mods" data-q="beamng.drive: физика и моторы beamng.drive: physics &amp; engines beamng.drive: física e motores beamng.drive：物理とエンジン калибрую jbeam: моторы, коробки, турбины, подвеску и массу, чтобы техника ехала и ломалась как задумано. механики на lua: лаунч-контроль, свои приборы, электрика. mods jbeam lua powertrain suspension physics бот bot" data-tilt="3">
-      <div class="svc-art" data-lb="7" role="button" tabindex="0" aria-label="Смотреть скрин"><img src="assets/svc/beamng-jbeam.webp?v=4b2add477d" alt="BeamNG.drive: физика и моторы" loading="lazy" decoding="async" fetchpriority="low" style="object-position:left top"><div class="case-top"><span class="tag">Моддинг</span><span class="flex gap-1.5"><span class="tag hot">◆ Ценится</span><span class="tag demo">демо</span></span></div><span class="zoom"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"></path></svg></span></div>
+      <div class="svc-art" data-lb="7" role="button" tabindex="0" aria-label="Смотреть скрин"><img src="assets/svc/beamng-jbeam.webp?v=b04f5aeddf" alt="BeamNG.drive: физика и моторы" loading="lazy" decoding="async" fetchpriority="low" style="object-position:left top"><div class="case-top"><span class="tag">Моддинг</span><span class="flex gap-1.5"><span class="tag hot">◆ Ценится</span><span class="tag demo">демо</span></span></div><span class="zoom"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"></path></svg></span></div>
       <div class="svc-body">
         <h3 class="svc-title">BeamNG.drive: физика и моторы</h3>
         <p class="svc-desc">Калибрую JBeam: моторы, коробки, турбины, подвеску и массу, чтобы техника ехала и ломалась как задумано. Механики на Lua: лаунч-контроль, свои приборы, электрика.</p>
         <div class="svc-price"><span class="v">от 1&nbsp;000 ₽</span><span class="u">до 7&nbsp;000 ₽</span></div>
         <div class="chips-s"><span>JBeam</span><span>Lua</span><span>Powertrain</span><span>Suspension</span><span>Physics</span></div>
-        <a class="svc-cta" href="https://t.me/kashewars?text=%D0%9F%D1%80%D0%B8%D0%B2%D0%B5%D1%82!%20%D0%A5%D0%BE%D1%87%D1%83%20%D0%B7%D0%B0%D0%BA%D0%B0%D0%B7%D0%B0%D1%82%D1%8C%20%C2%ABBeamNG.drive%3A%20%D1%84%D0%B8%D0%B7%D0%B8%D0%BA%D0%B0%20%D0%B8%20%D0%BC%D0%BE%D1%82%D0%BE%D1%80%D1%8B%C2%BB%20(%D1%83%D0%B2%D0%B8%D0%B4%D0%B5%D0%BB%20%D0%B2%20%D0%BF%D0%BE%D1%80%D1%82%D1%84%D0%BE%D0%BB%D0%B8%D0%BE).%0A%0A%E2%80%A2%20%D0%A7%D1%82%D0%BE%20%D0%B7%D0%B0%20%D0%BC%D0%BE%D0%B4%20(%D0%BC%D0%B0%D1%88%D0%B8%D0%BD%D0%B0%2C%20%D0%BC%D0%BE%D1%82%D0%BE%D1%80%2C%20%D0%BF%D0%BE%D0%B4%D0%B2%D0%B5%D1%81%D0%BA%D0%B0%2C%20%D0%BA%D0%BE%D1%80%D0%BE%D0%B1%D0%BA%D0%B0)%3A%20%0A%E2%80%A2%20%D0%A7%D1%82%D0%BE%20%D1%81%D0%B5%D0%B9%D1%87%D0%B0%D1%81%20%D0%BD%D0%B5%20%D1%82%D0%B0%D0%BA%20%D0%B8%20%D1%87%D1%82%D0%BE%20%D0%B4%D0%BE%D0%BB%D0%B6%D0%BD%D0%BE%20%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B8%D1%82%D1%8C%D1%81%D1%8F%3A%20%0A%E2%80%A2%20%D0%95%D1%81%D1%82%D1%8C%20%D0%BB%D0%B8%20%D0%B8%D1%81%D1%85%D0%BE%D0%B4%D0%BD%D1%8B%D0%B5%20jbeam-%D1%84%D0%B0%D0%B9%D0%BB%D1%8B%3A%20%0A%E2%80%A2%20%D0%9D%D1%83%D0%B6%D0%BD%D1%8B%20%D0%BB%D0%B8%20%D0%BC%D0%B5%D1%85%D0%B0%D0%BD%D0%B8%D0%BA%D0%B8%20%D0%BD%D0%B0%20Lua%3A%20%0A%0A%E2%80%A2%20%D0%91%D1%8E%D0%B4%D0%B6%D0%B5%D1%82%3A%20%0A%E2%80%A2%20%D0%A1%D1%80%D0%BE%D0%BA%D0%B8%3A%20" target="_blank" rel="noopener" data-brief="7">Скопировать ТЗ и написать<svg class="tgi" viewBox="0 0 24 24" aria-hidden="true"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"></path></svg><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></a>
+        <a class="svc-cta" href="#brief" data-brief="7">Заполнить ТЗ<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></a>
       </div>
     </article>
     <article class="svc spot " data-cat="mods" data-q="teardown: моды на lua teardown: lua mods teardown: mods em lua teardown：luaモッド свои инструменты, оружие и механики на lua: разрушение, физика объектов, интерфейс и настройки мода. mods lua tools destruction ui бот bot" data-tilt="5">
-      <div class="svc-art" data-lb="8" role="button" tabindex="0" aria-label="Смотреть скрин"><img src="assets/svc/teardown.webp?v=4b2add477d" alt="Teardown: моды на Lua" loading="lazy" decoding="async" fetchpriority="low" style="object-position:center"><div class="case-top"><span class="tag">Моддинг</span><span class="flex gap-1.5"><span class="tag demo">демо</span></span></div><span class="zoom"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"></path></svg></span></div>
+      <div class="svc-art" data-lb="8" role="button" tabindex="0" aria-label="Смотреть скрин"><img src="assets/svc/teardown.webp?v=b04f5aeddf" alt="Teardown: моды на Lua" loading="lazy" decoding="async" fetchpriority="low" style="object-position:center"><div class="case-top"><span class="tag">Моддинг</span><span class="flex gap-1.5"><span class="tag demo">демо</span></span></div><span class="zoom"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"></path></svg></span></div>
       <div class="svc-body">
         <h3 class="svc-title">Teardown: моды на Lua</h3>
         <p class="svc-desc">Свои инструменты, оружие и механики на Lua: разрушение, физика объектов, интерфейс и настройки мода.</p>
         <div class="svc-price"><span class="v">от 700 ₽</span><span class="u">до 5&nbsp;000 ₽</span></div>
         <div class="chips-s"><span>Lua</span><span>Tools</span><span>Destruction</span><span>UI</span></div>
-        <a class="svc-cta" href="https://t.me/kashewars?text=%D0%9F%D1%80%D0%B8%D0%B2%D0%B5%D1%82!%20%D0%A5%D0%BE%D1%87%D1%83%20%D0%B7%D0%B0%D0%BA%D0%B0%D0%B7%D0%B0%D1%82%D1%8C%20%C2%ABTeardown%3A%20%D0%BC%D0%BE%D0%B4%D1%8B%20%D0%BD%D0%B0%20Lua%C2%BB%20(%D1%83%D0%B2%D0%B8%D0%B4%D0%B5%D0%BB%20%D0%B2%20%D0%BF%D0%BE%D1%80%D1%82%D1%84%D0%BE%D0%BB%D0%B8%D0%BE).%0A%0A%E2%80%A2%20%D0%98%D0%B4%D0%B5%D1%8F%20%D0%BC%D0%BE%D0%B4%D0%B0%3A%20%0A%E2%80%A2%20%D0%9C%D0%B5%D1%85%D0%B0%D0%BD%D0%B8%D0%BA%D0%B0%20%D0%B8%20%D1%83%D0%BF%D1%80%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5%3A%20%0A%E2%80%A2%20%D0%95%D1%81%D1%82%D1%8C%20%D0%BB%D0%B8%20%D0%BC%D0%BE%D0%B4%D0%B5%D0%BB%D0%B8%20%D0%B8%20%D0%B7%D0%B2%D1%83%D0%BA%D0%B8%3A%20%0A%0A%E2%80%A2%20%D0%91%D1%8E%D0%B4%D0%B6%D0%B5%D1%82%3A%20%0A%E2%80%A2%20%D0%A1%D1%80%D0%BE%D0%BA%D0%B8%3A%20" target="_blank" rel="noopener" data-brief="8">Скопировать ТЗ и написать<svg class="tgi" viewBox="0 0 24 24" aria-hidden="true"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"></path></svg><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></a>
+        <a class="svc-cta" href="#brief" data-brief="8">Заполнить ТЗ<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></a>
       </div>
     </article>
     <article class="svc spot " data-cat="mods" data-q="моды для minecraft minecraft mods mods de minecraft minecraft mod моды на fabric и forge: новые предметы, блоки и механики, баланс и совместимость с другими модами. mods fabric forge java items бот bot" data-tilt="5">
-      <div class="svc-art" data-lb="9" role="button" tabindex="0" aria-label="Смотреть скрин"><img src="assets/svc/mc-mod.webp?v=4b2add477d" alt="Моды для Minecraft" loading="lazy" decoding="async" fetchpriority="low" style="object-position:center"><div class="case-top"><span class="tag">Моддинг</span><span class="flex gap-1.5"><span class="tag demo">демо</span></span></div><span class="zoom"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"></path></svg></span></div>
+      <div class="svc-art" data-lb="9" role="button" tabindex="0" aria-label="Смотреть скрин"><img src="assets/svc/mc-mod.webp?v=b04f5aeddf" alt="Моды для Minecraft" loading="lazy" decoding="async" fetchpriority="low" style="object-position:center"><div class="case-top"><span class="tag">Моддинг</span><span class="flex gap-1.5"><span class="tag demo">демо</span></span></div><span class="zoom"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"></path></svg></span></div>
       <div class="svc-body">
         <h3 class="svc-title">Моды для Minecraft</h3>
         <p class="svc-desc">Моды на Fabric и Forge: новые предметы, блоки и механики, баланс и совместимость с другими модами.</p>
         <div class="svc-price"><span class="v">от 1&nbsp;000 ₽</span><span class="u">до 6&nbsp;000 ₽</span></div>
         <div class="chips-s"><span>Fabric</span><span>Forge</span><span>Java</span><span>Items</span></div>
-        <a class="svc-cta" href="https://t.me/kashewars?text=%D0%9F%D1%80%D0%B8%D0%B2%D0%B5%D1%82!%20%D0%A5%D0%BE%D1%87%D1%83%20%D0%B7%D0%B0%D0%BA%D0%B0%D0%B7%D0%B0%D1%82%D1%8C%20%C2%AB%D0%9C%D0%BE%D0%B4%D1%8B%20%D0%B4%D0%BB%D1%8F%20Minecraft%C2%BB%20(%D1%83%D0%B2%D0%B8%D0%B4%D0%B5%D0%BB%20%D0%B2%20%D0%BF%D0%BE%D1%80%D1%82%D1%84%D0%BE%D0%BB%D0%B8%D0%BE).%0A%0A%E2%80%A2%20%D0%97%D0%B0%D0%B3%D1%80%D1%83%D0%B7%D1%87%D0%B8%D0%BA%20%D0%B8%20%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F%20(Fabric%2FForge%2C%201.20%2F1.21)%3A%20%0A%E2%80%A2%20%D0%A7%D1%82%D0%BE%20%D0%B4%D0%BE%D0%B1%D0%B0%D0%B2%D0%B8%D1%82%D1%8C%20(%D0%BF%D1%80%D0%B5%D0%B4%D0%BC%D0%B5%D1%82%D1%8B%2C%20%D0%B1%D0%BB%D0%BE%D0%BA%D0%B8%2C%20%D0%BC%D0%B5%D1%85%D0%B0%D0%BD%D0%B8%D0%BA%D0%B8)%3A%20%0A%E2%80%A2%20%D0%A1%20%D0%BA%D0%B0%D0%BA%D0%B8%D0%BC%D0%B8%20%D0%BC%D0%BE%D0%B4%D0%B0%D0%BC%D0%B8%20%D0%BD%D1%83%D0%B6%D0%BD%D0%B0%20%D1%81%D0%BE%D0%B2%D0%BC%D0%B5%D1%81%D1%82%D0%B8%D0%BC%D0%BE%D1%81%D1%82%D1%8C%3A%20%0A%0A%E2%80%A2%20%D0%91%D1%8E%D0%B4%D0%B6%D0%B5%D1%82%3A%20%0A%E2%80%A2%20%D0%A1%D1%80%D0%BE%D0%BA%D0%B8%3A%20" target="_blank" rel="noopener" data-brief="9">Скопировать ТЗ и написать<svg class="tgi" viewBox="0 0 24 24" aria-hidden="true"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"></path></svg><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></a>
+        <a class="svc-cta" href="#brief" data-brief="9">Заполнить ТЗ<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></a>
       </div>
     </article>
     <article class="svc spot " data-cat="games" data-q="minecraft minecraft minecraft minecraft плагины на paper/spigot 1.16–1.21 с исходником и настройка сервера: geyser, luckperms, velocity. games paper spigot geyser luckperms бот bot" data-tilt="5">
-      <div class="svc-art" data-lb="10" role="button" tabindex="0" aria-label="Смотреть скрин"><img src="assets/svc/minecraft.webp?v=4b2add477d" alt="Minecraft" loading="lazy" decoding="async" fetchpriority="low" style="object-position:center"><div class="case-top"><span class="tag">Игры</span><span class="flex gap-1.5"><span class="tag demo">демо</span></span></div><span class="zoom"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"></path></svg></span></div>
+      <div class="svc-art" data-lb="10" role="button" tabindex="0" aria-label="Смотреть скрин"><img src="assets/svc/minecraft.webp?v=b04f5aeddf" alt="Minecraft" loading="lazy" decoding="async" fetchpriority="low" style="object-position:center"><div class="case-top"><span class="tag">Игры</span><span class="flex gap-1.5"><span class="tag demo">демо</span></span></div><span class="zoom"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"></path></svg></span></div>
       <div class="svc-body">
         <h3 class="svc-title">Minecraft</h3>
         <p class="svc-desc">Плагины на Paper/Spigot 1.16–1.21 с исходником и настройка сервера: Geyser, LuckPerms, Velocity.</p>
         <div class="svc-price"><span class="v">от 300 ₽</span><span class="u">до 4&nbsp;000 ₽</span></div>
         <div class="chips-s"><span>Paper</span><span>Spigot</span><span>Geyser</span><span>LuckPerms</span></div>
-        <a class="svc-cta" href="https://t.me/kashewars?text=%D0%9F%D1%80%D0%B8%D0%B2%D0%B5%D1%82!%20%D0%A5%D0%BE%D1%87%D1%83%20%D0%B7%D0%B0%D0%BA%D0%B0%D0%B7%D0%B0%D1%82%D1%8C%20%C2%ABMinecraft%C2%BB%20(%D1%83%D0%B2%D0%B8%D0%B4%D0%B5%D0%BB%20%D0%B2%20%D0%BF%D0%BE%D1%80%D1%82%D1%84%D0%BE%D0%BB%D0%B8%D0%BE).%0A%0A%E2%80%A2%20%D0%AF%D0%B4%D1%80%D0%BE%20%D0%B8%20%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F%20(Paper%2FSpigot)%3A%20%0A%E2%80%A2%20%D0%9F%D0%BB%D0%B0%D0%B3%D0%B8%D0%BD%20%D0%B8%D0%BB%D0%B8%20%D0%BD%D0%B0%D1%81%D1%82%D1%80%D0%BE%D0%B9%D0%BA%D0%B0%20%D1%81%D0%B5%D1%80%D0%B2%D0%B5%D1%80%D0%B0%3A%20%0A%E2%80%A2%20%D0%A7%D1%82%D0%BE%20%D0%B4%D0%BE%D0%BB%D0%B6%D0%BD%D0%BE%20%D1%80%D0%B0%D0%B1%D0%BE%D1%82%D0%B0%D1%82%D1%8C%3A%20%0A%0A%E2%80%A2%20%D0%91%D1%8E%D0%B4%D0%B6%D0%B5%D1%82%3A%20%0A%E2%80%A2%20%D0%A1%D1%80%D0%BE%D0%BA%D0%B8%3A%20" target="_blank" rel="noopener" data-brief="10">Скопировать ТЗ и написать<svg class="tgi" viewBox="0 0 24 24" aria-hidden="true"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"></path></svg><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></a>
+        <a class="svc-cta" href="#brief" data-brief="10">Заполнить ТЗ<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></a>
       </div>
     </article>
     <article class="svc spot " data-cat="games" data-q="roblox studio roblox studio roblox studio roblox studio системы на luau: сохранения, магазин, интерфейс. чиню сломанные механики и ошибки в output. games luau datastore ui бот bot" data-tilt="5">
-      <div class="svc-art" data-lb="11" role="button" tabindex="0" aria-label="Смотреть скрин"><img src="assets/svc/roblox.webp?v=4b2add477d" alt="Roblox Studio" loading="lazy" decoding="async" fetchpriority="low" style="object-position:center"><div class="case-top"><span class="tag">Игры</span><span class="flex gap-1.5"><span class="tag demo">демо</span></span></div><span class="zoom"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"></path></svg></span></div>
+      <div class="svc-art" data-lb="11" role="button" tabindex="0" aria-label="Смотреть скрин"><img src="assets/svc/roblox.webp?v=b04f5aeddf" alt="Roblox Studio" loading="lazy" decoding="async" fetchpriority="low" style="object-position:center"><div class="case-top"><span class="tag">Игры</span><span class="flex gap-1.5"><span class="tag demo">демо</span></span></div><span class="zoom"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"></path></svg></span></div>
       <div class="svc-body">
         <h3 class="svc-title">Roblox Studio</h3>
         <p class="svc-desc">Системы на Luau: сохранения, магазин, интерфейс. Чиню сломанные механики и ошибки в Output.</p>
         <div class="svc-price"><span class="v">от 400 ₽</span><span class="u">до 4&nbsp;000 ₽</span></div>
         <div class="chips-s"><span>Luau</span><span>DataStore</span><span>UI</span></div>
-        <a class="svc-cta" href="https://t.me/kashewars?text=%D0%9F%D1%80%D0%B8%D0%B2%D0%B5%D1%82!%20%D0%A5%D0%BE%D1%87%D1%83%20%D0%B7%D0%B0%D0%BA%D0%B0%D0%B7%D0%B0%D1%82%D1%8C%20%C2%ABRoblox%20Studio%C2%BB%20(%D1%83%D0%B2%D0%B8%D0%B4%D0%B5%D0%BB%20%D0%B2%20%D0%BF%D0%BE%D1%80%D1%82%D1%84%D0%BE%D0%BB%D0%B8%D0%BE).%0A%0A%E2%80%A2%20%D0%A2%D0%B8%D0%BF%20%D0%B8%D0%B3%D1%80%D1%8B%3A%20%0A%E2%80%A2%20%D0%9A%D0%B0%D0%BA%D0%B0%D1%8F%20%D1%81%D0%B8%D1%81%D1%82%D0%B5%D0%BC%D0%B0%20%D0%BD%D1%83%D0%B6%D0%BD%D0%B0%20(%D1%81%D0%BE%D1%85%D1%80%D0%B0%D0%BD%D0%B5%D0%BD%D0%B8%D1%8F%2C%20%D0%BC%D0%B0%D0%B3%D0%B0%D0%B7%D0%B8%D0%BD%2C%20UI)%3A%20%0A%E2%80%A2%20%D0%A7%D1%82%D0%BE%20%D1%81%D0%B5%D0%B9%D1%87%D0%B0%D1%81%20%D1%81%D0%BB%D0%BE%D0%BC%D0%B0%D0%BD%D0%BE%20(%D0%B5%D1%81%D0%BB%D0%B8%20%D0%BD%D1%83%D0%B6%D0%B5%D0%BD%20%D1%84%D0%B8%D0%BA%D1%81)%3A%20%0A%0A%E2%80%A2%20%D0%91%D1%8E%D0%B4%D0%B6%D0%B5%D1%82%3A%20%0A%E2%80%A2%20%D0%A1%D1%80%D0%BE%D0%BA%D0%B8%3A%20" target="_blank" rel="noopener" data-brief="11">Скопировать ТЗ и написать<svg class="tgi" viewBox="0 0 24 24" aria-hidden="true"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"></path></svg><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></a>
+        <a class="svc-cta" href="#brief" data-brief="11">Заполнить ТЗ<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></a>
       </div>
     </article>
     <article class="svc spot " data-cat="ai" data-q="ии-боты и инструменты ai bots &amp; tooling bots e ferramentas de ia aiボット・開発環境 telegram-бот на claude или gpt, который отвечает клиентам. настройка claude code и cursor, свои mcp-серверы. ai claude gpt mcp cursor бот bot" data-tilt="5">
-      <div class="svc-art" data-lb="12" role="button" tabindex="0" aria-label="Смотреть скрин"><img src="assets/svc/ai-bot.webp?v=4b2add477d" alt="ИИ-боты и инструменты" loading="lazy" decoding="async" fetchpriority="low" style="object-position:center"><div class="case-top"><span class="tag">ИИ</span><span class="flex gap-1.5"><span class="tag demo">демо</span></span></div><span class="zoom"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"></path></svg></span></div>
+      <div class="svc-art" data-lb="12" role="button" tabindex="0" aria-label="Смотреть скрин"><img src="assets/svc/ai-bot.webp?v=b04f5aeddf" alt="ИИ-боты и инструменты" loading="lazy" decoding="async" fetchpriority="low" style="object-position:center"><div class="case-top"><span class="tag">ИИ</span><span class="flex gap-1.5"><span class="tag demo">демо</span></span></div><span class="zoom"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"></path></svg></span></div>
       <div class="svc-body">
         <h3 class="svc-title">ИИ-боты и инструменты</h3>
         <p class="svc-desc">Telegram-бот на Claude или GPT, который отвечает клиентам. Настройка Claude Code и Cursor, свои MCP-серверы.</p>
         <div class="svc-price"><span class="v">от 1&nbsp;500 ₽</span><span class="u">до 7&nbsp;000 ₽</span></div>
         <div class="chips-s"><span>Claude</span><span>GPT</span><span>MCP</span><span>Cursor</span></div>
-        <a class="svc-cta" href="https://t.me/kashewars?text=%D0%9F%D1%80%D0%B8%D0%B2%D0%B5%D1%82!%20%D0%A5%D0%BE%D1%87%D1%83%20%D0%B7%D0%B0%D0%BA%D0%B0%D0%B7%D0%B0%D1%82%D1%8C%20%C2%AB%D0%98%D0%98-%D0%B1%D0%BE%D1%82%D1%8B%20%D0%B8%20%D0%B8%D0%BD%D1%81%D1%82%D1%80%D1%83%D0%BC%D0%B5%D0%BD%D1%82%D1%8B%C2%BB%20(%D1%83%D0%B2%D0%B8%D0%B4%D0%B5%D0%BB%20%D0%B2%20%D0%BF%D0%BE%D1%80%D1%82%D1%84%D0%BE%D0%BB%D0%B8%D0%BE).%0A%0A%E2%80%A2%20%D0%93%D0%B4%D0%B5%20%D1%80%D0%B0%D0%B1%D0%BE%D1%82%D0%B0%D0%B5%D1%82%20%D0%B1%D0%BE%D1%82%20(Telegram%2C%20%D1%81%D0%B0%D0%B9%D1%82)%3A%20%0A%E2%80%A2%20%D0%9D%D0%B0%20%D0%BA%D0%B0%D0%BA%D0%B8%D0%B5%20%D0%B2%D0%BE%D0%BF%D1%80%D0%BE%D1%81%D1%8B%20%D0%BE%D1%82%D0%B2%D0%B5%D1%87%D0%B0%D0%B5%D1%82%3A%20%0A%E2%80%A2%20%D0%95%D1%81%D1%82%D1%8C%20%D0%BB%D0%B8%20%D0%B1%D0%B0%D0%B7%D0%B0%20%D0%B7%D0%BD%D0%B0%D0%BD%D0%B8%D0%B9%20(%D0%BF%D1%80%D0%B0%D0%B9%D1%81%2C%20FAQ)%3A%20%0A%0A%E2%80%A2%20%D0%91%D1%8E%D0%B4%D0%B6%D0%B5%D1%82%3A%20%0A%E2%80%A2%20%D0%A1%D1%80%D0%BE%D0%BA%D0%B8%3A%20" target="_blank" rel="noopener" data-brief="12">Скопировать ТЗ и написать<svg class="tgi" viewBox="0 0 24 24" aria-hidden="true"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"></path></svg><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></a>
+        <a class="svc-cta" href="#brief" data-brief="12">Заполнить ТЗ<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></a>
       </div>
     </article>
     <article class="svc more spot" data-cat="any" data-q="" data-tilt="4">
@@ -774,6 +843,45 @@
       <p class="svc-desc">Опиши задачу. Если возьмусь — назову цену и срок, если нет — скажу сразу.</p>
       <a class="btn-secondary btn-sm mt-3" href="https://t.me/kashewars" target="_blank" rel="noopener">Спросить в Telegram<svg class="tgi" viewBox="0 0 24 24" aria-hidden="true"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"></path></svg></a>
     </article></div>
+    </section>
+
+    <!-- ================= BRIEF BUILDER ================= -->
+    <section id="brief" class="mt-24">
+      <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-3 sm:gap-6 mb-6" data-reveal>
+        <div>
+          <div class="eyebrow muted" data-i18n="bf_eyebrow">Конструктор ТЗ</div>
+          <h2 class="t-section mt-3" data-i18n-html="bf_title">Опишите задачу здесь.<br><span class="muted">Отправьте одной кнопкой.</span></h2>
+        </div>
+        <div class="mono-xs muted sm:text-right max-w-[420px]" data-i18n="bf_note">Ответьте на пару вопросов — в Telegram уйдёт готовое ТЗ, писать с нуля ничего не нужно.</div>
+      </div>
+      <div id="bf" class="bf" data-reveal>
+        <div class="bf-form">
+          <div class="bf-step"><span class="bf-n">01</span><span data-i18n="bf_s1">Что нужно</span></div>
+          <div id="bfTypes" class="bf-types" role="radiogroup"></div>
+          <div id="bfQs" class="bf-qs"></div>
+          <div class="bf-row2">
+            <div><div class="bf-step"><span class="bf-n">03</span><span data-i18n="bf_s3">Бюджет</span></div><div id="bfBudget" class="bf-opts"></div></div>
+            <div><div class="bf-step"><span class="bf-n">04</span><span data-i18n="bf_s4">Сроки</span></div><div id="bfDead" class="bf-opts"></div></div>
+          </div>
+          <div class="bf-step"><span class="bf-n">05</span><span data-i18n="bf_s5">Что-то ещё</span></div>
+          <textarea id="bfExtra" class="bf-in big" rows="2" maxlength="800" data-i18n-ph="bf_extra_ph" aria-label="extra"></textarea>
+        </div>
+        <aside class="bf-side">
+          <div class="bf-sticky">
+            <div class="eyebrow muted" data-i18n="bf_est">Ориентировочно</div>
+            <div id="bfPrice" class="bf-price"><span class="bf-bar0"></span></div>
+            <div id="bfSub" class="bf-sub"></div>
+            <div class="bf-note" data-i18n="bf_est_note">Точную сумму назову после ТЗ, до начала работы.</div>
+            <div class="bf-line"></div>
+            <div class="bf-ph"><span class="eyebrow muted" data-i18n="bf_preview">Так придёт сообщение</span><span id="bfFilled" class="mono-xs muted"></span></div>
+            <div class="bf-prog"><i id="bfBar"></i></div>
+            <div class="bf-chat" data-lenis-prevent><div id="bfMsg" class="bf-bubble ph"></div></div>
+            <a id="bfSend" class="btn-primary bf-send off" href="https://t.me/kashewars" target="_blank" rel="noopener"><span class="btn-label"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="transform:none"><path d="M21.5 4.5 2.8 11.6c-.8.3-.8 1.4 0 1.7l4.6 1.6 1.8 5.6c.2.7 1.1.9 1.6.4l2.6-2.5 4.7 3.5c.6.4 1.4.1 1.6-.6L22.9 5.8c.2-.9-.6-1.6-1.4-1.3Z"/><path d="m7.4 14.9 10.1-6.6-7.4 7.8"/></svg><span data-i18n="bf_send">Отправить в Telegram</span></span></a>
+            <div class="bf-acts"><button id="bfCopy" type="button" class="btn-secondary" data-i18n="bf_copy">Скопировать</button><button id="bfReset" type="button" class="btn-secondary" data-i18n="bf_reset">Очистить</button></div>
+            <p class="bf-hint" data-i18n="bf_hint">Откроется чат с @kashewars, текст уже будет в поле ввода. Если не подставился — нажмите Ctrl+V, он скопирован.</p>
+          </div>
+        </aside>
+      </div>
     </section>
 
     <!-- ================= HOW I WORK ================= -->
@@ -1531,24 +1639,19 @@ function copyText(txt) {
   const ta = document.createElement('textarea'); ta.value = txt; ta.setAttribute('readonly', ''); ta.style.cssText = 'position:fixed;top:-1000px;opacity:0';
   document.body.appendChild(ta); ta.select(); try { document.execCommand('copy'); } catch (e) {} ta.remove(); return Promise.resolve();
 }
-document.addEventListener('click', e => {
-  const a = e.target.closest('[data-brief]'); if (!a) return;
-  const txt = briefText(+a.dataset.brief); if (!txt) return;
-  copyText(txt); toast(T('toast_brief'));
-});
 
 function renderServices() {
   svcGrid.innerHTML = SERVICES.map((s, i) => {
     const q = [s.t.ru, s.t.en, s.t.pt, s.t.ja, s.d[LANG], s.cat, ...s.tags, 'бот bot'].join(' ').toLowerCase();
     return `
     <article class="svc spot ${s.hot || s.feat ? 'hot' : ''}" data-cat="${s.cat}" data-q="${esc(q)}" data-tilt="${s.hot || s.feat ? 3 : 5}">
-      <div class="svc-art" data-lb="${i}" role="button" tabindex="0" aria-label="${esc(T('svc_zoom'))}">${s.img && s.img[0] ? `<img src="assets/svc/${s.img[0]}.webp?v=4b2add477d" alt="${esc(L(s.t))}" loading="lazy" decoding="async" fetchpriority="low" style="object-position:${s.pos || 'center'}">` : (s.gen && GEN[s.gen] ? artFor(s) : '')}<div class="case-top"><span class="tag">${esc(T('cat_' + s.cat))}${s.cat === 'telegram' ? TGI : ''}</span><span class="flex gap-1.5">${s.hot ? `<span class="tag hot">★ ${esc(T('svc_hot'))}</span>` : s.feat ? `<span class="tag hot">◆ ${esc(T('svc_feat'))}</span>` : ''}<span class="tag demo">${esc(T('svc_demo'))}</span></span></div><span class="zoom"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></span></div>
+      <div class="svc-art" data-lb="${i}" role="button" tabindex="0" aria-label="${esc(T('svc_zoom'))}">${s.img && s.img[0] ? `<img src="assets/svc/${s.img[0]}.webp?v=b04f5aeddf" alt="${esc(L(s.t))}" loading="lazy" decoding="async" fetchpriority="low" style="object-position:${s.pos || 'center'}">` : (s.gen && GEN[s.gen] ? artFor(s) : '')}<div class="case-top"><span class="tag">${esc(T('cat_' + s.cat))}${s.cat === 'telegram' ? TGI : ''}</span><span class="flex gap-1.5">${s.hot ? `<span class="tag hot">★ ${esc(T('svc_hot'))}</span>` : s.feat ? `<span class="tag hot">◆ ${esc(T('svc_feat'))}</span>` : ''}<span class="tag demo">${esc(T('svc_demo'))}</span></span></div><span class="zoom"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></span></div>
       <div class="svc-body">
         <h3 class="svc-title">${esc(L(s.t))}</h3>
         <p class="svc-desc">${esc(L(s.d))}</p>
         ${s.price ? `<div class="svc-price"><span class="v">${fmtFrom(s.price[0])}</span><span class="u">${fmtTo(s.price[1])}</span></div>` : ''}
         <div class="chips-s">${s.tags.map(t => `<span>${esc(t)}</span>`).join('')}</div>
-        <a class="svc-cta" href="${briefURL(i)}" target="_blank" rel="noopener" data-brief="${i}">${esc(T(s.brief ? 'brief_cta' : 'svc_cta'))}${ARROW}</a>
+        <a class="svc-cta" href="#brief" data-brief="${i}">${esc(T(s.brief ? 'brief_cta' : 'svc_cta'))}${ARROW}</a>
       </div>
     </article>`; }).join('') + `
     <article class="svc more spot" data-cat="any" data-q="" data-tilt="4">
@@ -1583,7 +1686,7 @@ let lbOpen = false, lbSvc = 0, lbIdx = 0;
 function lbShow() {
   const s = SERVICES[lbSvc], many = s.img.length > 1;
   if (!s.img || !s.img.length) return;
-  lbImg.src = `assets/svc/${s.img[lbIdx]}-full.webp?v=4b2add477d`; lbImg.alt = L(s.t);
+  lbImg.src = `assets/svc/${s.img[lbIdx]}-full.webp?v=b04f5aeddf`; lbImg.alt = L(s.t);
   $('#lbCap').textContent = L(s.t) + (many ? `  ·  ${lbIdx + 1} / ${s.img.length}` : '');
   $('#lbHint').textContent = T('lb_hint');
   $$('.nav', lb).forEach(b => { b.style.display = many ? '' : 'none'; });
@@ -1655,7 +1758,7 @@ modal.addEventListener('click', e => { if (e.target.closest('[data-close]')) clo
    KEYBOARD
    ========================================================= */
 document.addEventListener('keydown', e => {
-  const typing = document.activeElement && document.activeElement.tagName === 'INPUT';
+  const typing = document.activeElement && /^(INPUT|TEXTAREA)$/.test(document.activeElement.tagName);
   if (e.key === '/' && !typing) { e.preventDefault(); $('#search').focus(); }
   else if (e.key === 'Escape') { if (lbOpen) lbClose(); else if (modalOpen) closeModal(); else if (typing) document.activeElement.blur(); }
   else if (lbOpen && (e.key === 'ArrowRight' || e.key === 'ArrowLeft')) lbStep(e.key === 'ArrowRight' ? 1 : -1);
@@ -1716,8 +1819,122 @@ function decorateTG() {
   const tk = $('[data-i18n="chips_right"]'); if (tk && !tk.nextElementSibling) tk.insertAdjacentHTML('afterend', ' ' + TGI);
 }
 
+/* =========================================================
+   BRIEF BUILDER — answers on the site, finished text into the Telegram chat
+   ========================================================= */
+const CAT_C = { discord: '88,101,242', telegram: '42,171,238', parsers: '245,198,107', web: '45,212,191', mods: '249,115,22', games: '71,187,100', ai: '168,85,247' };
+const bfEl = $('#bf'), bfTypes = $('#bfTypes'), bfQs = $('#bfQs'), bfBudget = $('#bfBudget'), bfDead = $('#bfDead'), bfExtra = $('#bfExtra');
+let BF = (() => { try { const o = JSON.parse(store.get('bf1') || '{}'); return o && typeof o === 'object' ? o : {}; } catch (e) { return {}; } })();
+if (!(BF.s >= 0 && BF.s < SERVICES.length)) BF.s = -1;
+BF.a = BF.a && typeof BF.a === 'object' ? BF.a : {}; if (!(BF.b >= 0)) BF.b = -1; if (!(BF.d >= 0)) BF.d = -1; BF.x = typeof BF.x === 'string' ? BF.x : '';
+let bfSave = 0;
+const bfStore = () => { clearTimeout(bfSave); bfSave = setTimeout(() => store.set('bf1', JSON.stringify(BF)), 250); };
+const bfQ = () => { const s = SERVICES[BF.s]; return s && s.brief ? (s.brief[LANG] || s.brief.en || []) : []; };
+const bfLbl = q => q.replace(/[\s:：]+$/, '');
+const bfNice = n => n < 2000 ? Math.round(n / 100) * 100 : Math.round(n / 500) * 500;
+const bfRng = (a, b) => LANG === 'ru' ? `${rub(a).replace(' ₽', '')} – ${rub(b)}` : `${usd(a)} – ${usd(b)}`;
+function bfTiers() {
+  const s = SERVICES[BF.s]; if (!s || !s.price) return [];
+  const [lo, hi] = s.price, a = bfNice(lo + (hi - lo) * .3), b = bfNice(lo + (hi - lo) * .65);
+  return [bfRng(lo, a), bfRng(a, b), `${money(b)}+`];
+}
+function bfText() {
+  const s = SERVICES[BF.s]; if (!s) return '';
+  const ans = BF.a[BF.s] || [], out = [T('bf_hi').replace('{t}', L(s.t)), ''];
+  bfQ().forEach((q, i) => { const v = String(ans[i] || '').trim(); if (v) out.push(`${bfLbl(q)}: ${v}`); });
+  const tiers = bfTiers();
+  if (BF.b >= 0) out.push(`${T('bf_l_budget')}: ${BF.b < tiers.length ? tiers[BF.b] : T('bf_b_open')}`);
+  if (BF.d >= 0) out.push(`${T('bf_l_deadline')}: ${T('bf_d')[BF.d]}`);
+  const x = BF.x.trim(); if (x) out.push('', `${T('bf_l_extra')}: ${x}`);
+  while (out[out.length - 1] === '') out.pop();
+  return out.join('\n');
+}
+const BF_CHECK = '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>';
+const bfGrow = el => { el.style.height = 'auto'; el.style.height = el.scrollHeight + 2 + 'px'; };
+function renderBfTypes() {
+  bfTypes.innerHTML = SERVICES.map((s, i) => `<button type="button" role="radio" aria-checked="${i === BF.s}" class="bf-type ${i === BF.s ? 'on' : ''}" data-s="${i}" style="--c:${CAT_C[s.cat] || '172,173,174'}"><span class="bf-t">${esc(L(s.t))}</span><span class="bf-p"><span class="bf-dot"></span>${s.price ? esc(fmtFrom(s.price[0])) : ''}</span></button>`).join('');
+}
+function renderBfQs(anim) {
+  const qs = bfQ(), ans = BF.a[BF.s] || [];
+  const head = `<div class="bf-step"><span class="bf-n">02</span><span>${esc(T('bf_s2'))}</span>${qs.length ? `<span class="bf-c">${esc(L(SERVICES[BF.s].t))}</span>` : ''}</div>`;
+  bfQs.innerHTML = head + (qs.length ? qs.map((q, i) => `<div class="bf-f ${String(ans[i] || '').trim() ? 'ok' : ''}"><label for="bfq${i}"><span class="bf-ck">${BF_CHECK}</span><span>${esc(bfLbl(q))}</span></label><textarea id="bfq${i}" class="bf-in" rows="1" maxlength="400" data-q="${i}" placeholder="${esc(T('bf_ph'))}">${esc(ans[i] || '')}</textarea></div>`).join('')
+    : `<div class="bf-empty"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg><span>${esc(T('bf_pick'))}</span></div>`);
+  $$('textarea', bfQs).forEach(bfGrow);
+  if (anim && !REDUCED) gsap.from($$('.bf-f', bfQs), { y: 14, opacity: 0, duration: .5, stagger: .05, ease: 'power3.out', clearProps: 'transform,opacity' });
+}
+function renderBfOpts() {
+  const tiers = bfTiers(), none = BF.s < 0;
+  bfBudget.innerHTML = [...tiers, T('bf_b_open')].map((v, i) => `<button type="button" class="bf-opt ${i === BF.b ? 'on' : ''}" data-b="${i}" ${none ? 'disabled' : ''}>${esc(v)}</button>`).join('');
+  bfDead.innerHTML = T('bf_d').map((v, i) => `<button type="button" class="bf-opt ${i === BF.d ? 'on' : ''}" data-d="${i}">${esc(v)}${i === 3 ? '<span class="x">×1.5</span>' : ''}</button>`).join('');
+}
+function bfOut() {
+  const s = SERVICES[BF.s], qs = bfQ(), ans = BF.a[BF.s] || [];
+  const pr = $('#bfPrice'), sub = $('#bfSub'), msg = $('#bfMsg'), send = $('#bfSend');
+  if (s && s.price) {
+    const k = BF.d === 3 ? 1.5 : 1, txt = bfRng(bfNice(s.price[0] * k), bfNice(s.price[1] * k));
+    if (pr.textContent !== txt) { pr.textContent = txt; if (!REDUCED) gsap.fromTo(pr, { y: 6, opacity: .2 }, { y: 0, opacity: 1, duration: .45, ease: 'power3.out', clearProps: 'transform,opacity' }); }
+    sub.innerHTML = `<span>${esc(L(s.t))}</span>${k > 1 ? `<span class="bf-urg">${esc(T('bf_urgent'))}</span>` : ''}`;
+  } else { pr.innerHTML = '<span class="bf-bar0"></span>'; sub.textContent = T('bf_est_none'); }
+  const n = qs.filter((q, i) => String(ans[i] || '').trim()).length + (BF.b >= 0) + (BF.d >= 0), m = qs.length + 2;
+  $('#bfFilled').textContent = s ? T('bf_filled').replace('{n}', n).replace('{m}', m) : '';
+  $('#bfBar').style.width = s ? Math.round(n / m * 100) + '%' : '0%';
+  const text = bfText();
+  if (text) {
+    const tm = new Date().toLocaleTimeString(LANG === 'ru' ? 'ru-RU' : LANG, { hour: '2-digit', minute: '2-digit' });
+    msg.className = 'bf-bubble';
+    msg.innerHTML = text.split('\n').map(l => { const i = l.indexOf(': '); return i > 0 && i < 90 ? `<b>${esc(l.slice(0, i + 1))}</b>${esc(l.slice(i + 1))}` : esc(l); }).join('\n') + `<span class="tm">${tm} ✓✓</span>`;
+  } else { msg.className = 'bf-bubble ph'; msg.textContent = T('bf_pick'); }
+  send.href = text ? `${TG}?text=${encodeURIComponent(text)}` : TG;
+  send.classList.toggle('off', !text);
+}
+function renderBrief() {
+  renderBfTypes(); renderBfQs(false); renderBfOpts();
+  if (bfExtra.value !== BF.x) bfExtra.value = BF.x; bfGrow(bfExtra);
+  bfOut();
+}
+function bfPick(i, anim = true) {
+  if (i === BF.s) return;
+  BF.s = i; BF.b = -1; bfStore();
+  $$('.bf-type', bfTypes).forEach(b => { const on = +b.dataset.s === i; b.classList.toggle('on', on); b.setAttribute('aria-checked', on); });
+  renderBfQs(anim); renderBfOpts(); bfOut();
+}
+bfTypes.addEventListener('click', e => { const b = e.target.closest('[data-s]'); if (b) bfPick(+b.dataset.s); });
+bfQs.addEventListener('input', e => {
+  const ta = e.target.closest('[data-q]'); if (!ta || BF.s < 0) return;
+  (BF.a[BF.s] = BF.a[BF.s] || [])[+ta.dataset.q] = ta.value;
+  ta.closest('.bf-f').classList.toggle('ok', !!ta.value.trim());
+  bfGrow(ta); bfOut(); bfStore();
+});
+bfBudget.addEventListener('click', e => { const b = e.target.closest('[data-b]'); if (!b) return; BF.b = BF.b === +b.dataset.b ? -1 : +b.dataset.b; renderBfOpts(); bfOut(); bfStore(); });
+bfDead.addEventListener('click', e => { const b = e.target.closest('[data-d]'); if (!b) return; BF.d = BF.d === +b.dataset.d ? -1 : +b.dataset.d; renderBfOpts(); bfOut(); bfStore(); });
+// widths settle after fonts/reveal: re-measure auto-height fields whenever the form width changes
+let bfW = 0;
+if (window.ResizeObserver) new ResizeObserver(es => { const w = Math.round(es[0].contentRect.width); if (w !== bfW) { bfW = w; $$('textarea.bf-in', bfEl).forEach(bfGrow); } }).observe(bfQs);
+if (document.fonts) document.fonts.ready.then(() => $$('textarea.bf-in', bfEl).forEach(bfGrow));
+bfExtra.addEventListener('input', () => { BF.x = bfExtra.value; bfGrow(bfExtra); bfOut(); bfStore(); });
+function bfNeedPick() {
+  toast(T('toast_bf_pick'));
+  bfEl.classList.remove('pulse'); void bfEl.offsetWidth; bfEl.classList.add('pulse');
+}
+$('#bfSend').addEventListener('click', e => {
+  const text = bfText(); if (!text) { e.preventDefault(); bfNeedPick(); return; }
+  copyText(text); toast(T('toast_bf_send'));
+});
+$('#bfCopy').addEventListener('click', () => { const text = bfText(); if (!text) return bfNeedPick(); copyText(text); toast(T('toast_bf_copy')); });
+$('#bfReset').addEventListener('click', () => {
+  if (BF.s >= 0) delete BF.a[BF.s];
+  BF.b = -1; BF.d = -1; BF.x = ''; bfStore(); renderBrief(); toast(T('toast_bf_reset'));
+});
+// service cards: "Fill in the brief" picks the service here and scrolls to the form
+document.addEventListener('click', e => {
+  const a = e.target.closest('[data-brief]'); if (!a) return;
+  e.preventDefault();
+  bfPick(+a.dataset.brief, false); renderBfQs(true);
+  scrollToSel('#brief');
+});
+
 function renderAll() {
-  [applyStatic, renderChips, renderMetrics, renderCases, renderServices, renderReviews, renderFAQ, watchSvgs, decorateTG].forEach(fn => { try { fn(); } catch (err) { console.error(fn.name, err); } });
+  [applyStatic, renderChips, renderMetrics, renderCases, renderServices, renderBrief, renderReviews, renderFAQ, watchSvgs, decorateTG].forEach(fn => { try { fn(); } catch (err) { console.error(fn.name, err); } });
   try { if (modalOpen) fillModal(modalIdx); if (lbOpen) lbShow(); } catch (err) { console.error(err); }
 }
 function setLang(l) {
@@ -1792,7 +2009,7 @@ ScrollTrigger.create({ trigger: '#metricRow', start: 'top 92%', once: true, onEn
 
 // rail active state follows scroll
 const railLinks = $$('.rail-btn[href^="#"]');
-['#top', '#work', '#services', '#how', '#faq'].forEach(id => {
+['#top', '#work', '#services', '#brief', '#how', '#faq'].forEach(id => {
   const el = $(id); if (!el) return;
   ScrollTrigger.create({ trigger: el, start: 'top 45%', end: 'bottom 45%', onToggle: s => { if (s.isActive) railLinks.forEach(a => a.classList.toggle('active', a.getAttribute('href') === id)); } });
 });
