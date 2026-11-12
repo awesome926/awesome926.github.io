@@ -27,7 +27,7 @@
 <script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-<script src="i18n.js?v=b04f5aeddf"></script>
+<script src="i18n.js?v=069bc520ea"></script>
 <script>setTimeout(function(){document.documentElement.classList.remove("preload")},2500)</script>
 <style>
   :root{
@@ -287,7 +287,8 @@
 
   /* ---------- cases ---------- */
   .case-grid{ display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; perspective:1400px; }
-  @media (max-width:1180px){ .case-grid{ grid-template-columns:repeat(2,minmax(0,1fr)); } .case-grid .slot{ grid-column:span 2; min-height:240px; } }
+  .case-grid .slot{ grid-column:1/-1; min-height:220px; }
+  @media (max-width:1180px){ .case-grid{ grid-template-columns:repeat(2,minmax(0,1fr)); } .case-grid .slot{ grid-column:auto; min-height:360px; } }
   @media (max-width:700px){ .case-grid{ grid-template-columns:1fr; } .case-grid .slot{ grid-column:auto; } }
   .case{ border-radius:20px; background:#141415; border:1px solid rgba(255,255,255,.06); overflow:hidden; display:flex; flex-direction:column; --spot-a:.1; cursor:pointer; }
   .case-shot{ position:relative; aspect-ratio:16/10; overflow:hidden; background:#0b0b0c; }
@@ -437,7 +438,7 @@
   html[data-q="min"] .halo-glow, html[data-q="min"] .shimmer, html[data-q="min"] .ping i:first-child{ animation:none; }
   @media (prefers-reduced-motion: reduce){ .plate-float, .halo-glow, .halo-ring, .shimmer, .ping i:first-child{ animation:none; } }
 </style>
-<link rel="stylesheet" href="assets/site.css?v=b04f5aeddf">
+<link rel="stylesheet" href="assets/site.css?v=069bc520ea">
 </head>
 <body>
 
@@ -618,7 +619,7 @@
       <div class="m-thumb ico" style="--c:245,198,107"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.8l2.75 5.57 6.15.9-4.45 4.33 1.05 6.12L12 16.83l-5.5 2.89 1.05-6.12L3.1 9.27l6.15-.9L12 2.8Z"></path></svg></div>
       <div class="min-w-0 flex-1">
         <div class="mono-xs muted truncate">Рейтинг продавца</div>
-        <div class="text-[18px] font-medium mt-1 whitespace-nowrap leading-tight"><span data-count="5" data-dec="1">1.9</span><span class="muted text-[14px]"> / 5</span></div>
+        <div class="text-[18px] font-medium mt-1 whitespace-nowrap leading-tight"><span data-count="5" data-dec="1">5.0</span><span class="muted text-[14px]"> / 5</span></div>
         
       </div>
       <div class="shrink-0 flex flex-col items-end gap-2"><div class="stars"><i></i><i></i><i></i><i></i><i></i></div></div>
@@ -627,7 +628,7 @@
       <div class="m-thumb ico" style="--c:71,187,100"><svg class="rv" viewBox="0 0 24 24" aria-hidden="true"><path class="rv-b" d="M12 3.5c4.7 0 8.5 3.2 8.5 7.3s-3.8 7.3-8.5 7.3c-1 0-2-.15-2.9-.43L4.5 19.5l1.2-3.6C4.3 14.6 3.5 12.8 3.5 10.8 3.5 6.7 7.3 3.5 12 3.5Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"></path><path class="rv-h" d="M12 14.3s-3.7-2.2-3.7-4.7c0-1.2.9-2.1 2-2.1.75 0 1.35.4 1.7.95.35-.55.95-.95 1.7-.95 1.1 0 2 .9 2 2.1 0 2.5-3.7 4.7-3.7 4.7Z" fill="currentColor"></path><circle class="rv-s" cx="19.6" cy="4.4" r="1.15" fill="currentColor"></circle></svg></div>
       <div class="min-w-0 flex-1">
         <div class="mono-xs muted truncate">Отзывы покупателей</div>
-        <div class="text-[18px] font-medium mt-1 whitespace-nowrap leading-tight"><span data-count="40">15</span><span class="muted text-[14px]"> отзывов</span></div>
+        <div class="text-[18px] font-medium mt-1 whitespace-nowrap leading-tight"><span data-count="40">40</span><span class="muted text-[14px]"> отзывов</span></div>
         
       </div>
       <div class="shrink-0 flex flex-col items-end gap-2"><span class="pos-badge">FunPay <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M8 7h9v9"></path></svg></span></div>
@@ -662,6 +663,19 @@
         <div class="mono-xs muted sm:text-right max-w-[420px]" data-i18n="work_note">Демо открываются в новой вкладке · клик по карточке — подробности</div>
       </div>
       <div id="caseGrid" class="case-grid" data-reveal-group><article class="case spot" data-case="0" data-tilt="0">
+      <div class="case-shot"><img src="assets/linkd.jpg" alt="linkd" width="1200" height="750" loading="lazy" decoding="async">
+        <div class="case-top"><span class="tag blue">3D-сайт студии</span><span class="tag">2026</span></div></div>
+      <div class="case-body">
+        <h3 class="case-title">linkd</h3>
+        <p class="svc-desc">Концепт сайта 3D-студии с горизонтальным скроллом: сфера из клавиш, хромированные цепи через все экраны и живые 3D-превью работ. Зажми сферу — включится бас.</p>
+        <div class="chips-s"><span>Three.js</span><span>WebGL</span><span>GSAP</span><span>Web Audio</span><span>Lenis</span></div>
+        <div class="flex flex-wrap gap-2 mt-3">
+          <a class="btn-primary btn-sm" href="work/linkd/" target="_blank" rel="noopener">Открыть демо<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M8 7h9v9"></path></svg></a>
+          <button class="btn-secondary btn-sm" data-open="0">Подробнее</button>
+        </div>
+      </div>
+    </article>
+    <article class="case spot" data-case="1" data-tilt="0">
       <div class="case-shot"><img src="assets/vitrine.jpg" alt="Vitrine" width="1200" height="750" loading="lazy" decoding="async">
         <div class="case-top"><span class="tag blue">Концепт-лендинг</span><span class="tag">2026</span></div></div>
       <div class="case-body">
@@ -670,11 +684,11 @@
         <div class="chips-s"><span>HTML</span><span>Tailwind</span><span>GSAP</span><span>Canvas 2D</span><span>Lenis</span></div>
         <div class="flex flex-wrap gap-2 mt-3">
           <a class="btn-primary btn-sm" href="work/vitrine/" target="_blank" rel="noopener">Открыть демо<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M8 7h9v9"></path></svg></a>
-          <button class="btn-secondary btn-sm" data-open="0">Подробнее</button>
+          <button class="btn-secondary btn-sm" data-open="1">Подробнее</button>
         </div>
       </div>
     </article>
-    <article class="case spot" data-case="1" data-tilt="0">
+    <article class="case spot" data-case="2" data-tilt="0">
       <div class="case-shot"><img src="assets/paper-vs-skills.jpg" alt="Paper vs Skills" width="1200" height="750" loading="lazy" decoding="async">
         <div class="case-top"><span class="tag blue">3D-скроллителлинг</span><span class="tag">2026</span></div></div>
       <div class="case-body">
@@ -683,7 +697,7 @@
         <div class="chips-s"><span>Three.js</span><span>GSAP</span><span>Web Audio</span><span>Lenis</span><span>Python</span></div>
         <div class="flex flex-wrap gap-2 mt-3">
           <a class="btn-primary btn-sm" href="work/paper-vs-skills/" target="_blank" rel="noopener">Открыть демо<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M8 7h9v9"></path></svg></a>
-          <button class="btn-secondary btn-sm" data-open="1">Подробнее</button>
+          <button class="btn-secondary btn-sm" data-open="2">Подробнее</button>
         </div>
       </div>
     </article>
@@ -708,7 +722,7 @@
         <div class="mono-xs muted sm:text-right max-w-[420px]" data-i18n="svc_note">Фильтры сверху и поиск «/» работают по этому списку</div>
       </div>
       <div id="svcGrid" class="svc-grid"><article class="svc spot hot" data-cat="discord" data-q="discord-сервер под ключ discord server, turnkey servidor do discord completo discordサーバー構築 каналы и категории, роли и права, оформление, приветствия, тикеты и авто-роли. для кланов, стримеров и сообществ. отсюда приходит больше всего заказов. discord roles permissions ticket tool carl-bot dyno бот bot" data-tilt="3">
-      <div class="svc-art" data-lb="0" role="button" tabindex="0" aria-label="Смотреть скрин"><img src="assets/svc/discord-server.webp?v=b04f5aeddf" alt="Discord-сервер под ключ" loading="lazy" decoding="async" fetchpriority="low" style="object-position:left center"><div class="case-top"><span class="tag">Discord</span><span class="flex gap-1.5"><span class="tag hot">★ Чаще всего заказывают</span><span class="tag demo">демо</span></span></div><span class="zoom"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"></path></svg></span></div>
+      <div class="svc-art" data-lb="0" role="button" tabindex="0" aria-label="Смотреть скрин"><img src="assets/svc/discord-server.webp?v=069bc520ea" alt="Discord-сервер под ключ" loading="lazy" decoding="async" fetchpriority="low" style="object-position:left center"><div class="case-top"><span class="tag">Discord</span><span class="flex gap-1.5"><span class="tag hot">★ Чаще всего заказывают</span><span class="tag demo">демо</span></span></div><span class="zoom"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"></path></svg></span></div>
       <div class="svc-body">
         <h3 class="svc-title">Discord-сервер под ключ</h3>
         <p class="svc-desc">Каналы и категории, роли и права, оформление, приветствия, тикеты и авто-роли. Для кланов, стримеров и сообществ. Отсюда приходит больше всего заказов.</p>
@@ -718,7 +732,7 @@
       </div>
     </article>
     <article class="svc spot " data-cat="discord" data-q="discord-бот на заказ custom discord bot bot de discord sob encomenda discordボット開発 модерация, тикеты, уровни, мини-игры или любая своя логика. исходный код остаётся у тебя. discord moderation tickets levels mini-games бот bot" data-tilt="5">
-      <div class="svc-art" data-lb="1" role="button" tabindex="0" aria-label="Смотреть скрин"><img src="assets/svc/discord-bot.webp?v=b04f5aeddf" alt="Discord-бот на заказ" loading="lazy" decoding="async" fetchpriority="low" style="object-position:center"><div class="case-top"><span class="tag">Discord</span><span class="flex gap-1.5"><span class="tag demo">демо</span></span></div><span class="zoom"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"></path></svg></span></div>
+      <div class="svc-art" data-lb="1" role="button" tabindex="0" aria-label="Смотреть скрин"><img src="assets/svc/discord-bot.webp?v=069bc520ea" alt="Discord-бот на заказ" loading="lazy" decoding="async" fetchpriority="low" style="object-position:center"><div class="case-top"><span class="tag">Discord</span><span class="flex gap-1.5"><span class="tag demo">демо</span></span></div><span class="zoom"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"></path></svg></span></div>
       <div class="svc-body">
         <h3 class="svc-title">Discord-бот на заказ</h3>
         <p class="svc-desc">Модерация, тикеты, уровни, мини-игры или любая своя логика. Исходный код остаётся у тебя.</p>
@@ -728,7 +742,7 @@
       </div>
     </article>
     <article class="svc spot " data-cat="discord" data-q="защита сервера server protection proteção do servidor サーバー保護 антирейд, антиспам и фильтр рекламы, логи действий, правильные права у ролей. обычно за полчаса. discord automod anti-raid logs бот bot" data-tilt="5">
-      <div class="svc-art" data-lb="2" role="button" tabindex="0" aria-label="Смотреть скрин"><img src="assets/svc/discord-protect.webp?v=b04f5aeddf" alt="Защита сервера" loading="lazy" decoding="async" fetchpriority="low" style="object-position:center top"><div class="case-top"><span class="tag">Discord</span><span class="flex gap-1.5"><span class="tag demo">демо</span></span></div><span class="zoom"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"></path></svg></span></div>
+      <div class="svc-art" data-lb="2" role="button" tabindex="0" aria-label="Смотреть скрин"><img src="assets/svc/discord-protect.webp?v=069bc520ea" alt="Защита сервера" loading="lazy" decoding="async" fetchpriority="low" style="object-position:center top"><div class="case-top"><span class="tag">Discord</span><span class="flex gap-1.5"><span class="tag demo">демо</span></span></div><span class="zoom"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"></path></svg></span></div>
       <div class="svc-body">
         <h3 class="svc-title">Защита сервера</h3>
         <p class="svc-desc">Антирейд, антиспам и фильтр рекламы, логи действий, правильные права у ролей. Обычно за полчаса.</p>
@@ -738,7 +752,7 @@
       </div>
     </article>
     <article class="svc spot " data-cat="telegram" data-q="telegram-бот telegram bot bot de telegram telegramボット меню и кнопки, заявки и запись, каталог, уведомления админу. простой бот — примерно за день. telegram menu forms booking admin alerts бот bot" data-tilt="5">
-      <div class="svc-art" data-lb="3" role="button" tabindex="0" aria-label="Смотреть скрин"><img src="assets/svc/tg-bot.webp?v=b04f5aeddf" alt="Telegram-бот" loading="lazy" decoding="async" fetchpriority="low" style="object-position:center"><div class="case-top"><span class="tag">Telegram<svg class="tgi" viewBox="0 0 24 24" aria-hidden="true"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"></path></svg></span><span class="flex gap-1.5"><span class="tag demo">демо</span></span></div><span class="zoom"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"></path></svg></span></div>
+      <div class="svc-art" data-lb="3" role="button" tabindex="0" aria-label="Смотреть скрин"><img src="assets/svc/tg-bot.webp?v=069bc520ea" alt="Telegram-бот" loading="lazy" decoding="async" fetchpriority="low" style="object-position:center"><div class="case-top"><span class="tag">Telegram<svg class="tgi" viewBox="0 0 24 24" aria-hidden="true"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"></path></svg></span><span class="flex gap-1.5"><span class="tag demo">демо</span></span></div><span class="zoom"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"></path></svg></span></div>
       <div class="svc-body">
         <h3 class="svc-title">Telegram-бот</h3>
         <p class="svc-desc">Меню и кнопки, заявки и запись, каталог, уведомления админу. Простой бот — примерно за день.</p>
@@ -748,7 +762,7 @@
       </div>
     </article>
     <article class="svc spot " data-cat="telegram" data-q="магазин и автопостинг shop &amp; autoposting loja e autopostagem ショップと自動投稿 telegram-магазин с автовыдачей: оплатил — сразу получил. отложенные посты в канал по расписанию, с кнопками. telegram auto-delivery scheduler buttons бот bot" data-tilt="5">
-      <div class="svc-art" data-lb="4" role="button" tabindex="0" aria-label="Смотреть скрин"><img src="assets/svc/tg-shop.webp?v=b04f5aeddf" alt="Магазин и автопостинг" loading="lazy" decoding="async" fetchpriority="low" style="object-position:center"><div class="case-top"><span class="tag">Telegram<svg class="tgi" viewBox="0 0 24 24" aria-hidden="true"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"></path></svg></span><span class="flex gap-1.5"><span class="tag demo">демо</span></span></div><span class="zoom"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"></path></svg></span></div>
+      <div class="svc-art" data-lb="4" role="button" tabindex="0" aria-label="Смотреть скрин"><img src="assets/svc/tg-shop.webp?v=069bc520ea" alt="Магазин и автопостинг" loading="lazy" decoding="async" fetchpriority="low" style="object-position:center"><div class="case-top"><span class="tag">Telegram<svg class="tgi" viewBox="0 0 24 24" aria-hidden="true"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"></path></svg></span><span class="flex gap-1.5"><span class="tag demo">демо</span></span></div><span class="zoom"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"></path></svg></span></div>
       <div class="svc-body">
         <h3 class="svc-title">Магазин и автопостинг</h3>
         <p class="svc-desc">Telegram-магазин с автовыдачей: оплатил — сразу получил. Отложенные посты в канал по расписанию, с кнопками.</p>
@@ -758,7 +772,7 @@
       </div>
     </article>
     <article class="svc spot " data-cat="parsers" data-q="парсеры web scrapers scrapers スクレイパー собираю данные с сайтов в таблицу, csv или базу. можно запускать по расписанию и присылать уведомления в telegram. parsers csv json schedule alerts бот bot" data-tilt="5">
-      <div class="svc-art" data-lb="5" role="button" tabindex="0" aria-label="Смотреть скрин"><img src="assets/svc/parser.webp?v=b04f5aeddf" alt="Парсеры" loading="lazy" decoding="async" fetchpriority="low" style="object-position:center"><div class="case-top"><span class="tag">Парсеры</span><span class="flex gap-1.5"><span class="tag demo">демо</span></span></div><span class="zoom"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"></path></svg></span></div>
+      <div class="svc-art" data-lb="5" role="button" tabindex="0" aria-label="Смотреть скрин"><img src="assets/svc/parser.webp?v=069bc520ea" alt="Парсеры" loading="lazy" decoding="async" fetchpriority="low" style="object-position:center"><div class="case-top"><span class="tag">Парсеры</span><span class="flex gap-1.5"><span class="tag demo">демо</span></span></div><span class="zoom"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"></path></svg></span></div>
       <div class="svc-body">
         <h3 class="svc-title">Парсеры</h3>
         <p class="svc-desc">Собираю данные с сайтов в таблицу, CSV или базу. Можно запускать по расписанию и присылать уведомления в Telegram.</p>
@@ -768,7 +782,7 @@
       </div>
     </article>
     <article class="svc spot " data-cat="web" data-q="сайты и лендинги websites &amp; landing pages sites e landing pages webサイト・lp制作 одностраничники с живыми анимациями, адаптив под телефон, выкладка на хостинг. примеры — выше, в разделе «работы». web html tailwind gsap three.js бот bot" data-tilt="5">
-      <div class="svc-art" data-lb="6" role="button" tabindex="0" aria-label="Смотреть скрин"><img src="assets/svc/web.webp?v=b04f5aeddf" alt="Сайты и лендинги" loading="lazy" decoding="async" fetchpriority="low" style="object-position:center"><div class="case-top"><span class="tag">Сайты</span><span class="flex gap-1.5"><span class="tag demo">демо</span></span></div><span class="zoom"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"></path></svg></span></div>
+      <div class="svc-art" data-lb="6" role="button" tabindex="0" aria-label="Смотреть скрин"><img src="assets/svc/web.webp?v=069bc520ea" alt="Сайты и лендинги" loading="lazy" decoding="async" fetchpriority="low" style="object-position:center"><div class="case-top"><span class="tag">Сайты</span><span class="flex gap-1.5"><span class="tag demo">демо</span></span></div><span class="zoom"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"></path></svg></span></div>
       <div class="svc-body">
         <h3 class="svc-title">Сайты и лендинги</h3>
         <p class="svc-desc">Одностраничники с живыми анимациями, адаптив под телефон, выкладка на хостинг. Примеры — выше, в разделе «Работы».</p>
@@ -778,7 +792,7 @@
       </div>
     </article>
     <article class="svc spot hot" data-cat="mods" data-q="beamng.drive: физика и моторы beamng.drive: physics &amp; engines beamng.drive: física e motores beamng.drive：物理とエンジン калибрую jbeam: моторы, коробки, турбины, подвеску и массу, чтобы техника ехала и ломалась как задумано. механики на lua: лаунч-контроль, свои приборы, электрика. mods jbeam lua powertrain suspension physics бот bot" data-tilt="3">
-      <div class="svc-art" data-lb="7" role="button" tabindex="0" aria-label="Смотреть скрин"><img src="assets/svc/beamng-jbeam.webp?v=b04f5aeddf" alt="BeamNG.drive: физика и моторы" loading="lazy" decoding="async" fetchpriority="low" style="object-position:left top"><div class="case-top"><span class="tag">Моддинг</span><span class="flex gap-1.5"><span class="tag hot">◆ Ценится</span><span class="tag demo">демо</span></span></div><span class="zoom"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"></path></svg></span></div>
+      <div class="svc-art" data-lb="7" role="button" tabindex="0" aria-label="Смотреть скрин"><img src="assets/svc/beamng-jbeam.webp?v=069bc520ea" alt="BeamNG.drive: физика и моторы" loading="lazy" decoding="async" fetchpriority="low" style="object-position:left top"><div class="case-top"><span class="tag">Моддинг</span><span class="flex gap-1.5"><span class="tag hot">◆ Ценится</span><span class="tag demo">демо</span></span></div><span class="zoom"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"></path></svg></span></div>
       <div class="svc-body">
         <h3 class="svc-title">BeamNG.drive: физика и моторы</h3>
         <p class="svc-desc">Калибрую JBeam: моторы, коробки, турбины, подвеску и массу, чтобы техника ехала и ломалась как задумано. Механики на Lua: лаунч-контроль, свои приборы, электрика.</p>
@@ -788,7 +802,7 @@
       </div>
     </article>
     <article class="svc spot " data-cat="mods" data-q="teardown: моды на lua teardown: lua mods teardown: mods em lua teardown：luaモッド свои инструменты, оружие и механики на lua: разрушение, физика объектов, интерфейс и настройки мода. mods lua tools destruction ui бот bot" data-tilt="5">
-      <div class="svc-art" data-lb="8" role="button" tabindex="0" aria-label="Смотреть скрин"><img src="assets/svc/teardown.webp?v=b04f5aeddf" alt="Teardown: моды на Lua" loading="lazy" decoding="async" fetchpriority="low" style="object-position:center"><div class="case-top"><span class="tag">Моддинг</span><span class="flex gap-1.5"><span class="tag demo">демо</span></span></div><span class="zoom"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"></path></svg></span></div>
+      <div class="svc-art" data-lb="8" role="button" tabindex="0" aria-label="Смотреть скрин"><img src="assets/svc/teardown.webp?v=069bc520ea" alt="Teardown: моды на Lua" loading="lazy" decoding="async" fetchpriority="low" style="object-position:center"><div class="case-top"><span class="tag">Моддинг</span><span class="flex gap-1.5"><span class="tag demo">демо</span></span></div><span class="zoom"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"></path></svg></span></div>
       <div class="svc-body">
         <h3 class="svc-title">Teardown: моды на Lua</h3>
         <p class="svc-desc">Свои инструменты, оружие и механики на Lua: разрушение, физика объектов, интерфейс и настройки мода.</p>
@@ -798,7 +812,7 @@
       </div>
     </article>
     <article class="svc spot " data-cat="mods" data-q="моды для minecraft minecraft mods mods de minecraft minecraft mod моды на fabric и forge: новые предметы, блоки и механики, баланс и совместимость с другими модами. mods fabric forge java items бот bot" data-tilt="5">
-      <div class="svc-art" data-lb="9" role="button" tabindex="0" aria-label="Смотреть скрин"><img src="assets/svc/mc-mod.webp?v=b04f5aeddf" alt="Моды для Minecraft" loading="lazy" decoding="async" fetchpriority="low" style="object-position:center"><div class="case-top"><span class="tag">Моддинг</span><span class="flex gap-1.5"><span class="tag demo">демо</span></span></div><span class="zoom"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"></path></svg></span></div>
+      <div class="svc-art" data-lb="9" role="button" tabindex="0" aria-label="Смотреть скрин"><img src="assets/svc/mc-mod.webp?v=069bc520ea" alt="Моды для Minecraft" loading="lazy" decoding="async" fetchpriority="low" style="object-position:center"><div class="case-top"><span class="tag">Моддинг</span><span class="flex gap-1.5"><span class="tag demo">демо</span></span></div><span class="zoom"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"></path></svg></span></div>
       <div class="svc-body">
         <h3 class="svc-title">Моды для Minecraft</h3>
         <p class="svc-desc">Моды на Fabric и Forge: новые предметы, блоки и механики, баланс и совместимость с другими модами.</p>
@@ -808,7 +822,7 @@
       </div>
     </article>
     <article class="svc spot " data-cat="games" data-q="minecraft minecraft minecraft minecraft плагины на paper/spigot 1.16–1.21 с исходником и настройка сервера: geyser, luckperms, velocity. games paper spigot geyser luckperms бот bot" data-tilt="5">
-      <div class="svc-art" data-lb="10" role="button" tabindex="0" aria-label="Смотреть скрин"><img src="assets/svc/minecraft.webp?v=b04f5aeddf" alt="Minecraft" loading="lazy" decoding="async" fetchpriority="low" style="object-position:center"><div class="case-top"><span class="tag">Игры</span><span class="flex gap-1.5"><span class="tag demo">демо</span></span></div><span class="zoom"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"></path></svg></span></div>
+      <div class="svc-art" data-lb="10" role="button" tabindex="0" aria-label="Смотреть скрин"><img src="assets/svc/minecraft.webp?v=069bc520ea" alt="Minecraft" loading="lazy" decoding="async" fetchpriority="low" style="object-position:center"><div class="case-top"><span class="tag">Игры</span><span class="flex gap-1.5"><span class="tag demo">демо</span></span></div><span class="zoom"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"></path></svg></span></div>
       <div class="svc-body">
         <h3 class="svc-title">Minecraft</h3>
         <p class="svc-desc">Плагины на Paper/Spigot 1.16–1.21 с исходником и настройка сервера: Geyser, LuckPerms, Velocity.</p>
@@ -818,7 +832,7 @@
       </div>
     </article>
     <article class="svc spot " data-cat="games" data-q="roblox studio roblox studio roblox studio roblox studio системы на luau: сохранения, магазин, интерфейс. чиню сломанные механики и ошибки в output. games luau datastore ui бот bot" data-tilt="5">
-      <div class="svc-art" data-lb="11" role="button" tabindex="0" aria-label="Смотреть скрин"><img src="assets/svc/roblox.webp?v=b04f5aeddf" alt="Roblox Studio" loading="lazy" decoding="async" fetchpriority="low" style="object-position:center"><div class="case-top"><span class="tag">Игры</span><span class="flex gap-1.5"><span class="tag demo">демо</span></span></div><span class="zoom"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"></path></svg></span></div>
+      <div class="svc-art" data-lb="11" role="button" tabindex="0" aria-label="Смотреть скрин"><img src="assets/svc/roblox.webp?v=069bc520ea" alt="Roblox Studio" loading="lazy" decoding="async" fetchpriority="low" style="object-position:center"><div class="case-top"><span class="tag">Игры</span><span class="flex gap-1.5"><span class="tag demo">демо</span></span></div><span class="zoom"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"></path></svg></span></div>
       <div class="svc-body">
         <h3 class="svc-title">Roblox Studio</h3>
         <p class="svc-desc">Системы на Luau: сохранения, магазин, интерфейс. Чиню сломанные механики и ошибки в Output.</p>
@@ -828,7 +842,7 @@
       </div>
     </article>
     <article class="svc spot " data-cat="ai" data-q="ии-боты и инструменты ai bots &amp; tooling bots e ferramentas de ia aiボット・開発環境 telegram-бот на claude или gpt, который отвечает клиентам. настройка claude code и cursor, свои mcp-серверы. ai claude gpt mcp cursor бот bot" data-tilt="5">
-      <div class="svc-art" data-lb="12" role="button" tabindex="0" aria-label="Смотреть скрин"><img src="assets/svc/ai-bot.webp?v=b04f5aeddf" alt="ИИ-боты и инструменты" loading="lazy" decoding="async" fetchpriority="low" style="object-position:center"><div class="case-top"><span class="tag">ИИ</span><span class="flex gap-1.5"><span class="tag demo">демо</span></span></div><span class="zoom"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"></path></svg></span></div>
+      <div class="svc-art" data-lb="12" role="button" tabindex="0" aria-label="Смотреть скрин"><img src="assets/svc/ai-bot.webp?v=069bc520ea" alt="ИИ-боты и инструменты" loading="lazy" decoding="async" fetchpriority="low" style="object-position:center"><div class="case-top"><span class="tag">ИИ</span><span class="flex gap-1.5"><span class="tag demo">демо</span></span></div><span class="zoom"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"></path></svg></span></div>
       <div class="svc-body">
         <h3 class="svc-title">ИИ-боты и инструменты</h3>
         <p class="svc-desc">Telegram-бот на Claude или GPT, который отвечает клиентам. Настройка Claude Code и Cursor, свои MCP-серверы.</p>
@@ -1645,7 +1659,7 @@ function renderServices() {
     const q = [s.t.ru, s.t.en, s.t.pt, s.t.ja, s.d[LANG], s.cat, ...s.tags, 'бот bot'].join(' ').toLowerCase();
     return `
     <article class="svc spot ${s.hot || s.feat ? 'hot' : ''}" data-cat="${s.cat}" data-q="${esc(q)}" data-tilt="${s.hot || s.feat ? 3 : 5}">
-      <div class="svc-art" data-lb="${i}" role="button" tabindex="0" aria-label="${esc(T('svc_zoom'))}">${s.img && s.img[0] ? `<img src="assets/svc/${s.img[0]}.webp?v=b04f5aeddf" alt="${esc(L(s.t))}" loading="lazy" decoding="async" fetchpriority="low" style="object-position:${s.pos || 'center'}">` : (s.gen && GEN[s.gen] ? artFor(s) : '')}<div class="case-top"><span class="tag">${esc(T('cat_' + s.cat))}${s.cat === 'telegram' ? TGI : ''}</span><span class="flex gap-1.5">${s.hot ? `<span class="tag hot">★ ${esc(T('svc_hot'))}</span>` : s.feat ? `<span class="tag hot">◆ ${esc(T('svc_feat'))}</span>` : ''}<span class="tag demo">${esc(T('svc_demo'))}</span></span></div><span class="zoom"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></span></div>
+      <div class="svc-art" data-lb="${i}" role="button" tabindex="0" aria-label="${esc(T('svc_zoom'))}">${s.img && s.img[0] ? `<img src="assets/svc/${s.img[0]}.webp?v=069bc520ea" alt="${esc(L(s.t))}" loading="lazy" decoding="async" fetchpriority="low" style="object-position:${s.pos || 'center'}">` : (s.gen && GEN[s.gen] ? artFor(s) : '')}<div class="case-top"><span class="tag">${esc(T('cat_' + s.cat))}${s.cat === 'telegram' ? TGI : ''}</span><span class="flex gap-1.5">${s.hot ? `<span class="tag hot">★ ${esc(T('svc_hot'))}</span>` : s.feat ? `<span class="tag hot">◆ ${esc(T('svc_feat'))}</span>` : ''}<span class="tag demo">${esc(T('svc_demo'))}</span></span></div><span class="zoom"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></span></div>
       <div class="svc-body">
         <h3 class="svc-title">${esc(L(s.t))}</h3>
         <p class="svc-desc">${esc(L(s.d))}</p>
@@ -1686,7 +1700,7 @@ let lbOpen = false, lbSvc = 0, lbIdx = 0;
 function lbShow() {
   const s = SERVICES[lbSvc], many = s.img.length > 1;
   if (!s.img || !s.img.length) return;
-  lbImg.src = `assets/svc/${s.img[lbIdx]}-full.webp?v=b04f5aeddf`; lbImg.alt = L(s.t);
+  lbImg.src = `assets/svc/${s.img[lbIdx]}-full.webp?v=069bc520ea`; lbImg.alt = L(s.t);
   $('#lbCap').textContent = L(s.t) + (many ? `  ·  ${lbIdx + 1} / ${s.img.length}` : '');
   $('#lbHint').textContent = T('lb_hint');
   $$('.nav', lb).forEach(b => { b.style.display = many ? '' : 'none'; });

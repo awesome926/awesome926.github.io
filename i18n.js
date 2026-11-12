@@ -254,6 +254,16 @@ window.DATA = {
   ],
 
   cases: [
+    { id: 'linkd', title: 'linkd', year: '2026', img: 'assets/linkd.jpg', url: 'work/linkd/', stack: ['Three.js', 'WebGL', 'GSAP', 'Web Audio', 'Lenis'],
+      type: { ru: '3D-сайт студии', en: '3D studio website', pt: 'Site 3D de estúdio', ja: '3Dスタジオサイト' },
+      d: { ru: 'Концепт сайта 3D-студии с горизонтальным скроллом: сфера из клавиш, хромированные цепи через все экраны и живые 3D-превью работ. Зажми сферу — включится бас.',
+           en: 'Concept site for a 3D studio with horizontal scrolling: a sphere of keycaps, chrome chains running through every screen and live 3D project previews. Hold the sphere to hear the bass.',
+           pt: 'Site conceitual de um estúdio 3D com rolagem horizontal: uma esfera de teclas, correntes cromadas por todas as telas e prévias 3D ao vivo dos projetos. Segure a esfera para ouvir o grave.',
+           ja: '横スクロールの3Dスタジオのコンセプトサイト。キーキャップの球体、全画面を貫くクロームのチェーン、ライブ3Dの作品プレビュー。球体を長押しするとベースが鳴ります。' },
+      pts: { ru: ['Всё 3D процедурное: клавиши, цепи, шипастая звезда — без единой модели', 'Вертикальный скролл двигает горизонтальную ленту, WebGL идёт с ней 1:1', '13 карточек с живыми мини-сценами, отрисованными в текстуры', 'Бас-дрон синтезируется через Web Audio, шлейф при быстром скролле'],
+             en: ['All 3D is procedural: keycaps, chains, the spiked star — no model files', 'Vertical scroll drives a horizontal track, WebGL moves with it 1:1', '13 cards with live mini-scenes rendered to textures', 'Bass drone synthesized with Web Audio, motion trail on fast scrolls'],
+             pt: ['Todo o 3D é procedural: teclas, correntes, a estrela com espinhos — sem arquivos de modelo', 'A rolagem vertical move uma faixa horizontal e o WebGL acompanha 1:1', '13 cards com minicenas 3D ao vivo renderizadas em textura', 'Grave sintetizado com Web Audio, rastro de movimento na rolagem rápida'],
+             ja: ['3Dはすべてプロシージャル：キーキャップ、チェーン、トゲの星。モデルファイルなし', '縦スクロールで横のトラックが動き、WebGLも1:1で追従', 'ライブのミニシーンをテクスチャに描画した13枚のカード', 'Web Audioで合成したベース音、高速スクロール時の残像'] } },
     { id: 'vitrine', title: 'Vitrine', year: '2026', img: 'assets/vitrine.jpg', url: 'work/vitrine/', stack: ['HTML', 'Tailwind', 'GSAP', 'Canvas 2D', 'Lenis'],
       type: { ru: 'Концепт-лендинг', en: 'Concept landing', pt: 'Landing conceitual', ja: 'コンセプトLP' },
       d: { ru: 'Витрина цифровых коллекций в духе маркетплейса: живое поле частиц, стеклянные плашки с шейдерами, генеративные арты и модалка осмотра.',
