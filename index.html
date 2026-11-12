@@ -248,6 +248,7 @@
   .tag.demo{ color:#81d8d0; border-color:rgba(129,216,208,.32); }
   .tgi{ width:15px; height:15px; flex:none; display:inline-block; vertical-align:-3px; filter:drop-shadow(0 0 5px rgba(42,171,238,.5)); }
   .tgi path{ fill:#2AABEE; }
+  .btn-primary .tgi{ filter:none; } .btn-primary .tgi path{ fill:#fff; }
   .btn-sm .tgi, .chip .tgi, .tag .tgi, .mono-xs .tgi, footer .tgi{ width:12px; height:12px; vertical-align:-2px; }
   .tag .tgi{ margin-left:5px; }
   .svc-cta .tgi{ margin:0 auto 0 7px; }
@@ -347,6 +348,8 @@
     height:44px; padding:0 18px; border-radius:9999px; display:flex; align-items:center; gap:10px; background:rgba(20,20,21,.9); border:1px solid #26272d; font-size:14px; white-space:nowrap; }
   .off .halo-glow, .off .halo-ring, .off .shimmer, .off .plate-float, .off .ping i, .off .ld, .off .caret{ animation-play-state:paused !important; }
   .preload .rail, .preload .topbar, .preload #chips, .preload .hero-content > *, .preload .plate, .preload .hud{ opacity:0; }
+  @media (pointer:coarse){ .topbar{ -webkit-backdrop-filter:none; backdrop-filter:none; background:rgba(20,20,21,.97); } }
+  html[data-q="min"] .halo-glow, html[data-q="min"] .shimmer, html[data-q="min"] .ping i:first-child{ animation:none; }
   @media (prefers-reduced-motion: reduce){ .plate-float, .halo-glow, .halo-ring, .shimmer, .ping i:first-child{ animation:none; } }
 </style>
 <link rel="stylesheet" href="assets/site.css?v=46711b9ac0">
@@ -719,6 +722,29 @@ gsap.registerPlugin(ScrollTrigger);
 const REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 /* =========================================================
+   ADAPTIVE QUALITY — same picture, less work on weak devices
+   full: desktop · lite: phones / <=4 cores / <=4 GB / data saver · min: FPS stays low
+   ========================================================= */
+const COARSE = matchMedia('(pointer: coarse)').matches;
+const NET = navigator.connection || {};
+const WEAK = !!(REDUCED || NET.saveData || (navigator.deviceMemory && navigator.deviceMemory <= 4) || (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4));
+const QUALITY = {
+  full: { auroraScale: 5, auroraSkip: 2, plateSkip: 2 },
+  lite: { auroraScale: 7, auroraSkip: 3, plateSkip: 3 },
+  min:  { auroraScale: 9, auroraSkip: 4, plateSkip: 6 }
+};
+let qName = new URLSearchParams(location.search).get('q');
+if (!QUALITY[qName]) qName = (WEAK || COARSE) ? 'lite' : 'full';
+let Q = QUALITY[qName];
+const qListeners = [];
+document.documentElement.dataset.q = qName;
+function setQuality(n) {
+  if (n === qName || !QUALITY[n]) return;
+  qName = n; Q = QUALITY[n]; document.documentElement.dataset.q = n;
+  qListeners.forEach(f => { try { f(); } catch (e) {} });
+}
+
+/* =========================================================
    LANGUAGE
    ========================================================= */
 const LANGS = ['ru', 'en', 'pt', 'ja'];
@@ -1030,7 +1056,7 @@ const Field = (() => {
   // Soft aurora: a handful of wide light ribbons drawn on a tiny canvas (1/6 of the stage),
   // upscaled by the browser so they come out naturally blurred. ~240x85 px of work per frame.
   const stage = $('#stage'), cv = $('#field'), ctx = cv.getContext('2d');
-  const S = 5;
+  let S = Q.auroraScale;
   const HAS_FILTER = 'filter' in ctx;
   if (!HAS_FILTER) cv.style.filter = 'blur(14px)';
   let W = 0, H = 0, w = 0, h = 0, visible = true, frame = 0;
@@ -1045,7 +1071,7 @@ const Field = (() => {
   ];
   const deep = [6, 92, 110];                                      // deep teal partner colour
   const col = (k, a) => { const r = tint[0] + (deep[0] - tint[0]) * k, g = tint[1] + (deep[1] - tint[1]) * k, b = tint[2] + (deep[2] - tint[2]) * k; return `rgba(${r | 0},${g | 0},${b | 0},${a})`; };
-  function build() { W = stage.clientWidth; H = stage.clientHeight; w = Math.max(2, Math.ceil(W / S)); h = Math.max(2, Math.ceil(H / S)); cv.width = w; cv.height = h; }
+  function build() { S = Q.auroraScale; W = stage.clientWidth; H = stage.clientHeight; w = Math.max(2, Math.ceil(W / S)); h = Math.max(2, Math.ceil(H / S)); cv.width = w; cv.height = h; }
   stage.addEventListener('pointermove', e => { const r = stage.getBoundingClientRect(); m.tx = (e.clientX - r.left) / r.width; m.ty = (e.clientY - r.top) / r.height; });
   stage.addEventListener('pointerleave', () => { m.tx = .5; m.ty = .5; });
   function setTint(rgb) { tintT[0] = rgb[0]; tintT[1] = rgb[1]; tintT[2] = rgb[2]; }
@@ -1088,10 +1114,11 @@ const Field = (() => {
     rg.addColorStop(0, col(.2, .22)); rg.addColorStop(1, col(.2, 0));
     ctx.fillStyle = rg; ctx.fillRect(0, 0, w, h);
   }
-  function step(t) { if (!visible || !w) return; if ((frame++ & 1) && !REDUCED) return; draw(REDUCED ? 8 : t); }
+  function step(t) { if (!visible || !w) return; if ((frame++ % Q.auroraSkip) && !REDUCED) return; draw(REDUCED ? 8 : t); }
   new IntersectionObserver(es => { visible = es[0].isIntersecting; }, { threshold: 0 }).observe(stage);
   let rt; new ResizeObserver(() => { clearTimeout(rt); rt = setTimeout(() => { build(); draw(performance.now() / 1000); }, 80); }).observe(stage);
   build(); draw(0);
+  qListeners.push(() => { build(); draw(performance.now() / 1000); });
   return { step, setTint, get visible() { return visible; }, get size() { return [W, H]; } };
 })();
 
@@ -1130,7 +1157,7 @@ const Plates = (() => {
     o.ctx.putImageData(img, 0, 0);
   }
   list.forEach(o => render(o, 0));
-  function step(t) { if (!Field.visible) return; frame++; for (let i = 0; i < list.length; i++) if ((i + frame) % 2 === 0) render(list[i], t); }
+  function step(t) { if (!Field.visible) return; frame++; for (let i = 0; i < list.length; i++) if ((i + frame) % Q.plateSkip === 0) render(list[i], t); }
   return { step };
 })();
 
@@ -1275,7 +1302,7 @@ function renderServices() {
     const q = [s.t.ru, s.t.en, s.t.pt, s.t.ja, s.d[LANG], s.cat, ...s.tags, 'бот bot'].join(' ').toLowerCase();
     return `
     <article class="svc spot ${s.hot || s.feat ? 'hot' : ''}" data-cat="${s.cat}" data-q="${esc(q)}" data-tilt="${s.hot || s.feat ? 3 : 5}">
-      <div class="svc-art" data-lb="${i}" role="button" tabindex="0" aria-label="${esc(T('svc_zoom'))}">${s.img && s.img[0] ? `<img src="assets/svc/${s.img[0]}.webp?v=46711b9ac0" alt="${esc(L(s.t))}" loading="lazy" decoding="async" style="object-position:${s.pos || 'center'}">` : (s.gen && GEN[s.gen] ? artFor(s) : '')}<div class="case-top"><span class="tag">${esc(T('cat_' + s.cat))}${s.cat === 'telegram' ? TGI : ''}</span><span class="flex gap-1.5">${s.hot ? `<span class="tag hot">★ ${esc(T('svc_hot'))}</span>` : s.feat ? `<span class="tag hot">◆ ${esc(T('svc_feat'))}</span>` : ''}<span class="tag demo">${esc(T('svc_demo'))}</span></span></div><span class="zoom"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></span></div>
+      <div class="svc-art" data-lb="${i}" role="button" tabindex="0" aria-label="${esc(T('svc_zoom'))}">${s.img && s.img[0] ? `<img src="assets/svc/${s.img[0]}.webp?v=46711b9ac0" alt="${esc(L(s.t))}" loading="lazy" decoding="async" fetchpriority="low" style="object-position:${s.pos || 'center'}">` : (s.gen && GEN[s.gen] ? artFor(s) : '')}<div class="case-top"><span class="tag">${esc(T('cat_' + s.cat))}${s.cat === 'telegram' ? TGI : ''}</span><span class="flex gap-1.5">${s.hot ? `<span class="tag hot">★ ${esc(T('svc_hot'))}</span>` : s.feat ? `<span class="tag hot">◆ ${esc(T('svc_feat'))}</span>` : ''}<span class="tag demo">${esc(T('svc_demo'))}</span></span></div><span class="zoom"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></span></div>
       <div class="svc-body">
         <h3 class="svc-title">${esc(L(s.t))}</h3>
         <p class="svc-desc">${esc(L(s.d))}</p>
@@ -1471,7 +1498,25 @@ if (document.fonts) document.fonts.ready.then(() => moveInd(false));
    MAIN LOOP (single ticker) + FPS
    ========================================================= */
 
+const PERF = new URLSearchParams(location.search).has('perf');
+let perfEl = null, pAcc = 0, pN = 0, gAcc = 0, gN = 0, gLow = 0;
+const T0 = performance.now();
+if (PERF) {
+  perfEl = document.createElement('div');
+  perfEl.style.cssText = 'position:fixed;left:10px;bottom:10px;z-index:200;font:12px/1.4 "IBM Plex Mono",monospace;color:#e8fffc;background:rgba(10,10,12,.85);border:1px solid #26272d;border-radius:8px;padding:6px 9px;pointer-events:none';
+  document.body.appendChild(perfEl);
+}
 gsap.ticker.add((time, deltaMs) => {
+  if (!document.hidden && performance.now() - T0 > 3500 && Field.visible) {
+    gAcc += deltaMs; gN++;
+    if (gN >= 60) {
+      const avg = gAcc / gN;
+      gLow = avg > 24 ? gLow + 1 : 0;              // below ~42 fps two windows in a row
+      if (gLow >= 2) { setQuality(qName === 'full' ? 'lite' : 'min'); gLow = 0; }
+      gAcc = 0; gN = 0;
+    }
+  }
+  if (perfEl) { pAcc += deltaMs; pN++; if (pAcc > 500) { perfEl.textContent = `${Math.round(1000 / (pAcc / pN))} fps · ${qName}${WEAK ? ' · weak' : ''}${COARSE ? ' · touch' : ''}`; pAcc = 0; pN = 0; } }
   Field.step(time);
   Plates.step(time);
 });
