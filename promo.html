@@ -10,7 +10,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Unbounded:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-<script src="assets/music.js"></script>
+<script src="assets/music.js?v=6769e259e5"></script>
 <style>
 :root{
   --bg:#050505; --card:#111111; --line:rgba(255,255,255,.08); --line2:rgba(255,255,255,.16);
@@ -94,6 +94,9 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .cvol{display:none;align-items:center;gap:8px}
 .ctrl.own .cvol{display:flex}
 .cvol input{width:110px;accent-color:#fff}
+.cn{display:none;max-width:260px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#d6d6da;font:500 13px/1 var(--ui)}
+.ctrl.own .cn{display:block}
+.cn::before{content:'♪ ';color:#9a9aa0}
 .ctrl{position:fixed;left:22px;bottom:22px;z-index:100;display:flex;align-items:center;gap:12px;font:500 13px/1 var(--mono);color:#9a9aa0}
 .ctrl button{height:36px;padding:0 16px;border-radius:999px;border:1px solid rgba(255,255,255,.18);color:#fff;font:500 13px/1 var(--ui);transition:background .3s,color .3s}
 .ctrl button:hover{background:#fff;color:#000}
@@ -374,7 +377,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
     <small id="gCap">Флористика · лил кидд · Яндекс Музыка</small>
   </div>
 </div>
-<div class="ctrl"><button type="button" id="replay">↻ Заново</button><span class="t" id="timer">00:00 / 00:30</span><label class="cvol">🔊<input id="cVol" type="range" min="0" max="100" aria-label="volume"></label><span class="k">R — заново · Space — пауза</span></div>
+<div class="ctrl"><button type="button" id="replay">↻ Заново</button><span class="t" id="timer">00:00 / 00:30</span><span class="cn" id="cName"></span><label class="cvol">🔊<input id="cVol" type="range" min="0" max="100" aria-label="volume"></label><span class="k">R — заново · Space — пауза</span></div>
 
 <script>
 (() => {
@@ -814,7 +817,8 @@ $('#replay').addEventListener('click', replay);
 if (window.Music) Music.available.then(ok => {
   if (!ok) return;
   gate.classList.add('own'); $('.ctrl').classList.add('own');
-  $('#gCap').textContent = `${Music.cfg.title}${Music.cfg.artist ? ' · ' + Music.cfg.artist : ''}`;
+  const cap = () => { const n = Music.artist ? `${Music.title} · ${Music.artist}` : Music.title; $('#gCap').textContent = n; $('#cName').textContent = n; };
+  cap(); Music.on(cap);
   const v = $('#cVol'); v.value = Math.round(Music.volume * 100);
   v.addEventListener('input', () => Music.setVolume(v.value / 100));
   $('#gStart').addEventListener('click', () => { Music.play(true); startPromo(); });

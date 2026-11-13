@@ -25,8 +25,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 <script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
-<script src="assets/music.js?v=fd652e43dd"></script>
-<script src="i18n.js?v=fd652e43dd"></script>
+<script src="assets/music.js?v=6769e259e5"></script>
+<script src="i18n.js?v=6769e259e5"></script>
 <style>
 :root{
   --bg:#050505; --bg2:#0A0A0A; --card:#111111; --card2:#161617; --line:rgba(255,255,255,.08); --line2:rgba(255,255,255,.14);
@@ -1018,8 +1018,14 @@ const M = window.Music;
   }
   music.classList.add('own', 'live');
   const c = M.cfg, esc2 = s => String(s).replace(/[&<>]/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[ch]));
-  $('#mTitle').textContent = c.title; $('#mArtist').textContent = c.artist;
-  $('#mPillName').innerHTML = `<b>${esc2(c.title)}</b>${c.artist ? ' · ' + esc2(c.artist) : ''}`;
+  // name: config title/artist → ID3 tags of track.mp3 → "Track"
+  const showMeta = () => {
+    $('#mTitle').textContent = M.title; $('#mArtist').textContent = M.artist;
+    $('#mArtist').style.display = M.artist ? '' : 'none';
+    $('#mPillName').innerHTML = `<b>${esc2(M.title)}</b>${M.artist ? ' · ' + esc2(M.artist) : ''}`;
+    mPill.setAttribute('aria-label', M.artist ? `${M.title} — ${M.artist}` : M.title);
+  };
+  showMeta(); M.on(showMeta);
   const vol = $('#mVol'), pct = $('#mPct');
   const showVol = () => { const v = Math.round(M.volume * 100); vol.value = v; vol.style.setProperty('--v', v + '%'); pct.textContent = v + '%'; };
   showVol();
@@ -1064,6 +1070,6 @@ onScroll();
 addEventListener('load', () => ScrollTrigger.refresh());
 })();
 </script>
-<script type="module" src="assets/field.js?v=fd652e43dd"></script>
+<script type="module" src="assets/field.js?v=6769e259e5"></script>
 </body>
 </html>

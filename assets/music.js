@@ -2,15 +2,19 @@
    ─────────────────────────────────────────────────────────────
    HOW TO ADD YOUR TRACK
    1. put the file here:  assets/music/track.mp3
-   2. change TITLE / ARTIST / START below if you want
+   2. the name shown in the player comes from (first match wins):
+        a) title / artist below — fill them in to override, leave '' to skip
+        b) the ID3 tags inside track.mp3 (title + artist)
+        c) the word "Track"
+      START / volume below are optional too
    3. commit + push — that's it. While the file is missing, the pages
       fall back to the Yandex Music widget.
    ───────────────────────────────────────────────────────────── */
 (function () {
   const CFG = {
     src: 'assets/music/track.mp3',
-    title: 'Мой трек',
-    artist: 'ökǒmomorîrěmnant',
+    title: '',        // e.g. 'Night drive' — '' = take it from the file's ID3 tags
+    artist: '',       // e.g. 'Someone'    — '' = take it from the file's ID3 tags
     start: 15,        // seconds: playback (and every loop) starts here
     volume: 0.3,      // default volume 0..1
     fadeIn: 2.2       // seconds
@@ -21,6 +25,7 @@
     cfg: CFG,
     ok: false, playing: false,
     volume: isFinite(saved) ? Math.min(1, Math.max(0, saved)) : CFG.volume,
+    title: CFG.title || 'Track', artist: CFG.artist || '',
     beat: 0,                  // 0..1, bass energy (drives the flowers)
     bands: [0, 0, 0, 0, 0],   // 0..1, five equalizer bars
     listeners: [],
@@ -32,7 +37,55 @@
   M.available = fetch(CFG.src, { method: 'HEAD', cache: 'no-store' })
     .then(r => r.ok && !/text\/html/.test(r.headers.get('content-type') || ''))
     .catch(() => false)
-    .then(ok => { M.ok = ok; if (ok) prepare(); return ok; });
+    .then(ok => { M.ok = ok; if (ok) { prepare(); M.meta = readTags().then(applyTags); } return ok; });
+  M.meta = Promise.resolve();
+
+  /* ---------- ID3 tags (v2.2 / v2.3 / v2.4) ---------- */
+  function applyTags(tag) {
+    tag = tag || {};
+    M.title = (CFG.title || tag.title || 'Track').trim() || 'Track';
+    M.artist = (CFG.artist || tag.artist || '').trim();
+    M.emit();
+  }
+  function readTags() {
+    if (CFG.title && CFG.artist) return Promise.resolve({});
+    // the tag sits at the start of the file; 512 KB covers it unless a huge cover image comes first
+    return fetch(CFG.src, { headers: { Range: 'bytes=0-524287' } })
+      .then(r => r.ok ? r.arrayBuffer() : null)
+      .then(buf => buf ? parseID3(new Uint8Array(buf.slice(0, 524288))) : {})
+      .catch(() => ({}));
+  }
+  function decodeText(b) {
+    const enc = b[0], s = b.subarray(1);
+    const strip = x => x.replace(/\u0000+$/g, '').split('\u0000')[0].trim();
+    try {
+      if (enc === 1 || enc === 2) return strip(new TextDecoder(enc === 2 ? 'utf-16be' : (s[0] === 0xFE && s[1] === 0xFF ? 'utf-16be' : 'utf-16le')).decode(s[0] === 0xFF || s[0] === 0xFE ? s.subarray(2) : s));
+      if (enc === 3) return strip(new TextDecoder('utf-8').decode(s));
+      // "latin-1" in Russian files is very often really cp1251
+      const hi = s.some(c => c > 0x7f);
+      return strip(new TextDecoder(hi ? 'windows-1251' : 'latin1').decode(s));
+    } catch (e) { return ''; }
+  }
+  function parseID3(u) {
+    const out = {};
+    if (u.length < 10 || u[0] !== 0x49 || u[1] !== 0x44 || u[2] !== 0x33) return out;   // "ID3"
+    const ver = u[3], flags = u[5];
+    const syncsafe = i => (u[i] & 127) << 21 | (u[i + 1] & 127) << 14 | (u[i + 2] & 127) << 7 | (u[i + 3] & 127);
+    const end = Math.min(u.length, 10 + syncsafe(6));
+    let i = 10;
+    if (flags & 0x40 && ver >= 3) i += ver === 4 ? syncsafe(10) : (u[10] << 24 | u[11] << 16 | u[12] << 8 | u[13]) + 4;
+    const want = ver === 2 ? { TT2: 'title', TP1: 'artist' } : { TIT2: 'title', TPE1: 'artist' };
+    while (i + (ver === 2 ? 6 : 10) <= end) {
+      let id, size, head;
+      if (ver === 2) { id = String.fromCharCode(u[i], u[i + 1], u[i + 2]); size = u[i + 3] << 16 | u[i + 4] << 8 | u[i + 5]; head = 6; }
+      else { id = String.fromCharCode(u[i], u[i + 1], u[i + 2], u[i + 3]); size = ver === 4 ? syncsafe(i + 4) : (u[i + 4] << 24 | u[i + 5] << 16 | u[i + 6] << 8 | u[i + 7]); head = 10; }
+      if (!/^[A-Z0-9]{3,4}$/.test(id) || size <= 0) break;
+      if (want[id] && !out[want[id]]) out[want[id]] = decodeText(u.subarray(i + head, i + head + size));
+      if (out.title && out.artist) break;
+      i += head + size;
+    }
+    return out;
+  }
 
   function prepare() {
     el = new Audio(CFG.src);
