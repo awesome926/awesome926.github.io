@@ -25,7 +25,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 <script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
-<script src="i18n.js?v=55cd91ac83"></script>
+<script src="assets/music.js?v=fd652e43dd"></script>
+<script src="i18n.js?v=fd652e43dd"></script>
 <style>
 :root{
   --bg:#050505; --bg2:#0A0A0A; --card:#111111; --card2:#161617; --line:rgba(255,255,255,.08); --line2:rgba(255,255,255,.14);
@@ -299,6 +300,26 @@ img{display:block;max-width:100%}
 @media (max-width:700px){.music{bottom:14px}.mpill .nm{max-width:150px}}
 @media (prefers-reduced-motion:reduce){.mpill .eq i{animation:none;height:60%}}
 
+.mown{display:none;padding:16px 16px 14px}
+.music.own .mown{display:block}
+.music.own #ymBox{display:none}
+.mown .mrow{display:flex;align-items:center;gap:14px}
+.mplay{width:48px;height:48px;border-radius:50%;background:#fff;color:#050505;display:grid;place-items:center;flex:none;transition:transform .3s var(--ease)}
+.mplay:hover{transform:scale(1.06)}
+.mplay svg{width:18px;height:18px}
+.mplay .i-pause{display:none}
+.music.playing .mplay .i-play{display:none}
+.music.playing .mplay .i-pause{display:block}
+.mmeta{min-width:0;flex:1}
+.mmeta b{display:block;font:600 15px/1.2 var(--display);letter-spacing:-.02em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mmeta span{display:block;font-size:12.5px;color:var(--muted);margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mvol{display:flex;align-items:center;gap:10px;margin-top:14px;color:var(--muted)}
+.mvol svg{width:16px;height:16px;flex:none}
+.mvol input{-webkit-appearance:none;appearance:none;flex:1;height:4px;border-radius:4px;background:linear-gradient(90deg,#fff var(--v,30%),rgba(255,255,255,.16) var(--v,30%));outline:none;cursor:pointer}
+.mvol input::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:#fff;box-shadow:0 0 0 4px rgba(255,255,255,.12)}
+.mvol input::-moz-range-thumb{width:14px;height:14px;border:0;border-radius:50%;background:#fff}
+.mvol .pct{font:500 12px/1 var(--ui);min-width:34px;text-align:right;font-variant-numeric:tabular-nums}
+.music.live .mpill .eq i{animation:none;transition:height .08s linear}
 /* ---------- toast ---------- */
 .toast{position:fixed;left:50%;bottom:26px;z-index:99;transform:translate(-50%,20px);opacity:0;pointer-events:none;background:#fff;color:#050505;font-size:14px;font-weight:500;padding:12px 18px;border-radius:999px;box-shadow:0 20px 50px -20px rgba(0,0,0,.9);transition:opacity .35s,transform .45s var(--ease);max-width:calc(100% - 32px);text-align:center}
 .toast.on{opacity:1;transform:translate(-50%,0)}
@@ -472,10 +493,19 @@ img{display:block;max-width:100%}
 <div class="lb" id="lb" role="dialog" aria-modal="true" aria-hidden="true"><img alt=""></div>
 <div class="music" id="music">
   <div class="mpanel-y" id="mPanelY" aria-hidden="true">
-    <div id="ymHost"></div>
-    <div class="mcap"><span data-t="music_hint">Нажми ▶ — трек играет прямо здесь</span><a href="https://music.yandex.ru/album/40896526/track/148729001" target="_blank" rel="noopener">Яндекс Музыка ↗</a></div>
+    <div class="mown">
+      <div class="mrow">
+        <button class="mplay" id="mPlay" type="button" aria-label="play"><svg class="i-play" viewBox="0 0 16 16" fill="currentColor"><path d="M4.5 2.8v10.4L13 8 4.5 2.8Z"/></svg><svg class="i-pause" viewBox="0 0 16 16" fill="currentColor"><rect x="3.5" y="2.8" width="3" height="10.4" rx="1"/><rect x="9.5" y="2.8" width="3" height="10.4" rx="1"/></svg></button>
+        <div class="mmeta"><b id="mTitle"></b><span id="mArtist"></span></div>
+      </div>
+      <label class="mvol"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 6v4h2.6L8.5 13V3L5.1 6H2.5Z"/><path d="M11 5.5a3.5 3.5 0 0 1 0 5M12.8 3.6a6 6 0 0 1 0 8.8"/></svg><input id="mVol" type="range" min="0" max="100" step="1" aria-label="volume"><span class="pct" id="mPct"></span></label>
+    </div>
+    <div id="ymBox">
+      <div id="ymHost"></div>
+      <div class="mcap"><span data-t="music_hint">Нажми ▶ — трек играет прямо здесь</span><a href="https://music.yandex.ru/album/40896526/track/148729001" target="_blank" rel="noopener">Яндекс Музыка ↗</a></div>
+    </div>
   </div>
-  <button class="mpill" id="mPill" type="button" aria-expanded="false" aria-controls="mPanelY"><span class="eq" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span class="nm"><b>Флористика</b> · лил кидд</span><svg class="ch" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10l4-4 4 4"/></svg></button>
+  <button class="mpill" id="mPill" type="button" aria-expanded="false" aria-controls="mPanelY"><span class="eq" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span class="nm" id="mPillName"><b>Флористика</b> · лил кидд</span><svg class="ch" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10l4-4 4 4"/></svg></button>
 </div>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
@@ -966,19 +996,51 @@ document.addEventListener('keydown', e => {
    LANGUAGE SWITCH + BOOT
    ========================================================= */
 /* =========================================================
-   MUSIC — official Yandex Music widget, loaded on first open
+   MUSIC — own player (assets/music.js) when assets/music/track.mp3 exists,
+   otherwise the official Yandex Music widget
    ========================================================= */
 const music = $('#music'), mPill = $('#mPill'), mPanelY = $('#mPanelY');
 const YM = 'https://music.yandex.ru/iframe/track/148729001/40896526';
+let OWN = false;
 function musicOpen(open, remember) {
-  if (open && !$('#ymHost iframe')) $('#ymHost').innerHTML = `<iframe src="${YM}" title="Флористика — лил кидд" allow="autoplay; clipboard-write; encrypted-media" loading="lazy"></iframe>`;
+  if (open && !OWN && !$('#ymHost iframe')) $('#ymHost').innerHTML = `<iframe src="${YM}" title="Флористика — лил кидд" allow="autoplay; clipboard-write; encrypted-media" loading="lazy"></iframe>`;
   music.classList.toggle('open', open); music.classList.add('seen');
   mPill.setAttribute('aria-expanded', open); mPanelY.setAttribute('aria-hidden', !open);
   if (remember) store.set('music', open ? 'open' : 'closed');
 }
 mPill.addEventListener('click', () => musicOpen(!music.classList.contains('open'), true));
-// desktop: show the player by itself a moment after the intro, unless it was closed before
-if (store.get('music') !== 'closed' && matchMedia('(min-width: 701px)').matches) setTimeout(() => musicOpen(true, false), 2600);
+const M = window.Music;
+(M ? M.available : Promise.resolve(false)).then(ok => {
+  OWN = ok;
+  if (!ok) {
+    if (store.get('music') !== 'closed' && matchMedia('(min-width: 701px)').matches) setTimeout(() => musicOpen(true, false), 2600);
+    return;
+  }
+  music.classList.add('own', 'live');
+  const c = M.cfg, esc2 = s => String(s).replace(/[&<>]/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[ch]));
+  $('#mTitle').textContent = c.title; $('#mArtist').textContent = c.artist;
+  $('#mPillName').innerHTML = `<b>${esc2(c.title)}</b>${c.artist ? ' · ' + esc2(c.artist) : ''}`;
+  const vol = $('#mVol'), pct = $('#mPct');
+  const showVol = () => { const v = Math.round(M.volume * 100); vol.value = v; vol.style.setProperty('--v', v + '%'); pct.textContent = v + '%'; };
+  showVol();
+  vol.addEventListener('input', () => { M.setVolume(vol.value / 100); if (!M.playing && +vol.value > 0) M.play(); });
+  $('#mPlay').addEventListener('click', e => { e.stopPropagation(); if (M.playing) { M.pause(); store.set('music_off', '1'); } else { M.play(); store.set('music_off', '0'); } });
+  M.on(() => { music.classList.toggle('playing', M.playing); showVol(); });
+  // sound starts with the visitor's first click / tap / key anywhere (browsers allow nothing earlier)
+  const first = e => {
+    if (e.target.closest && e.target.closest('#mPlay, #mVol')) return;
+    ['pointerdown', 'keydown'].forEach(ev => removeEventListener(ev, first, true));
+    if (store.get('music_off') !== '1') M.play();
+  };
+  ['pointerdown', 'keydown'].forEach(ev => addEventListener(ev, first, true));
+  if (matchMedia('(min-width: 701px)').matches && store.get('music') !== 'closed') setTimeout(() => musicOpen(true, false), 2600);
+  // live equalizer bars from the real sound
+  const bars = $$('.mpill .eq i');
+  (function eq() {
+    requestAnimationFrame(eq);
+    bars.forEach((b, i) => { const v = M.bands[i + 1] || 0; b.style.height = (18 + Math.min(1, v * 1.6) * 82).toFixed(0) + '%'; });
+  })();
+});
 
 function renderAll() {
   [applyStatic, renderWorks, renderPrice, renderHow, renderBrief].forEach(fn => { try { fn(); } catch (err) { console.error(fn.name, err); } });
@@ -1002,6 +1064,6 @@ onScroll();
 addEventListener('load', () => ScrollTrigger.refresh());
 })();
 </script>
-<script type="module" src="assets/field.js?v=55cd91ac83"></script>
+<script type="module" src="assets/field.js?v=fd652e43dd"></script>
 </body>
 </html>

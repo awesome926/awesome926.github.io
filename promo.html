@@ -10,6 +10,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Unbounded:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="assets/music.js"></script>
 <style>
 :root{
   --bg:#050505; --card:#111111; --line:rgba(255,255,255,.08); --line2:rgba(255,255,255,.16);
@@ -85,6 +86,14 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .g-player iframe{display:block;width:100%;height:100px;border:0}
 @keyframes gpulse{0%,100%{box-shadow:0 0 0 0 rgba(255,255,255,.0)}50%{box-shadow:0 0 0 8px rgba(255,255,255,.1)}}
 .gate small{margin-top:16px;font:400 12px/1 var(--mono);color:#5d5d62}
+.g-start{display:none;align-items:center;gap:14px;height:64px;padding:0 32px;border-radius:999px;background:#fff;color:#050505;font:600 18px/1 var(--ui);animation:gpulse 2.2s ease-in-out infinite;transition:transform .3s}
+.g-start:hover{transform:scale(1.04)}
+.g-start svg{width:18px;height:18px}
+.gate.own .g-start{display:inline-flex}
+.gate.own .g-player{display:none}
+.cvol{display:none;align-items:center;gap:8px}
+.ctrl.own .cvol{display:flex}
+.cvol input{width:110px;accent-color:#fff}
 .ctrl{position:fixed;left:22px;bottom:22px;z-index:100;display:flex;align-items:center;gap:12px;font:500 13px/1 var(--mono);color:#9a9aa0}
 .ctrl button{height:36px;padding:0 16px;border-radius:999px;border:1px solid rgba(255,255,255,.18);color:#fff;font:500 13px/1 var(--ui);transition:background .3s,color .3s}
 .ctrl button:hover{background:#fff;color:#000}
@@ -361,10 +370,11 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
     <h2>без музыки<br><span>не то.</span></h2>
     <p>Нажми <b>▶</b> в плеере — ролик начнётся вместе с треком.</p>
     <div class="g-player"><iframe id="ymFrame" src="https://music.yandex.ru/iframe/track/148729001/40896526" title="Флористика — лил кидд" allow="autoplay; clipboard-write; encrypted-media"></iframe></div>
-    <small>Флористика · лил кидд · Яндекс Музыка</small>
+    <button class="g-start" id="gStart" type="button"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M4.5 2.8v10.4L13 8 4.5 2.8Z"/></svg>Включить музыку</button>
+    <small id="gCap">Флористика · лил кидд · Яндекс Музыка</small>
   </div>
 </div>
-<div class="ctrl"><button type="button" id="replay">↻ Заново</button><span class="t" id="timer">00:00 / 00:30</span><span class="k">R — заново · Space — пауза</span></div>
+<div class="ctrl"><button type="button" id="replay">↻ Заново</button><span class="t" id="timer">00:00 / 00:30</span><label class="cvol">🔊<input id="cVol" type="range" min="0" max="100" aria-label="volume"></label><span class="k">R — заново · Space — пауза</span></div>
 
 <script>
 (() => {
@@ -483,6 +493,8 @@ function drawField(now) {
     let sx = cx + p.x / dz * f, sy = hy + (cy - y) / dz * f;
     if (sx < -120 || sx > W + 120 || sy > H + 130 || sy < hy - 200) continue;
     let size = p.s / dz * f * 1.1;
+    const MB = window.Music ? window.Music.beat : 0;
+    if (MB) { const bt = MB * (.45 + .55 * ((p.ph * 7.31) % 1)); size *= 1 + bt * .3; sy -= bt * size * .25; }
     if (FIELD.mOn > 0) {
       const ddx = sx - FIELD.mx, ddy = sy - FIELD.my, d = Math.hypot(ddx, ddy), R = 170;
       if (d < R) { const k = (1 - d / R) * FIELD.mOn; sx += ddx / (d || 1) * k * 70; sy += ddy / (d || 1) * k * 50 - k * 26; size *= 1 + k * .15; }
@@ -788,7 +800,7 @@ gsap.ticker.add(() => {
 /* ---------- music gate: the promo only starts once the track is switched on ---------- */
 let started = false, ready = false, armed = false;
 const gate = $('#gate');
-function replay() { if (!started) return; build(); tl.play(0); }
+function replay() { if (!started) return; if (window.Music && Music.ok) { Music.restart(); if (!Music.playing) Music.play(); } build(); tl.play(0); }
 function startPromo() {
   if (started || !ready) return;
   started = true;
@@ -798,6 +810,15 @@ function startPromo() {
 // a click inside the cross-origin player moves focus into its iframe — that is our "music is on" signal
 addEventListener('blur', () => { setTimeout(() => { if (armed && document.activeElement && document.activeElement.id === 'ymFrame') startPromo(); }, 0); });
 $('#replay').addEventListener('click', replay);
+// own track (assets/music/track.mp3): a real "play" button, volume slider, flowers on the beat
+if (window.Music) Music.available.then(ok => {
+  if (!ok) return;
+  gate.classList.add('own'); $('.ctrl').classList.add('own');
+  $('#gCap').textContent = `${Music.cfg.title}${Music.cfg.artist ? ' · ' + Music.cfg.artist : ''}`;
+  const v = $('#cVol'); v.value = Math.round(Music.volume * 100);
+  v.addEventListener('input', () => Music.setVolume(v.value / 100));
+  $('#gStart').addEventListener('click', () => { Music.play(true); startPromo(); });
+});
 addEventListener('keydown', e => {
   if (e.key === 'r' || e.key === 'R' || e.key === 'к' || e.key === 'К') replay();
   if (e.code === 'Space' && started) { e.preventDefault(); if (tl) tl.paused(!tl.paused()); }

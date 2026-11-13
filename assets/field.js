@@ -72,7 +72,7 @@ function seed(aspect) {
 }
 
 const uniforms = {
-  uT: { value: 0 }, uGrow: { value: REDUCED ? 1 : 0 }, uScroll: { value: 0 }, uDim: { value: 0 },
+  uT: { value: 0 }, uGrow: { value: REDUCED ? 1 : 0 }, uScroll: { value: 0 }, uDim: { value: 0 }, uBeat: { value: 0 },
   uMouse: { value: new THREE.Vector2(0, 99) }, uMouseOn: { value: 0 },
   uBg: { value: new THREE.Vector3(5 / 255, 5 / 255, 6 / 255) }, uPx: { value: 1 }
 };
@@ -84,7 +84,7 @@ const material = new THREE.ShaderMaterial({
   side: THREE.DoubleSide,
   vertexShader: /* glsl */`
     attribute vec3 aOff; attribute vec4 aRnd; attribute vec3 aCol;
-    uniform float uT, uGrow, uScroll, uMouseOn; uniform vec2 uMouse;
+    uniform float uT, uGrow, uScroll, uMouseOn, uBeat; uniform vec2 uMouse;
     varying vec2 vUv; varying vec3 vCol; varying float vFog; varying float vLeaf; varying float vRnd; varying float vBright;
     ${TERRAIN}
     void main(){
@@ -106,6 +106,10 @@ const material = new THREE.ShaderMaterial({
       y += e * (2. + r4 * 10.) * (1. - leaf * .5);
       b.x += e * (r4 - .5) * 4.;
       float size = aRnd.y * grow * (1. - smoothstep(.55, 1., k));
+      // music: every bass hit makes the meadow breathe — flowers swell and hop, each a bit differently
+      float bt = uBeat * (.45 + .55 * fract(r4 * 7.31)) * (1. - leaf * .7);
+      size *= 1. + bt * .28;
+      y += bt * .22;
       // place in view space as a card that faces the camera but lies down by a random amount
       vec4 c = modelViewMatrix * vec4(b.x, y + size * .35, b.y, 1.);
       float spin = aRnd.x + uT * (r4 - .5) * .15 + e * (r4 - .5) * 6. + f * (r4 - .5) * 3.;
@@ -209,7 +213,7 @@ addEventListener('pointerdown', pointer, { passive: true });
 document.addEventListener('pointerleave', () => { hasPointer = false; });
 
 /* ---------- loop + FPS governor ---------- */
-let t0 = performance.now(), simT = 0, slow = 0, frames = 0, acc = 0, scrollS = F.scroll, ctaS = F.cta, mouseOn = 0, growT = 0;
+let t0 = performance.now(), simT = 0, slow = 0, frames = 0, acc = 0, scrollS = F.scroll, ctaS = F.cta, mouseOn = 0, growT = 0, beatS = 0;
 function frame(now) {
   requestAnimationFrame(frame);
   const dt = Math.min((now - t0) / 1000, .05); t0 = now;
@@ -226,6 +230,8 @@ function frame(now) {
   uniforms.uMouseOn.value = mouseOn;
   uniforms.uT.value = simT;
   uniforms.uScroll.value = scrollS;
+  beatS += ((F.beat || 0) - beatS) * Math.min(1, dt * ((F.beat || 0) > beatS ? 30 : 7));
+  uniforms.uBeat.value = REDUCED ? 0 : beatS;
   uniforms.uDim.value = ctaS * .5;
   renderer.render(scene, camera);
   acc += dt; frames++;
