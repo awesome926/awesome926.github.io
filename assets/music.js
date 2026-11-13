@@ -18,7 +18,7 @@
     title: '',        // e.g. 'Night drive' — '' = take it from the file's ID3 tags
     artist: '',       // e.g. 'Someone'    — '' = take it from the file's ID3 tags
     cover: '',        // e.g. 'assets/music/cover.jpg' — '' = the picture embedded in the mp3
-    start: 15,        // seconds: playback (and every loop) starts here
+    start: 25,        // seconds: playback (and every loop) starts here
     volume: 0.15,      // default volume 0..1
     fadeIn: 2.2       // seconds
   };
