@@ -10,7 +10,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Unbounded:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-<script src="assets/music.js?v=6769e259e5"></script>
+<script src="assets/music.js?v=4e85349095"></script>
 <style>
 :root{
   --bg:#050505; --card:#111111; --line:rgba(255,255,255,.08); --line2:rgba(255,255,255,.16);
@@ -96,6 +96,14 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .cvol input{width:110px;accent-color:#fff}
 .cn{display:none;max-width:260px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#d6d6da;font:500 13px/1 var(--ui)}
 .ctrl.own .cn{display:block}
+.g-cover,.ccov{display:none;background:#1c1c1f center/cover no-repeat;position:relative;overflow:hidden;flex:none}
+.g-cover{width:180px;height:180px;border-radius:22px;border:1px solid rgba(255,255,255,.16);box-shadow:0 30px 70px -30px #000;margin-bottom:30px}
+.ccov{width:26px;height:26px;border-radius:6px;border:1px solid rgba(255,255,255,.18)}
+.gate.own .g-cover{display:block}
+.gate.own .g-eq{display:none}
+.ctrl.own .ccov{display:block}
+.g-cover.ph::after,.ccov.ph::after{content:"♪";position:absolute;inset:0;display:grid;place-items:center;color:#8E8E93;font-size:56px;background:radial-gradient(circle at 30% 25%,#2a2a2e,#141415)}
+.ccov.ph::after{font-size:13px}
 .cn::before{content:'♪ ';color:#9a9aa0}
 .ctrl{position:fixed;left:22px;bottom:22px;z-index:100;display:flex;align-items:center;gap:12px;font:500 13px/1 var(--mono);color:#9a9aa0}
 .ctrl button{height:36px;padding:0 16px;border-radius:999px;border:1px solid rgba(255,255,255,.18);color:#fff;font:500 13px/1 var(--ui);transition:background .3s,color .3s}
@@ -370,6 +378,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 <div class="gate" id="gate">
   <div class="g-in">
     <div class="g-eq"><i></i><i></i><i></i><i></i><i></i></div>
+    <div class="g-cover ph" id="gCover"></div>
     <h2>без музыки<br><span>не то.</span></h2>
     <p>Нажми <b>▶</b> в плеере — ролик начнётся вместе с треком.</p>
     <div class="g-player"><iframe id="ymFrame" src="https://music.yandex.ru/iframe/track/148729001/40896526" title="Флористика — лил кидд" allow="autoplay; clipboard-write; encrypted-media"></iframe></div>
@@ -377,7 +386,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
     <small id="gCap">Флористика · лил кидд · Яндекс Музыка</small>
   </div>
 </div>
-<div class="ctrl"><button type="button" id="replay">↻ Заново</button><span class="t" id="timer">00:00 / 00:30</span><span class="cn" id="cName"></span><label class="cvol">🔊<input id="cVol" type="range" min="0" max="100" aria-label="volume"></label><span class="k">R — заново · Space — пауза</span></div>
+<div class="ctrl"><button type="button" id="replay">↻ Заново</button><span class="t" id="timer">00:00 / 00:30</span><span class="ccov ph" id="cCover"></span><span class="cn" id="cName"></span><label class="cvol">🔊<input id="cVol" type="range" min="0" max="100" aria-label="volume"></label><span class="k">R — заново · Space — пауза</span></div>
 
 <script>
 (() => {
@@ -817,7 +826,9 @@ $('#replay').addEventListener('click', replay);
 if (window.Music) Music.available.then(ok => {
   if (!ok) return;
   gate.classList.add('own'); $('.ctrl').classList.add('own');
-  const cap = () => { const n = Music.artist ? `${Music.title} · ${Music.artist}` : Music.title; $('#gCap').textContent = n; $('#cName').textContent = n; };
+  $('.gate p').innerHTML = 'Нажми <b>«Включить музыку»</b> — ролик начнётся вместе с треком.';
+  const cap = () => { const n = Music.artist ? `${Music.title} · ${Music.artist}` : Music.title; $('#gCap').textContent = n; $('#cName').textContent = n;
+    ['#gCover', '#cCover'].forEach(s => { const el = $(s); el.style.backgroundImage = Music.cover ? `url("${Music.cover}")` : ''; el.classList.toggle('ph', !Music.cover); }); };
   cap(); Music.on(cap);
   const v = $('#cVol'); v.value = Math.round(Music.volume * 100);
   v.addEventListener('input', () => Music.setVolume(v.value / 100));
