@@ -19,7 +19,7 @@
     artist: '',       // e.g. 'Someone'    — '' = take it from the file's ID3 tags
     cover: '',        // e.g. 'assets/music/cover.jpg' — '' = the picture embedded in the mp3
     start: 15,        // seconds: playback (and every loop) starts here
-    volume: 0.3,      // default volume 0..1
+    volume: 0.15,      // default volume 0..1
     fadeIn: 2.2       // seconds
   };
   const store = { get(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }, set(k, v) { try { localStorage.setItem(k, v); } catch (e) {} } };
