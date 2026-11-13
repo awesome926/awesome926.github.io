@@ -1,0 +1,726 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>ökǒmomorîrěmnant — promo 30s</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Unbounded:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<style>
+:root{
+  --bg:#050505; --card:#111111; --line:rgba(255,255,255,.08); --line2:rgba(255,255,255,.16);
+  --muted:#8E8E93; --dim:#5d5d62;
+  --display:'Unbounded',system-ui,sans-serif; --ui:'Inter',system-ui,sans-serif; --mono:'JetBrains Mono',ui-monospace,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:#000;overflow:hidden;color:#fff;font-family:var(--ui);-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+
+/* ---------- stage: 1080×1920, scaled to fit, centred ---------- */
+#stage{position:absolute;left:50%;top:50%;width:1080px;height:1920px;transform-origin:0 0;overflow:hidden;background:var(--bg);box-shadow:0 0 0 1px rgba(255,255,255,.06)}
+.layer{position:absolute;inset:0}
+#fieldWrap{z-index:1}
+#field{position:absolute;inset:0;width:1080px;height:1920px}
+.scene{position:absolute;inset:0;z-index:2}
+
+/* ---------- controls outside the 9:16 frame ---------- */
+.ctrl{position:fixed;left:22px;bottom:22px;z-index:100;display:flex;align-items:center;gap:12px;font:500 13px/1 var(--mono);color:#9a9aa0}
+.ctrl button{height:36px;padding:0 16px;border-radius:999px;border:1px solid rgba(255,255,255,.18);color:#fff;font:500 13px/1 var(--ui);transition:background .3s,color .3s}
+.ctrl button:hover{background:#fff;color:#000}
+.ctrl .t{min-width:118px;font-variant-numeric:tabular-nums}
+.ctrl .k{color:#55555a}
+
+/* ---------- header ---------- */
+.hdr{position:absolute;left:0;right:0;top:0;height:150px;z-index:30;display:flex;align-items:center;justify-content:space-between;padding:0 56px}
+.logo{display:flex;align-items:center;gap:16px;font:600 30px/1 var(--display);letter-spacing:-.03em}
+.logo img{width:46px;height:46px;border-radius:12px}
+.hr{display:flex;align-items:center;gap:16px}
+.langs{position:relative;display:flex;padding:6px;border:1px solid var(--line);border-radius:999px}
+.langs span{position:relative;z-index:1;width:76px;height:52px;display:grid;place-items:center;font:500 22px/1 var(--ui);letter-spacing:.06em;color:var(--muted);transition:color .3s}
+.langs span.on{color:#fff}
+.langs i{position:absolute;left:6px;top:6px;width:76px;height:52px;border-radius:999px;background:rgba(255,255,255,.12)}
+.wpill{height:68px;padding:0 30px;border-radius:999px;background:#fff;color:#050505;display:flex;align-items:center;gap:12px;font:600 25px/1 var(--ui)}
+
+/* ---------- S1 hero ---------- */
+.hero{display:flex;flex-direction:column;align-items:center;text-align:center}
+.hero::before{content:"";position:absolute;inset:0;background:radial-gradient(60% 18% at 50% 44%,rgba(5,5,5,.8),rgba(5,5,5,.25) 70%,transparent 90%),linear-gradient(180deg,rgba(5,5,5,.75),transparent 22%)}
+.hero-in{position:absolute;left:0;right:0;top:560px;display:flex;flex-direction:column;align-items:center}
+.kicker{display:inline-flex;align-items:center;gap:16px;height:72px;padding:0 30px;border-radius:999px;border:1px solid var(--line2);background:rgba(5,5,5,.55);font:400 27px/1 var(--ui);color:#dcdce0}
+.kicker .dot{width:14px;height:14px;border-radius:50%;background:#47bb64;position:relative}
+.kicker .dot::after{content:"";position:absolute;inset:-2px;border-radius:50%;border:2px solid #47bb64;animation:ping 1.6s infinite}
+@keyframes ping{0%{transform:scale(1);opacity:.9}100%{transform:scale(2.6);opacity:0}}
+.title{font:800 80px/.92 var(--display);letter-spacing:-.055em;white-space:nowrap;margin:44px 0 40px;text-shadow:0 14px 70px rgba(0,0,0,.7)}
+.title .ch{display:inline-block}
+.slogan{font:400 34px/1.45 var(--ui);color:var(--muted);max-width:900px}
+.slogan b{display:block;color:#fff;font-weight:500}
+.slogan .ln{display:block;overflow:hidden}
+.slogan .ln > span{display:inline-block}
+.downc{margin-top:60px;width:112px;height:112px;border-radius:50%;border:2px solid rgba(255,255,255,.5);background:rgba(5,5,5,.6);display:grid;place-items:center}
+.downc svg{width:34px;height:34px}
+
+/* technical callouts */
+.callout{position:absolute;z-index:40;display:flex;align-items:center;gap:14px;padding:14px 20px;border:1px solid rgba(255,255,255,.35);border-radius:10px;background:rgba(5,5,5,.72);font:500 24px/1 var(--mono);letter-spacing:.02em;color:#fff;white-space:nowrap}
+.callout::before,.callout::after{content:"";position:absolute;width:12px;height:12px;border:2px solid #fff}
+.callout::before{left:-7px;top:-7px;border-right:0;border-bottom:0}
+.callout::after{right:-7px;bottom:-7px;border-left:0;border-top:0}
+.callout .bul{width:10px;height:10px;border-radius:50%;background:#47bb64;box-shadow:0 0 12px #47bb64}
+.lead{position:absolute;z-index:39;height:2px;background:linear-gradient(90deg,rgba(255,255,255,.8),rgba(255,255,255,.2));transform-origin:0 50%}
+.lead::after{content:"";position:absolute;right:-6px;top:-5px;width:12px;height:12px;border-radius:50%;background:#fff}
+
+/* ---------- S2 works ---------- */
+.works{perspective:2600px;perspective-origin:50% 45%}
+.h-xl{font:700 132px/.95 var(--display);letter-spacing:-.055em}
+.works .h-xl{position:absolute;left:0;right:0;top:220px;text-align:center}
+.xcard{position:absolute;left:90px;width:900px;height:560px;transform-style:preserve-3d}
+.ly{position:absolute;inset:0;transform-style:preserve-3d}
+.ly.base{background:var(--card);border:1px solid var(--line);border-radius:30px;overflow:hidden}
+.ly.base .grid{position:absolute;inset:0;opacity:0;background-image:linear-gradient(rgba(255,255,255,.07) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.07) 1px,transparent 1px);background-size:60px 60px}
+.ly.prev .fan{position:absolute;left:26px;right:26px;top:26px;height:300px;border-radius:20px;background:radial-gradient(80% 90% at 50% 100%,rgba(255,255,255,.06),transparent 70%),#0c0c0d}
+.ly.prev img{position:absolute;left:50%;top:50%;width:62%;aspect-ratio:16/10;object-fit:cover;object-position:top;border-radius:14px;border:1px solid rgba(255,255,255,.14);box-shadow:0 30px 60px -24px #000}
+.ly.prev img:nth-child(1){transform:translate(-88%,-44%) rotate(-9deg);filter:brightness(.72)}
+.ly.prev img:nth-child(2){transform:translate(-12%,-44%) rotate(9deg);filter:brightness(.72)}
+.ly.prev img:nth-child(3){transform:translate(-50%,-54%)}
+.ly.type .cnt{position:absolute;left:40px;top:358px;font:500 22px/1 var(--ui);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.ly.type .tt{position:absolute;left:40px;top:396px;font:700 62px/1 var(--display);letter-spacing:-.05em}
+.ly.type .dd{position:absolute;left:40px;top:478px;width:660px;font:400 26px/1.4 var(--ui);color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ly.type .arr{position:absolute;right:36px;bottom:36px;width:96px;height:96px;border-radius:50%;border:2px solid var(--line2);display:grid;place-items:center;background:var(--card)}
+.ly.type .arr svg{width:32px;height:32px}
+.guide{position:absolute;inset:-2px;border:2px dashed rgba(255,255,255,.45);border-radius:30px;opacity:0;pointer-events:none}
+.ly.prev .guide{inset:18px 18px auto 18px;height:316px;border-radius:24px}
+.ly.type .guide{inset:340px 18px 18px 18px;border-radius:24px}
+.lbl{position:absolute;left:0;top:-58px;display:flex;align-items:center;gap:12px;font:500 22px/1 var(--mono);color:#fff;opacity:0;white-space:nowrap}
+.lbl b{display:inline-grid;place-items:center;width:40px;height:30px;border-radius:6px;background:#fff;color:#050505;font-weight:500}
+.ly.prev .lbl{left:auto;right:18px;top:-40px}
+.ly.type .lbl{top:auto;bottom:-56px;left:18px}
+.snapline{position:absolute;inset:-6px;border-radius:34px;border:3px solid #fff;opacity:0;pointer-events:none}
+
+/* gallery modal */
+.backdrop{position:absolute;inset:0;z-index:50;background:rgba(0,0,0,.72);opacity:0}
+.mpanel{position:absolute;left:40px;right:40px;z-index:51;background:#0b0b0c;border:1px solid var(--line2);border-radius:40px;padding:56px 52px;opacity:0}
+.mgal{top:300px}
+.m-eye{font:500 22px/1 var(--ui);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.m-h{font:700 96px/1 var(--display);letter-spacing:-.055em;margin-top:16px}
+.m-x{position:absolute;right:44px;top:44px;width:84px;height:84px;border-radius:50%;border:2px solid var(--line2);display:grid;place-items:center}
+.m-x svg{width:28px;height:28px}
+.gitems{display:flex;flex-direction:column;gap:26px;margin-top:44px}
+.gitem{display:flex;gap:28px;align-items:center;padding:20px;border:1px solid var(--line);border-radius:26px;background:var(--card)}
+.gitem img{width:330px;aspect-ratio:16/10;object-fit:cover;object-position:top;border-radius:16px;border:1px solid var(--line2);flex:none}
+.gitem h4{font:600 44px/1.05 var(--display);letter-spacing:-.04em}
+.gitem p{font:400 23px/1.4 var(--ui);color:var(--muted);margin-top:10px}
+.gitem .demo{display:inline-flex;align-items:center;gap:10px;height:54px;padding:0 22px;border-radius:999px;background:#fff;color:#050505;font:600 21px/1 var(--ui);margin-top:16px}
+
+/* ---------- S3 price ---------- */
+.price .h-xl{position:absolute;left:64px;top:230px;font-size:112px}
+.pnote{position:absolute;left:64px;top:390px;width:820px;font:400 30px/1.45 var(--ui);color:var(--muted)}
+.plist{position:absolute;left:40px;right:40px;top:540px;border-top:1px solid var(--line)}
+.prow{position:relative;height:186px;padding:30px 26px;border-bottom:1px solid var(--line);border-radius:22px}
+.prow .bgh{position:absolute;inset:0;border-radius:22px;background:var(--card);opacity:0}
+.prow .pn{position:absolute;left:26px;top:34px;font:600 42px/1.1 var(--display);letter-spacing:-.04em}
+.prow .pd{position:absolute;left:26px;top:100px;width:640px;font:400 25px/1.4 var(--ui);color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.prow .pp{position:absolute;right:26px;top:36px;font:500 36px/1 var(--ui);text-align:right;white-space:nowrap}
+.prow .pb{position:absolute;right:26px;top:94px;height:60px;padding:0 24px;border-radius:999px;border:2px solid var(--line2);display:flex;align-items:center;gap:12px;font:500 23px/1 var(--ui);background:transparent}
+.prow .pb .fill{position:absolute;inset:-2px;border-radius:999px;background:#fff;opacity:0}
+.prow .pb span,.prow .pb svg{position:relative}
+.prow .pb svg{width:22px;height:22px}
+
+/* ---------- S4 brief ---------- */
+.mbrief{top:120px;bottom:60px;padding:50px 48px}
+.mbrief .m-h{font-size:58px;margin-top:14px}
+.mbrief .m-h span{color:var(--muted)}
+.bstep{display:flex;align-items:baseline;gap:16px;font:500 21px/1 var(--ui);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:38px 0 18px}
+.bstep b{color:#fff;font:700 24px/1 var(--display);letter-spacing:0}
+.pills{display:flex;flex-wrap:wrap;gap:12px}
+.bp{position:relative;height:62px;padding:0 24px;border-radius:999px;border:2px solid var(--line2);display:inline-flex;align-items:center;font:400 24px/1 var(--ui);color:#d6d6da;white-space:nowrap}
+.bp .fill{position:absolute;inset:-2px;border-radius:999px;background:#fff;opacity:0}
+.bp span{position:relative}
+.bp small{font-size:16px;opacity:.6;margin-left:8px}
+.qgrid{display:grid;grid-template-columns:1fr 1fr;gap:26px 34px}
+.qf label{display:flex;align-items:center;gap:12px;font:400 21px/1.3 var(--ui);color:var(--muted)}
+.qf label i{width:10px;height:10px;border-radius:50%;background:var(--line2);flex:none}
+.qf .in{height:58px;border-bottom:2px solid var(--line2);font:400 25px/58px var(--ui);color:#fff;white-space:nowrap;overflow:hidden}
+.qf .in.ph{color:#48484d}
+.qf .in .caret{display:inline-block;width:2px;height:30px;background:#fff;vertical-align:-6px;margin-left:2px;opacity:0}
+.cols2{display:grid;grid-template-columns:1fr 1fr;gap:0 34px}
+.bside{position:absolute;left:48px;right:48px;bottom:48px;padding:34px 36px;border:1px solid var(--line);border-radius:30px;background:var(--card)}
+.bside .row{display:flex;justify-content:space-between;align-items:center;gap:20px}
+.best{font:500 20px/1 var(--ui);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.bprice{font:700 70px/1.05 var(--display);letter-spacing:-.05em;font-variant-numeric:tabular-nums;margin-top:14px;min-height:74px}
+.bsub{display:flex;gap:14px;align-items:center;font:400 24px/1 var(--ui);color:var(--muted);margin-top:12px;min-height:34px}
+.urg{font-size:18px;color:#f5c66b;border:1px solid rgba(245,198,107,.4);border-radius:999px;padding:6px 14px;opacity:0}
+.bline{height:1px;background:var(--line);margin:26px 0 20px}
+.bmsg{font:400 23px/1.55 var(--ui);color:#bdbdc2;white-space:pre-wrap;min-height:180px}
+.bmsg b{color:#fff;font-weight:500}
+.bsend{position:relative;margin-top:24px;height:96px;border-radius:999px;background:#fff;color:#050505;display:flex;align-items:center;justify-content:center;gap:16px;font:600 30px/1 var(--ui);overflow:hidden}
+.bsend svg{width:30px;height:30px}
+.bsend .shine{position:absolute;top:0;bottom:0;left:-40%;width:30%;transform:skewX(-20deg);background:linear-gradient(90deg,transparent,rgba(0,0,0,.12),transparent)}
+.toast{position:absolute;left:50%;bottom:120px;z-index:60;transform:translateX(-50%);padding:22px 34px;border-radius:999px;background:#fff;color:#050505;font:500 26px/1 var(--ui);white-space:nowrap;opacity:0}
+
+/* ---------- S5 CTA ---------- */
+.cta{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+.cta::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(5,5,5,.85),rgba(5,5,5,.35) 35%,rgba(5,5,5,.35) 65%,rgba(5,5,5,.9)),radial-gradient(70% 30% at 50% 46%,rgba(5,5,5,.8),transparent 80%)}
+.cta-in{position:relative;display:flex;flex-direction:column;align-items:center}
+.ctat{font:800 168px/.9 var(--display);letter-spacing:-.06em}
+.ctat .w{display:block;overflow:hidden;padding-bottom:.08em}
+.ctat .w > span{display:inline-block}
+.ctas{font:400 31px/1.5 var(--ui);color:#c9c9cd;max-width:820px;margin-top:40px}
+.cpills{display:flex;flex-wrap:wrap;justify-content:center;gap:18px;margin-top:60px;max-width:960px}
+.cp{position:relative;height:92px;padding:0 40px;border-radius:999px;border:2px solid rgba(255,255,255,.22);background:rgba(255,255,255,.08);display:inline-flex;align-items:center;gap:16px;font:500 30px/1 var(--ui);overflow:hidden;color:#fff}
+.cp .fill{position:absolute;inset:0;background:#fff;transform:scaleY(0);transform-origin:50% 100%}
+.cp span,.cp svg{position:relative}
+.cp svg{width:26px;height:26px}
+.cp .star{color:#f5c66b}
+.burst{position:absolute;z-index:45;left:0;top:0;width:0;height:0}
+.burst i{position:absolute;left:-7px;top:-7px;width:14px;height:14px;border-radius:50%;background:#fff;opacity:0}
+.url{position:absolute;bottom:110px;left:0;right:0;text-align:center;font:500 26px/1 var(--mono);color:#9a9aa0;letter-spacing:.04em;opacity:0}
+
+/* ---------- virtual cursor ---------- */
+#cursor{position:absolute;left:0;top:0;z-index:90;width:0;height:0;pointer-events:none}
+#cursor svg{position:absolute;left:-4px;top:-3px;width:46px;height:56px;filter:drop-shadow(0 6px 14px rgba(0,0,0,.6))}
+#cursor .ring{position:absolute;left:-36px;top:-36px;width:72px;height:72px;border-radius:50%;border:3px solid #fff;opacity:0}
+.flash{position:absolute;inset:0;z-index:95;background:#fff;opacity:0;pointer-events:none}
+.vign{position:absolute;inset:0;z-index:94;pointer-events:none;background:radial-gradient(120% 80% at 50% 50%,transparent 60%,rgba(0,0,0,.55))}
+</style>
+</head>
+<body>
+
+<div id="stage">
+  <div class="layer" id="fieldWrap"><canvas id="field" width="1080" height="1920"></canvas></div>
+
+  <!-- header -->
+  <div class="hdr" id="hdr">
+    <div class="logo"><img src="favicon.svg" alt=""><span>ökǒmomorîrěmnant</span></div>
+    <div class="hr">
+      <div class="langs" id="langs"><i id="langInd"></i><span class="on" id="lRU">RU</span><span id="lEN">EN</span></div>
+      <div class="wpill"><span data-ru="Написать" data-en="Message me">Написать</span><svg width="20" height="20" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 11.5 11.5 4.5M5.5 4.5h6v6"/></svg></div>
+    </div>
+  </div>
+
+  <!-- S1 hero -->
+  <section class="scene hero" id="s1">
+    <div class="hero-in" id="heroIn">
+      <span class="kicker" id="kicker"><span class="dot"></span><span>принимаю заказы · FunPay ★ 5.0</span></span>
+      <h1 class="title" id="title">ökǒmomorîrěmnant</h1>
+      <p class="slogan"><span class="ln"><span><b>Боты, парсеры, сайты и моды под ключ.</b></span></span><span class="ln"><span>Цену и срок называю до начала работы.</span></span></p>
+      <div class="downc" id="downc"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M10 3.5v13M4.5 11l5.5 5.5 5.5-5.5"/></svg></div>
+    </div>
+    <div class="lead" id="lead1"></div>
+    <div class="callout" id="call1"><span class="bul"></span>Interactive Canvas · 60 FPS</div>
+  </section>
+
+  <!-- S2 works -->
+  <section class="scene works" id="s2">
+    <h2 class="h-xl" id="wTitle">мои работы</h2>
+    <div class="xcard" id="card1" style="top:470px">
+      <div class="ly base" id="ly1"><div class="grid" id="grid1"></div><div class="guide"></div><div class="lbl"><b>01</b>подложка · #111 · r 20px</div></div>
+      <div class="ly prev" id="ly2"><div class="fan"><img src="assets/vitrine.jpg" alt=""><img src="assets/paper-vs-skills.jpg" alt=""><img src="assets/linkd.jpg" alt=""></div><div class="guide"></div><div class="lbl"><b>02</b>превью работ · веер</div></div>
+      <div class="ly type" id="ly3"><div class="cnt">3 проекта</div><div class="tt">сайты</div><div class="dd">Лендинги и промо-сайты с WebGL, 3D и живыми анимациями</div>
+        <div class="arr" id="arr1"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 11.5 11.5 4.5M5.5 4.5h6v6"/></svg></div>
+        <div class="guide"></div><div class="lbl"><b>03</b>типографика + кнопка</div></div>
+      <div class="snapline" id="snap1"></div>
+    </div>
+    <div class="xcard" id="card2" style="top:1060px">
+      <div class="ly base"></div>
+      <div class="ly prev"><div class="fan"><img src="assets/svc/discord-bot.webp" alt=""><img src="assets/svc/ai-bot.webp" alt=""><img src="assets/svc/tg-bot.webp" alt=""></div></div>
+      <div class="ly type"><div class="cnt">5 направлений</div><div class="tt">боты и парсеры</div><div class="dd">Telegram- и Discord-боты, магазины, ИИ-ассистенты</div><div class="arr"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 11.5 11.5 4.5M5.5 4.5h6v6"/></svg></div></div>
+    </div>
+    <div class="xcard" id="card3" style="top:1650px">
+      <div class="ly base"></div>
+      <div class="ly prev"><div class="fan"><img src="assets/svc/beamng-jbeam.webp" alt=""><img src="assets/svc/minecraft.webp" alt=""><img src="assets/svc/discord-server.webp" alt=""></div></div>
+      <div class="ly type"><div class="cnt">7 направлений</div><div class="tt">discord и игры</div><div class="dd">Серверы под ключ, моды и плагины</div><div class="arr"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 11.5 11.5 4.5M5.5 4.5h6v6"/></svg></div></div>
+    </div>
+    <div class="backdrop" id="gBack"></div>
+    <div class="mpanel mgal" id="gPanel">
+      <div class="m-eye">3 проекта</div><div class="m-h">сайты</div>
+      <div class="m-x"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3.5 3.5l9 9M12.5 3.5l-9 9"/></svg></div>
+      <div class="gitems">
+        <div class="gitem"><img src="assets/linkd.jpg" alt=""><div><h4>linkd</h4><p>3D-сайт студии · Three.js, WebGL, Web Audio</p><span class="demo">открыть демо ↗</span></div></div>
+        <div class="gitem"><img src="assets/vitrine.jpg" alt=""><div><h4>vitrine</h4><p>Концепт-лендинг · Canvas 2D, шейдеры</p><span class="demo">открыть демо ↗</span></div></div>
+        <div class="gitem"><img src="assets/paper-vs-skills.jpg" alt=""><div><h4>paper vs skills</h4><p>3D-скроллителлинг · Three.js, GSAP</p><span class="demo">открыть демо ↗</span></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- S3 price + S4 brief -->
+  <section class="scene price" id="s3">
+    <h2 class="h-xl lx" data-ru="сколько стоит" data-en="what it costs">сколько стоит</h2>
+    <p class="pnote lx" data-ru="Стартовые цены. Точную сумму называю до начала работы." data-en="Starting prices. The exact amount comes before work begins.">Стартовые цены. Точную сумму называю до начала работы.</p>
+    <div class="plist" id="plist"></div>
+
+    <div class="backdrop" id="bBack"></div>
+    <div class="mpanel mbrief" id="bPanel">
+      <div class="m-eye">конструктор тз</div>
+      <div class="m-h">опишите задачу. <span>отправьте одной кнопкой.</span></div>
+      <div class="m-x"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3.5 3.5l9 9M12.5 3.5l-9 9"/></svg></div>
+      <div class="bstep"><b>01</b>что нужно</div>
+      <div class="pills" id="svcPills" role="radiogroup"></div>
+      <div class="bstep"><b>02</b>вопросы по задаче</div>
+      <div class="qgrid" id="qgrid"></div>
+      <div class="cols2">
+        <div><div class="bstep"><b>03</b>бюджет</div><div class="pills" id="budPills" role="radiogroup"></div></div>
+        <div><div class="bstep"><b>04</b>сроки</div><div class="pills" id="dlPills" role="radiogroup"></div></div>
+      </div>
+      <div class="bside" id="bside">
+        <div class="row"><span class="best">ориентировочно</span><span class="best" id="bfill">0 из 6</span></div>
+        <div class="bprice" id="bprice">—</div>
+        <div class="bsub"><span id="bsvc">тип не выбран</span><span class="urg" id="burg">срочно ×1.5</span></div>
+        <div class="bline"></div>
+        <div class="best" style="margin-bottom:14px">05 · так придёт сообщение</div>
+        <div class="bmsg" id="bmsg"></div>
+        <div class="bsend" id="bsend"><span class="shine"></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21.5 4.5 2.8 11.6c-.8.3-.8 1.4 0 1.7l4.6 1.6 1.8 5.6c.2.7 1.1.9 1.6.4l2.6-2.5 4.7 3.5c.6.4 1.4.1 1.6-.6L22.9 5.8c.2-.9-.6-1.6-1.4-1.3Z"/><path d="m7.4 14.9 10.1-6.6-7.4 7.8"/></svg>Отправить в Telegram</div>
+      </div>
+    </div>
+    <div class="lead" id="lead2"></div>
+    <div class="callout" id="call2"><span class="bul"></span>Расчёт стоимости за 10 секунд</div>
+    <div class="toast" id="toast">ТЗ готово — открываю Telegram</div>
+  </section>
+
+  <!-- S5 CTA -->
+  <section class="scene cta" id="s5">
+    <div class="cta-in">
+      <h2 class="ctat"><span class="w"><span>есть</span></span><span class="w"><span>проект?</span></span></h2>
+      <p class="ctas" id="ctas">Быстрее всего отвечаю в Telegram. На FunPay можно оформить заказ с безопасной сделкой.</p>
+      <div class="cpills">
+        <div class="cp" id="cpTG"><span class="fill"></span><span>Telegram · @kashewars</span><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 11.5 11.5 4.5M5.5 4.5h6v6"/></svg></div>
+        <div class="cp" id="cpCh"><span class="fill"></span><span>Канал</span><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 11.5 11.5 4.5M5.5 4.5h6v6"/></svg></div>
+        <div class="cp" id="cpFP"><span class="fill"></span><span>FunPay <span class="star">★ 5.0</span></span><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 11.5 11.5 4.5M5.5 4.5h6v6"/></svg></div>
+      </div>
+    </div>
+    <div class="burst" id="burst"></div>
+    <div class="url" id="url">awesome926.github.io</div>
+  </section>
+
+  <div id="cursor"><span class="ring"></span><svg viewBox="0 0 23 28"><path d="M2 2v21.5l5.6-5.2 3.7 8.2 3.6-1.6-3.6-8h7.6L2 2Z" fill="#fff" stroke="#050505" stroke-width="1.6" stroke-linejoin="round"/></svg></div>
+  <div class="vign"></div>
+  <div class="flash" id="flash"></div>
+</div>
+
+<div class="ctrl"><button type="button" id="replay">↻ Заново</button><span class="t" id="timer">00:00 / 00:30</span><span class="k">R — заново · Space — пауза</span></div>
+
+<script>
+(() => {
+'use strict';
+const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
+const stage = $('#stage');
+const DUR = 30;
+
+/* ---------- fit the 1080×1920 frame into the window ---------- */
+let SC = 1;
+function fit() {
+  SC = Math.min(innerHeight * .96 / 1920, innerWidth * .96 / 1080);
+  stage.style.transform = `translate(-50%,-50%) scale(${SC})`;
+  stage.style.transform = `scale(${SC})`;
+  stage.style.left = (innerWidth - 1080 * SC) / 2 + 'px';
+  stage.style.top = (innerHeight - 1920 * SC) / 2 + 'px';
+}
+fit(); addEventListener('resize', fit);
+
+/* =========================================================
+   DATA (same texts and prices as the site)
+   ========================================================= */
+const ROWS = [
+  ['Discord-сервер под ключ', 'Каналы, роли и права, тикеты и авто-роли', 'от 500 ₽', 'Discord server, turnkey', 'Channels, roles & permissions, tickets', 'from $6'],
+  ['Discord-бот на заказ', 'Модерация, тикеты, уровни, своя логика', 'от 700 ₽', 'Custom Discord bot', 'Moderation, tickets, levels, custom logic', 'from $9'],
+  ['Защита сервера', 'Антирейд, антиспам, логи, права ролей', 'от 250 ₽', 'Server protection', 'Anti-raid, anti-spam, logs, permissions', 'from $3'],
+  ['Telegram-бот', 'Меню, заявки и запись, уведомления админу', 'от 700 ₽', 'Telegram bot', 'Menus, requests & bookings, admin alerts', 'from $9'],
+  ['Магазин и автопостинг', 'Автовыдача товара, посты по расписанию', 'от 1 500 ₽', 'Shop & autoposting', 'Instant delivery, scheduled posts', 'from $19'],
+  ['Парсеры', 'Данные с сайтов в CSV, Excel или Sheets', 'от 500 ₽', 'Web scrapers', 'Website data to CSV, Excel or Sheets', 'from $6'],
+  ['Сайты и лендинги', 'Анимации, адаптив, выкладка на хостинг', 'от 2 000 ₽', 'Websites & landing pages', 'Animation, mobile-ready, deployed', 'from $25']
+];
+const ARR_R = '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg>';
+$('#plist').innerHTML = ROWS.map(r => `<div class="prow"><span class="bgh"></span>
+  <div class="pn lx" data-ru="${r[0]}" data-en="${r[3]}">${r[0]}</div><div class="pd lx" data-ru="${r[1]}" data-en="${r[4]}">${r[1]}</div>
+  <div class="pp lx" data-ru="${r[2]}" data-en="${r[5]}">${r[2]}</div>
+  <div class="pb"><span class="fill"></span><span class="lx" data-ru="заказать" data-en="order">заказать</span>${ARR_R}</div></div>`).join('');
+
+const SVCS = ['Discord-сервер', 'Discord-бот', 'Защита сервера', 'Telegram-бот', 'Магазин', 'Парсеры', 'Сайты', 'ИИ-боты'];
+$('#svcPills').innerHTML = SVCS.map(s => `<div class="bp" role="radio"><span class="fill"></span><span>${s}</span></div>`).join('');
+const QS = ['Для чего бот', 'Сценарий и кнопки', 'Куда присылать заявки', 'Есть ли сервер для бота'];
+$('#qgrid').innerHTML = QS.map(q => `<div class="qf"><label><i></i>${q}</label><div class="in ph">Можно коротко</div></div>`).join('');
+const BUD = ['700 – 1 700 ₽', '1 700 – 3 000 ₽', '3 000 ₽+', 'Пока не знаю'];
+$('#budPills').innerHTML = BUD.map(s => `<div class="bp"><span class="fill"></span><span>${s}</span></div>`).join('');
+const DL = ['Не горит', 'За неделю', 'Срочно, 1–2 дня'];
+$('#dlPills').innerHTML = DL.map((s, i) => `<div class="bp"><span class="fill"></span><span>${s}${i === 2 ? '<small>×1.5</small>' : ''}</span></div>`).join('');
+
+/* title letters */
+const title = $('#title');
+title.innerHTML = [...title.textContent].map(c => `<span class="ch">${c}</span>`).join('');
+function fitTitle() {
+  title.style.fontSize = '100px';
+  const w = title.scrollWidth || 1;
+  title.style.fontSize = (100 * 960 / w).toFixed(1) + 'px';
+}
+
+/* burst particles */
+$('#burst').innerHTML = Array.from({ length: 34 }, () => '<i></i>').join('');
+
+/* =========================================================
+   FLOWER FIELD (canvas 2D, driven by the timeline)
+   ========================================================= */
+const cv = $('#field'), ctx = cv.getContext('2d');
+const FIELD = { camZ: -42, camY: 2.6, horizon: 860, dim: 0, mx: -999, my: -999, mOn: 0, speed: 1 };
+// seeded random so every replay looks identical
+let seed = 7; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+function flowerSprite(tint) {
+  const s = 96, c = document.createElement('canvas'); c.width = c.height = s; const x = c.getContext('2d');
+  x.translate(s / 2, s / 2);
+  const g = x.createRadialGradient(0, 0, 4, 0, 0, s * .48);
+  g.addColorStop(0, '#f2f2f5'); g.addColorStop(.55, '#ffffff'); g.addColorStop(1, tint);
+  x.fillStyle = g; x.beginPath();
+  for (let i = 0; i <= 360; i += 3) {
+    const a = i * Math.PI / 180, pet = Math.abs(Math.cos(2.5 * a)), r = (s * .48) * (.34 + .66 * Math.pow(pet, 1.35));
+    const px = Math.cos(a - Math.PI / 2) * r, py = Math.sin(a - Math.PI / 2) * r;
+    i ? x.lineTo(px, py) : x.moveTo(px, py);
+  }
+  x.closePath(); x.fill();
+  x.fillStyle = '#fff1d0'; x.beginPath(); x.arc(0, 0, s * .07, 0, Math.PI * 2); x.fill();
+  return c;
+}
+function leafSprite() {
+  const c = document.createElement('canvas'); c.width = 40; c.height = 96; const x = c.getContext('2d');
+  x.fillStyle = '#12281c'; x.beginPath(); x.moveTo(20, 2); x.quadraticCurveTo(40, 48, 20, 94); x.quadraticCurveTo(0, 48, 20, 2); x.fill();
+  return c;
+}
+const SPR = ['#ffffff', '#ffd6e6', '#dcd6ff', '#cff3ff', '#ffe6cc', '#ffffff'].map(flowerSprite), LEAF = leafSprite();
+const N = 5600, FL = [];
+for (let i = 0; i < N; i++) {
+  const z = -40 + Math.pow(rnd(), .85) * 105, leaf = rnd() < .1;
+  FL.push({ x: (rnd() * 2 - 1) * (z > 0 ? z * .5 + 4 : 5), z, s: leaf ? .26 + rnd() * .22 : .12 + Math.pow(rnd(), 1.8) * .2, sq: .45 + rnd() * .5, rot: rnd() * 6.28, spr: leaf ? -1 : Math.floor(rnd() * SPR.length), ph: rnd() * 6.28 });
+}
+FL.sort((a, b) => b.z - a.z);
+const hill = (x, z, t) => .6 * Math.sin(x * .12 + z * .05 + .6) + x * .06 + .35 * Math.sin(z * .2 + t * .4);
+let fieldT = 0, lastNow = performance.now();
+function drawField(now) {
+  const dt = Math.min((now - lastNow) / 1000, .05); lastNow = now; fieldT += dt;
+  if (+fieldWrap.style.opacity === 0 && fieldWrap.style.opacity !== '') return;
+  ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.clearRect(0, 0, 1080, 1920);
+  const f = 1150, cx = 540, hy = FIELD.horizon, cz = FIELD.camZ, cy = FIELD.camY;
+  for (const p of FL) {
+    const dz = p.z - cz; if (dz < 2.2) continue;
+    const y = hill(p.x, p.z, fieldT);
+    let sx = cx + p.x / dz * f, sy = hy + (cy - y) / dz * f;
+    if (sx < -120 || sx > 1200 || sy > 2050 || sy < hy - 200) continue;
+    let size = p.s / dz * f * 1.1;
+    if (FIELD.mOn > 0) {
+      const ddx = sx - FIELD.mx, ddy = sy - FIELD.my, d = Math.hypot(ddx, ddy), R = 170;
+      if (d < R) { const k = (1 - d / R) * FIELD.mOn; sx += ddx / (d || 1) * k * 70; sy += ddy / (d || 1) * k * 50 - k * 26; size *= 1 + k * .15; }
+    }
+    const fog = Math.min(1, Math.max(.05, 1 - (dz - 4) / 70)) * Math.min(1, (dz - 2.2) / 1.5);
+    ctx.globalAlpha = fog * (1 - FIELD.dim);
+    const sway = Math.sin(fieldT * 1.2 + p.ph) * .08;
+    const c = Math.cos(p.rot + sway), s = Math.sin(p.rot + sway);
+    if (p.spr < 0) { ctx.setTransform(c * size * .012, s * size * .012, -s * size * .03 * p.sq, c * size * .03 * p.sq, sx, sy); ctx.drawImage(LEAF, -20, -48); }
+    else { ctx.setTransform(c * size / 96, s * size / 96 * p.sq, -s * size / 96, c * size / 96 * p.sq, sx, sy); ctx.drawImage(SPR[p.spr], -48, -48); }
+  }
+  ctx.globalAlpha = 1;
+}
+const fieldWrap = $('#fieldWrap');
+
+/* stars */
+(function () {
+  const g = ctx; // drawn once into a separate layer under the field
+  const sc = document.createElement('canvas'); sc.width = 1080; sc.height = 1920; sc.style.cssText = 'position:absolute;inset:0;width:1080px;height:1920px';
+  const x = sc.getContext('2d'); for (let i = 0; i < 160; i++) { x.globalAlpha = .15 + rnd() * .45; x.fillStyle = '#fff'; x.beginPath(); x.arc(rnd() * 1080, 120 + rnd() * 680, .8 + rnd() * 1.6, 0, 6.28); x.fill(); }
+  fieldWrap.insertBefore(sc, cv);
+})();
+
+/* =========================================================
+   STAGE STATE HELPERS (all of these are reset on replay)
+   ========================================================= */
+const ST = { lang: 'ru', svc: -1, a: ['', '', '', ''], b: -1, d: -1, lo: 0, hi: 0 };
+const fmt = n => Math.round(n).toLocaleString('ru-RU').replace(/,/g, ' ');
+function setLang(l) {
+  ST.lang = l;
+  $$('.lx, [data-ru]').forEach(el => { const v = el.dataset[l]; if (v !== undefined) el.textContent = v; });
+  $('#lRU').classList.toggle('on', l === 'ru'); $('#lEN').classList.toggle('on', l === 'en');
+}
+function renderBrief() {
+  const filled = ST.a.filter(Boolean).length + (ST.b >= 0) + (ST.d >= 0);
+  $('#bfill').textContent = ST.svc >= 0 ? `${filled} из 6` : '0 из 6';
+  $('#bprice').textContent = ST.svc >= 0 ? `${fmt(ST.lo)} – ${fmt(ST.hi)} ₽` : '—';
+  $('#bsvc').textContent = ST.svc >= 0 ? 'Telegram-бот' : 'тип не выбран';
+  $$('#qgrid .qf').forEach((q, i) => {
+    const v = ST.a[i], inp = q.querySelector('.in');
+    inp.classList.toggle('ph', !v);
+    inp.innerHTML = (v ? v.replace(/&/g, '&amp;').replace(/</g, '&lt;') : 'Можно коротко') + '<span class="caret"></span>';
+    q.querySelector('label i').style.background = v ? '#fff' : '';
+    q.querySelector('label').style.color = v ? '#fff' : '';
+  });
+  if (ST.svc < 0) { $('#bmsg').innerHTML = '<span style="color:#5d5d62">Выберите, что нужно, — появятся вопросы именно под эту задачу.</span>'; return; }
+  const L = ['Привет! Хочу заказать «Telegram-бот» (с сайта-портфолио).', ''];
+  QS.forEach((q, i) => { if (ST.a[i]) L.push(`<b>${q}:</b> ${ST.a[i]}`); });
+  if (ST.b >= 0) L.push(`<b>Бюджет:</b> ${BUD[ST.b]}`);
+  if (ST.d >= 0) L.push(`<b>Сроки:</b> ${DL[ST.d]}`);
+  $('#bmsg').innerHTML = L.join('\n');
+}
+function pillOn(el, on) { gsap.set(el.querySelector('.fill'), { opacity: on ? 1 : 0 }); el.style.color = on ? '#050505' : ''; el.style.borderColor = on ? '#fff' : ''; }
+function reset() {
+  setLang('ru');
+  Object.assign(ST, { svc: -1, a: ['', '', '', ''], b: -1, d: -1, lo: 0, hi: 0 });
+  $$('.bp').forEach(p => pillOn(p, false));
+  renderBrief();
+  $$('.prow').forEach(r => { r.querySelector('.bgh').style.opacity = 0; });
+  Object.assign(FIELD, { camZ: -42, camY: 2.6, horizon: 860, dim: 0, mx: -999, my: -999, mOn: 0 });
+}
+
+/* stage-space position of an element (measured with every scene laid out flat) */
+function pos(el, ax = .5, ay = .5) {
+  const r = el.getBoundingClientRect(), s = stage.getBoundingClientRect();
+  return { x: (r.left - s.left) / SC + r.width / SC * ax, y: (r.top - s.top) / SC + r.height / SC * ay };
+}
+
+/* =========================================================
+   MASTER TIMELINE — 30.0 s
+   ========================================================= */
+let tl;
+function build() {
+  if (tl) tl.kill();
+  gsap.set('#s1,#s2,#s3,#s5,#fieldWrap,#hdr,#gBack,#gPanel,#bBack,#bPanel,#call1,#lead1,#call2,#lead2,#toast', { clearProps: 'all' });
+  reset(); fitTitle();
+
+  // --- measure targets with everything in its resting place ---
+  const P = {
+    kick: pos($('#kicker')), title: pos(title),
+    arr1: pos($('#arr1')), rows: $$('.prow').map(r => pos(r, .45, .5)), rowBtn: $$('.prow .pb').map(b => pos(b)),
+    svc: pos($$('#svcPills .bp')[3]), q0: pos($$('#qgrid .in')[0], .2), q1: pos($$('#qgrid .in')[1], .2),
+    bud: pos($$('#budPills .bp')[1]), dl: pos($$('#dlPills .bp')[2]), send: pos($('#bsend')), price: pos($('#bprice'), 0, .5),
+    tg: pos($('#cpTG')), ch: pos($('#cpCh'))
+  };
+  const cur = $('#cursor'), ring = $('#cursor .ring');
+  const CUR = { x: 1180, y: 1500 };
+  const moveC = () => gsap.set(cur, { x: CUR.x, y: CUR.y });
+  const go = (x, y, d = .5, ease = 'power3.inOut') => ({ targets: CUR, vars: { x, y, duration: d, ease, onUpdate: moveC } });
+  const click = t => {
+    tl.to(cur, { scale: .82, duration: .08, ease: 'power2.in' }, t).to(cur, { scale: 1, duration: .22, ease: 'back.out(3)' }, t + .08);
+    tl.fromTo(ring, { scale: .3, opacity: .9 }, { scale: 1.6, opacity: 0, duration: .45, ease: 'power2.out' }, t);
+  };
+
+  // callouts + leader lines
+  const lineTo = (el, x1, y1, x2, y2) => gsap.set(el, { left: x1, top: y1, width: Math.hypot(x2 - x1, y2 - y1), rotation: Math.atan2(y2 - y1, x2 - x1) * 180 / Math.PI, transformOrigin: '0 50%' });
+  gsap.set('#call1', { left: 470, top: 1150 });
+  lineTo('#lead1', 640, 1214, 860, 1318);
+  const c2y = P.price.y - 190;
+  gsap.set('#call2', { left: 330, top: c2y });
+  lineTo('#lead2', 560, c2y + 64, 680, P.price.y - 20);
+
+  tl = gsap.timeline({ paused: true, defaults: { ease: 'power3.out' } });
+  const T = (tween, at) => tl.to(tween.targets, tween.vars, at);
+  // the header sits above the scenes, so dim it while a modal is open
+  tl.to('#hdr', { opacity: .15, duration: .3 }, 10.45).to('#hdr', { opacity: 1, duration: .3 }, 11.7)
+    .to('#hdr', { opacity: .15, duration: .3 }, 15.9);
+
+  // ---------- initial state (time 0) ----------
+  tl.set(cur, { x: CUR.x, y: CUR.y, opacity: 0 }, 0)
+    .set('#s2', { y: 1920, opacity: 1 }, 0).set('#s3', { y: 1920 }, 0).set('#s5', { opacity: 0 }, 0)
+    .set('#fieldWrap', { y: 0, opacity: 1 }, 0)
+    .set('#hdr', { opacity: 0, y: -30 }, 0)
+    .set('#heroIn', { scale: 2.5, transformOrigin: `50% ${P.kick.y - 560}px`, y: 960 - P.kick.y }, 0)
+    .set('.title .ch', { yPercent: 115, opacity: 0 }, 0)
+    .set('.slogan .ln > span', { yPercent: 110 }, 0)
+    .set('#downc', { scale: 0, opacity: 0 }, 0)
+    .set('#kicker', { opacity: 0, scale: .8 }, 0)
+    .set(['#call1', '#lead1', '#call2', '#lead2', '#toast'], { opacity: 0 }, 0)
+    .set(['#gBack', '#gPanel', '#bBack', '#bPanel'], { opacity: 0 }, 0)
+    .set('.gitem', { y: 60, opacity: 0 }, 0)
+    .set('#qgrid .qf', { opacity: .25 }, 0)
+    .set('#card1', { x: 0, y: 0, rotationX: 0, rotationY: 0, rotationZ: 0, scale: 1 }, 0)
+    .set(['#card2', '#card3', '#wTitle'], { opacity: 1, y: 0, filter: 'blur(0px)' }, 0)
+    .set(['#ly1', '#ly2', '#ly3'], { z: 0 }, 0)
+    .set('#card1 .guide, #card1 .lbl, #grid1, #snap1', { opacity: 0 }, 0)
+    .set('.ctat .w > span', { yPercent: 110 }, 0).set('#ctas', { opacity: 0, y: 30 }, 0)
+    .set('.cp', { opacity: 0, y: 40, scale: 1 }, 0).set('.cp .fill', { scaleY: 0 }, 0).set('#cpTG', { color: '#fff' }, 0)
+    .set('#url', { opacity: 0 }, 0)
+    .set('#burst i', { x: 0, y: 0, opacity: 0, scale: 1 }, 0)
+    .set('#flash', { opacity: 0 }, 0)
+    .set('.prow .pn, .prow .pb svg', { x: 0 }, 0)
+    .set('.prow .pb .fill', { opacity: 0 }, 0).set('.prow .pb', { color: '#fff' }, 0)
+    .set('#langInd', { x: 0 }, 0)
+    .set('#burg', { opacity: 0 }, 0);
+
+  /* ===== 00:00 – 00:05 · hook ===== */
+  tl.to('#flash', { opacity: .9, duration: .12, ease: 'power2.in' }, .1).to('#flash', { opacity: 0, duration: .7, ease: 'power2.out' }, .22);
+  tl.to(FIELD, { camZ: 0, duration: 2.1, ease: 'expo.out' }, .15);                         // fly through the canvas
+  tl.to('#kicker', { opacity: 1, scale: 1, duration: .6, ease: 'back.out(1.6)' }, .55);    // macro on the badge
+  tl.to('#heroIn', { scale: 1, y: 0, duration: 1.1, ease: 'expo.inOut' }, 1.55);            // pull back
+  tl.to('.title .ch', { yPercent: 0, opacity: 1, duration: 1, stagger: .035, ease: 'power4.out' }, 1.85);
+  tl.to('#hdr', { opacity: 1, y: 0, duration: .7 }, 2.2);
+  tl.to(cur, { opacity: 1, duration: .3 }, 2.5);
+  T(go(170, 1480, .01), 2.5);
+  tl.to(FIELD, { mOn: 1, duration: .3 }, 2.6);
+  T(go(900, 1330, 1.5, 'sine.inOut'), 2.6);
+  tl.to(CUR, { duration: 1.5, ease: 'sine.inOut', onUpdate() { FIELD.mx = CUR.x; FIELD.my = CUR.y; } }, 2.6);
+  tl.fromTo('#lead1', { opacity: 0, scaleX: 0 }, { opacity: 1, scaleX: 1, duration: .5 }, 3.1);
+  tl.fromTo('#call1', { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: .5 }, 3.2);
+  tl.to('.slogan .ln > span', { yPercent: 0, duration: .9, stagger: .12, ease: 'power4.out' }, 3.45);
+  tl.to('#downc', { scale: 1, opacity: 1, duration: .6, ease: 'back.out(1.8)' }, 3.9);
+  T(go(540, P.title.y + 330, .7), 4.15);
+  tl.to(FIELD, { mOn: 0, duration: .5 }, 4.2);
+  tl.to(['#call1', '#lead1'], { opacity: 0, duration: .3 }, 4.6);
+
+  /* ===== 00:05 – 00:12 · works breakdown ===== */
+  click(4.9);
+  tl.to(['#s1', '#fieldWrap'], { y: -1920, duration: .95, ease: 'power3.inOut' }, 5.0);
+  tl.to('#s2', { y: 0, duration: .95, ease: 'power3.inOut' }, 5.0);
+  T(go(760, 1500, .7), 5.4);
+  tl.to(['#card2', '#card3'], { opacity: 0, y: 120, filter: 'blur(14px)', duration: .6, stagger: .06, ease: 'power2.in' }, 6.05);
+  tl.to('#wTitle', { opacity: 0, y: -60, duration: .5, ease: 'power2.in' }, 6.1);
+  tl.to('#card1', { y: 250, rotationX: 24, rotationY: -32, rotationZ: 6, scale: .82, duration: 1, ease: 'expo.inOut' }, 6.25);
+  tl.to(cur, { opacity: 0, duration: .25 }, 6.3);
+  tl.to('#ly1', { z: -170, duration: .9, ease: 'expo.out' }, 7.2);
+  tl.to('#ly2', { z: 110, duration: .9, ease: 'expo.out' }, 7.25);
+  tl.to('#ly3', { z: 300, duration: .9, ease: 'expo.out' }, 7.3);
+  tl.to('#grid1, #card1 .guide', { opacity: 1, duration: .5, stagger: .06 }, 7.45);
+  tl.to('#card1 .lbl', { opacity: 1, duration: .4, stagger: .14 }, 7.7);
+  tl.to('#card1', { rotationY: -22, rotationX: 18, duration: 1.4, ease: 'sine.inOut' }, 7.9);
+  tl.to('#card1 .lbl, #grid1, #card1 .guide', { opacity: 0, duration: .25 }, 9.15);
+  tl.to(['#ly1', '#ly2', '#ly3'], { z: 0, duration: .42, ease: 'power4.in' }, 9.25);
+  tl.to('#card1', { rotationX: 0, rotationY: 0, rotationZ: 0, scale: 1, duration: .5, ease: 'power4.in' }, 9.2);
+  tl.fromTo('#card1', { scale: 1 }, { scale: 1.035, duration: .08, ease: 'power2.out', immediateRender: false }, 9.7)
+    .to('#card1', { scale: 1, duration: .5, ease: 'elastic.out(1,.45)' }, 9.78);
+  tl.fromTo('#snap1', { opacity: .9, scale: .985 }, { opacity: 0, scale: 1.04, duration: .5, ease: 'power2.out' }, 9.7);
+  tl.to(cur, { opacity: 1, duration: .2 }, 9.75);
+  T(go(940, 1650, .01), 9.75);
+  T(go(P.arr1.x, P.arr1.y + 250, .5), 9.8);
+  tl.to('#arr1', { backgroundColor: '#fff', color: '#050505', borderColor: '#fff', rotation: 45, duration: .25 }, 10.15);
+  click(10.35);
+  tl.to('#gBack', { opacity: 1, duration: .35 }, 10.45);
+  tl.fromTo('#gPanel', { opacity: 0, y: 120, scale: .96 }, { opacity: 1, y: 0, scale: 1, duration: .6, ease: 'expo.out' }, 10.5);
+  tl.to('.gitem', { y: 0, opacity: 1, duration: .55, stagger: .1 }, 10.7);
+  T(go(800, 820, .7), 10.7);
+  tl.to('#gPanel', { opacity: 0, y: 60, duration: .3, ease: 'power2.in' }, 11.65);
+  tl.to('#gBack', { opacity: 0, duration: .3 }, 11.7);
+
+  /* ===== 00:12 – 00:16 · price + language switch ===== */
+  tl.to('#s2', { y: -1920, duration: .8, ease: 'power3.inOut' }, 11.95);
+  tl.to('#s3', { y: 0, duration: .8, ease: 'power3.inOut' }, 11.95);
+  T(go(P.rows[0].x, P.rows[0].y, .5), 12.4);
+  const rows = $$('.prow');
+  rows.slice(0, 6).forEach((r, i) => {
+    const t = 12.6 + i * .38;
+    if (i) T(go(P.rows[i].x + (i % 2 ? 40 : -30), P.rows[i].y, .32, 'power2.inOut'), t - .3);
+    tl.to(r.querySelector('.bgh'), { opacity: 1, duration: .16 }, t)
+      .to(r.querySelector('.pn'), { x: 16, duration: .3 }, t)
+      .to(r.querySelector('.pb svg'), { x: 8, duration: .3 }, t)
+      .to(r.querySelector('.pb .fill'), { opacity: 1, duration: .16 }, t)
+      .to(r.querySelector('.pb'), { color: '#050505', duration: .16 }, t)
+      .to(r.querySelector('.bgh'), { opacity: 0, duration: .3 }, t + .34)
+      .to(r.querySelector('.pn'), { x: 0, duration: .4 }, t + .34)
+      .to(r.querySelector('.pb svg'), { x: 0, duration: .4 }, t + .34)
+      .to(r.querySelector('.pb .fill'), { opacity: 0, duration: .3 }, t + .34)
+      .to(r.querySelector('.pb'), { color: '#fff', duration: .3 }, t + .34);
+  });
+  // language: RU → EN for a beat, then back
+  const swap = (l, t) => {
+    tl.to('#s3 .lx, #hdr [data-ru]', { opacity: 0, y: -10, duration: .16, ease: 'power2.in' }, t)
+      .call(() => setLang(l), null, t + .17)
+      .fromTo('#s3 .lx, #hdr [data-ru]', { y: 12 }, { opacity: 1, y: 0, duration: .3, stagger: .008, immediateRender: false }, t + .18)
+      .to('#langInd', { x: l === 'en' ? 76 : 0, duration: .35, ease: 'power3.inOut' }, t);
+  };
+  swap('en', 13.55); swap('ru', 14.75);
+  T(go(P.rowBtn[3].x, P.rowBtn[3].y, .45), 15.2);
+  tl.to(rows[3].querySelector('.bgh'), { opacity: 1, duration: .15 }, 15.55).to(rows[3].querySelector('.pb .fill'), { opacity: 1, duration: .15 }, 15.55).to(rows[3].querySelector('.pb'), { color: '#050505', duration: .15 }, 15.55);
+  click(15.75);
+
+  /* ===== 00:16 – 00:24 · brief builder / price calculator ===== */
+  tl.to('#bBack', { opacity: 1, duration: .35 }, 15.9);
+  tl.fromTo('#bPanel', { opacity: 0, y: 140, scale: .97 }, { opacity: 1, y: 0, scale: 1, duration: .6, ease: 'expo.out' }, 15.95);
+  tl.from('#bPanel .bstep, #svcPills .bp, #bside', { opacity: 0, y: 24, duration: .45, stagger: .025 }, 16.15);
+  T(go(P.svc.x, P.svc.y, .45), 16.35);
+  click(16.8);
+  tl.call(() => { pillOn($$('#svcPills .bp')[3], true); ST.svc = 3; renderBrief(); }, null, 16.85);
+  tl.to('#qgrid .qf', { opacity: 1, duration: .35, stagger: .05 }, 16.9);
+  tl.to(ST, { lo: 700, hi: 4000, duration: .6, ease: 'power2.out', onUpdate: renderBrief }, 16.9);
+  const typeIn = (i, text, t, d) => {
+    tl.call(() => { $$('#qgrid .caret')[i] && gsap.set($$('#qgrid .caret')[i], { opacity: 1 }); }, null, t);
+    tl.to({ n: 0 }, { n: text.length, duration: d, ease: 'none', onUpdate() { ST.a[i] = text.slice(0, Math.round(this.targets()[0].n)); renderBrief(); const c = $$('#qgrid .caret')[i]; if (c) c.style.opacity = 1; } }, t);
+    tl.call(() => { renderBrief(); }, null, t + d + .05);
+  };
+  T(go(P.q0.x, P.q0.y, .4), 17.3);
+  click(17.7);
+  typeIn(0, 'запись клиентов в барбершоп', 17.8, .75);
+  T(go(P.q1.x, P.q1.y, .35), 18.6);
+  click(18.95);
+  typeIn(1, 'мастер → дата → время', 19.0, .6);
+  T(go(P.bud.x, P.bud.y, .4), 19.65);
+  click(20.05);
+  tl.call(() => { pillOn($$('#budPills .bp')[1], true); ST.b = 1; renderBrief(); }, null, 20.1);
+  T(go(P.dl.x, P.dl.y, .35), 20.25);
+  click(20.62);
+  tl.call(() => { pillOn($$('#dlPills .bp')[2], true); ST.d = 2; renderBrief(); }, null, 20.67);
+  tl.to(ST, { lo: 1100, hi: 6000, duration: .55, ease: 'power2.out', onUpdate: renderBrief }, 20.7);
+  tl.to('#burg', { opacity: 1, duration: .3 }, 20.75);
+  tl.fromTo('#bprice', { color: '#f5c66b' }, { color: '#ffffff', duration: 1.2, immediateRender: false }, 20.7);
+  tl.fromTo('#lead2', { opacity: 0, scaleX: 0 }, { opacity: 1, scaleX: 1, duration: .45 }, 21.0);
+  tl.fromTo('#call2', { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: .45 }, 21.1);
+  T(go(P.send.x + 120, P.send.y, .6), 21.4);
+  tl.fromTo('#bsend .shine', { left: '-40%' }, { left: '130%', duration: .7, ease: 'power2.inOut' }, 21.8);
+  tl.to('#bsend', { scale: 1.02, duration: .2 }, 21.95);
+  click(22.45);
+  tl.to('#bsend', { scale: .97, duration: .08 }, 22.45).to('#bsend', { scale: 1, duration: .3, ease: 'back.out(3)' }, 22.53);
+  tl.to('#flash', { opacity: .25, duration: .06 }, 22.48).to('#flash', { opacity: 0, duration: .35 }, 22.54);
+  tl.fromTo('#toast', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: .4 }, 22.6);
+  tl.to(['#call2', '#lead2'], { opacity: 0, duration: .3 }, 23.2);
+  tl.to(['#bPanel', '#toast'], { opacity: 0, y: 40, duration: .35, ease: 'power2.in' }, 23.55);
+  tl.to(cur, { opacity: 0, duration: .25 }, 23.6);
+
+  /* ===== 00:24 – 00:30 · CTA ===== */
+  tl.to('#s3', { opacity: 0, duration: .5 }, 23.7);
+  tl.to('#hdr', { opacity: 0, duration: .4 }, 23.7);
+  tl.set('#fieldWrap', { y: 0, opacity: 0 }, 23.8);
+  tl.set(FIELD, { camZ: -14, camY: 3.4, horizon: 620, dim: .55 }, 23.8);
+  tl.to('#fieldWrap', { opacity: 1, duration: .9 }, 23.85);
+  tl.to(FIELD, { camZ: 0, duration: 4.5, ease: 'power2.out' }, 23.85);
+  tl.to('#s5', { opacity: 1, duration: .3 }, 23.85);
+  tl.to('.ctat .w > span', { yPercent: 0, duration: 1, stagger: .12, ease: 'power4.out' }, 24.05);
+  tl.to('#ctas', { opacity: 1, y: 0, duration: .7 }, 24.55);
+  tl.to('.cp', { opacity: 1, y: 0, duration: .6, stagger: .1, ease: 'back.out(1.5)' }, 24.85);
+  tl.to(cur, { opacity: 1, duration: .25 }, 25.4);
+  T(go(900, 1700, .01), 25.4);
+  T(go(P.tg.x + 60, P.tg.y + 8, .9), 25.45);
+  tl.to('#cpTG .fill', { scaleY: 1, duration: .35, ease: 'power3.out' }, 26.3);
+  tl.to('#cpTG', { color: '#050505', borderColor: '#fff', duration: .2 }, 26.3);
+  tl.to('#cpTG', { scale: 1.04, duration: .25 }, 26.35);
+  click(27.0);
+  tl.to('#cpTG', { scale: .96, duration: .08 }, 27.0).to('#cpTG', { scale: 1.04, duration: .4, ease: 'back.out(3)' }, 27.08);
+  tl.set('#burst', { x: P.tg.x, y: P.tg.y }, 27.0);
+  $$('#burst i').forEach((p, i) => {
+    const a = i / 34 * Math.PI * 2 + (i % 3) * .2, d = 150 + (i * 37 % 90) * 2.4;
+    tl.fromTo(p, { x: 0, y: 0, opacity: 1, scale: .6 + (i % 4) * .25 }, { x: Math.cos(a) * d, y: Math.sin(a) * d * .8, opacity: 0, scale: .2, duration: .9 + (i % 5) * .08, ease: 'expo.out' }, 27.03);
+  });
+  tl.to('#flash', { opacity: .35, duration: .06 }, 27.02).to('#flash', { opacity: 0, duration: .5 }, 27.08);
+  T(go(P.tg.x + 260, P.tg.y + 260, 1.2, 'power2.out'), 27.6);
+  tl.to('#url', { opacity: 1, duration: .8 }, 27.7);
+  tl.to(cur, { opacity: 0, duration: .6 }, 28.4);
+  tl.set({}, {}, DUR); // lock the length to exactly 30 s
+}
+
+/* =========================================================
+   PLAYBACK + TIMER
+   ========================================================= */
+const timer = $('#timer');
+const mmss = s => `00:${String(Math.min(DUR, Math.floor(s))).padStart(2, '0')}`;
+gsap.ticker.add(() => {
+  drawField(performance.now());
+  if (tl) timer.textContent = `${mmss(tl.time())} / 00:30`;
+});
+function replay() { build(); tl.play(0); }
+$('#replay').addEventListener('click', replay);
+addEventListener('keydown', e => {
+  if (e.key === 'r' || e.key === 'R' || e.key === 'к' || e.key === 'К') replay();
+  if (e.code === 'Space') { e.preventDefault(); if (tl) tl.paused(!tl.paused()); }
+});
+// optional: ?t=12 jumps to a moment (handy for checking a single shot)
+const jump = parseFloat(new URLSearchParams(location.search).get('t'));
+const imgs = $$('img').map(im => im.complete ? Promise.resolve() : new Promise(r => { im.onload = im.onerror = r; }));
+Promise.all([document.fonts ? document.fonts.ready : Promise.resolve(), ...imgs]).then(() => {
+  build();
+  if (!isNaN(jump)) { tl.progress(0); tl.time(Math.min(DUR, jump)); tl.pause(); }
+  else setTimeout(() => tl.play(0), 400);
+});
+})();
+</script>
+</body>
+</html>
