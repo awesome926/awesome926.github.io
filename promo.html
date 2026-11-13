@@ -24,10 +24,50 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 #stage{position:absolute;left:50%;top:50%;width:1080px;height:1920px;transform-origin:0 0;overflow:hidden;background:var(--bg);box-shadow:0 0 0 1px rgba(255,255,255,.06)}
 .layer{position:absolute;inset:0}
 #fieldWrap{z-index:1}
-#field{position:absolute;inset:0;width:1080px;height:1920px}
+#field{position:absolute;inset:0}
 .scene{position:absolute;inset:0;z-index:2}
 
 /* ---------- controls outside the 9:16 frame ---------- */
+/* ================= LANDSCAPE 1920×1080 (PC browsers) ================= */
+#stage.land .hdr{height:120px;padding:0 80px}
+#stage.land .hero-in{top:300px}
+#stage.land .slogan{max-width:1200px}
+#stage.land .downc{margin-top:44px;width:96px;height:96px}
+#stage.land .works .h-xl{top:120px;font-size:112px}
+#stage.land .xcard{width:540px;height:560px}
+#stage.land .ly.type .tt{font-size:44px;top:402px}
+#stage.land .ly.type .dd{width:330px;font-size:22px;top:470px}
+#stage.land .ly.type .arr{width:84px;height:84px;right:30px;bottom:30px}
+#stage.land .ly.prev .fan{height:300px}
+#stage.land .mgal{left:200px;right:200px;top:110px;padding:48px 52px}
+#stage.land .mgal .m-h{font-size:80px}
+#stage.land .gitems{flex-direction:row;gap:24px;margin-top:36px}
+#stage.land .gitem{flex:1;flex-direction:column;align-items:flex-start;gap:18px}
+#stage.land .gitem img{width:100%}
+#stage.land .gitem h4{font-size:38px}
+#stage.land .price .h-xl{left:100px;top:170px;font-size:104px;width:700px;line-height:1}
+#stage.land .pnote{left:100px;top:400px;width:600px}
+#stage.land .plist{left:860px;right:70px;top:125px}
+#stage.land .prow{height:128px;padding:0}
+#stage.land .prow .pn{top:22px;font-size:33px}
+#stage.land .prow .pd{top:74px;font-size:21px;width:560px}
+#stage.land .prow .pp{top:26px;font-size:29px}
+#stage.land .prow .pb{top:66px;height:46px;font-size:19px;padding:0 18px}
+#stage.land .mbrief{left:150px;right:150px;top:50px;bottom:50px;padding:44px 52px}
+#stage.land .mbrief .m-h{font-size:50px;max-width:900px}
+#stage.land .mbrief .bstep{margin:28px 0 14px}
+#stage.land .mbrief .pills,#stage.land .mbrief .qgrid,#stage.land .mbrief .cols2{max-width:920px}
+#stage.land .bp{height:54px;font-size:22px;padding:0 20px}
+#stage.land .qf .in{height:50px;line-height:50px;font-size:23px}
+#stage.land .bside{left:auto;right:48px;top:48px;bottom:48px;width:600px;display:flex;flex-direction:column}
+#stage.land .bprice{font-size:58px}
+#stage.land .bmsg{flex:1;min-height:0}
+#stage.land .bsend{margin-top:auto}
+#stage.land .ctat{font-size:190px}
+#stage.land .ctat .w{display:inline-block;margin:0 .1em}
+#stage.land .ctas{max-width:1000px}
+#stage.land .cpills{max-width:1400px;flex-wrap:nowrap}
+#stage.land .url{bottom:70px}
 /* music gate (unscaled, over the frame; fades out but keeps the player alive) */
 .gate{position:fixed;inset:0;z-index:200;display:grid;place-items:center;background:radial-gradient(60% 50% at 50% 45%,rgba(20,20,22,.92),rgba(0,0,0,.97));transition:opacity .7s ease,visibility .7s}
 .gate.off{opacity:0;pointer-events:none}
@@ -205,7 +245,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 <body>
 
 <div id="stage">
-  <div class="layer" id="fieldWrap"><canvas id="field" width="1080" height="1920"></canvas></div>
+  <div class="layer" id="fieldWrap"><canvas id="field"></canvas></div>
 
   <!-- header -->
   <div class="hdr" id="hdr">
@@ -231,7 +271,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
   <!-- S2 works -->
   <section class="scene works" id="s2">
     <h2 class="h-xl" id="wTitle">мои работы</h2>
-    <div class="xcard" id="card1" style="top:470px">
+    <div class="xcard" id="card1">
       <div class="ly base" id="ly1"><div class="grid" id="grid1"></div><div class="guide"></div><div class="lbl"><b>01</b>подложка · #111 · r 20px</div></div>
       <div class="ly prev" id="ly2"><div class="fan"><img src="assets/vitrine.jpg" alt=""><img src="assets/paper-vs-skills.jpg" alt=""><img src="assets/linkd.jpg" alt=""></div><div class="guide"></div><div class="lbl"><b>02</b>превью работ · веер</div></div>
       <div class="ly type" id="ly3"><div class="cnt">3 проекта</div><div class="tt">сайты</div><div class="dd">Лендинги и промо-сайты с WebGL, 3D и живыми анимациями</div>
@@ -239,12 +279,12 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
         <div class="guide"></div><div class="lbl"><b>03</b>типографика + кнопка</div></div>
       <div class="snapline" id="snap1"></div>
     </div>
-    <div class="xcard" id="card2" style="top:1060px">
+    <div class="xcard" id="card2">
       <div class="ly base"></div>
       <div class="ly prev"><div class="fan"><img src="assets/svc/discord-bot.webp" alt=""><img src="assets/svc/ai-bot.webp" alt=""><img src="assets/svc/tg-bot.webp" alt=""></div></div>
       <div class="ly type"><div class="cnt">5 направлений</div><div class="tt">боты и парсеры</div><div class="dd">Telegram- и Discord-боты, магазины, ИИ-ассистенты</div><div class="arr"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 11.5 11.5 4.5M5.5 4.5h6v6"/></svg></div></div>
     </div>
-    <div class="xcard" id="card3" style="top:1650px">
+    <div class="xcard" id="card3">
       <div class="ly base"></div>
       <div class="ly prev"><div class="fan"><img src="assets/svc/beamng-jbeam.webp" alt=""><img src="assets/svc/minecraft.webp" alt=""><img src="assets/svc/discord-server.webp" alt=""></div></div>
       <div class="ly type"><div class="cnt">7 направлений</div><div class="tt">discord и игры</div><div class="dd">Серверы под ключ, моды и плагины</div><div class="arr"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 11.5 11.5 4.5M5.5 4.5h6v6"/></svg></div></div>
@@ -333,16 +373,27 @@ const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAl
 const stage = $('#stage');
 const DUR = 30;
 
-/* ---------- fit the 1080×1920 frame into the window ---------- */
+/* ---------- frame: 1920×1080 on wide screens (PC), 1080×1920 on tall ones (phones) ---------- */
+const qf = new URLSearchParams(location.search).get('f');
+const LAND = qf ? qf === 'land' : innerWidth / innerHeight >= 1;
+const W = LAND ? 1920 : 1080, H = LAND ? 1080 : 1920;
+stage.style.width = W + 'px'; stage.style.height = H + 'px';
+stage.classList.toggle('land', LAND);
 let SC = 1;
 function fit() {
-  SC = Math.min(innerHeight * .96 / 1920, innerWidth * .96 / 1080);
-  stage.style.transform = `translate(-50%,-50%) scale(${SC})`;
+  SC = Math.min(innerHeight / H, innerWidth / W) * (LAND ? 1 : .96);
   stage.style.transform = `scale(${SC})`;
-  stage.style.left = (innerWidth - 1080 * SC) / 2 + 'px';
-  stage.style.top = (innerHeight - 1920 * SC) / 2 + 'px';
+  stage.style.left = (innerWidth - W * SC) / 2 + 'px';
+  stage.style.top = (innerHeight - H * SC) / 2 + 'px';
 }
-fit(); addEventListener('resize', fit);
+fit();
+addEventListener('resize', () => { fit(); if (!qf && (innerWidth / innerHeight >= 1) !== LAND) location.reload(); });
+// card positions for each layout (works section)
+const CARDS = LAND ? [[100, 330], [690, 330], [1280, 330]] : [[90, 470], [90, 1060], [90, 1650]];
+['#card1', '#card2', '#card3'].forEach((id, i) => { const el = document.querySelector(id); el.style.left = CARDS[i][0] + 'px'; el.style.top = CARDS[i][1] + 'px'; });
+const CW = LAND ? 540 : 900, CH = 560;
+const C1 = { dx: (W - CW) / 2 - CARDS[0][0], dy: (H - CH) / 2 - CARDS[0][1] + (LAND ? 30 : 0) };
+const HERO_TOP = LAND ? 300 : 560;
 
 /* =========================================================
    DATA (same texts and prices as the site)
@@ -377,7 +428,7 @@ title.innerHTML = [...title.textContent].map(c => `<span class="ch">${c}</span>`
 function fitTitle() {
   title.style.fontSize = '100px';
   const w = title.scrollWidth || 1;
-  title.style.fontSize = (100 * 960 / w).toFixed(1) + 'px';
+  title.style.fontSize = (100 * (LAND ? 1500 : 960) / w).toFixed(1) + 'px';
 }
 
 /* burst particles */
@@ -386,8 +437,10 @@ $('#burst').innerHTML = Array.from({ length: 34 }, () => '<i></i>').join('');
 /* =========================================================
    FLOWER FIELD (canvas 2D, driven by the timeline)
    ========================================================= */
-const cv = $('#field'), ctx = cv.getContext('2d');
-const FIELD = { camZ: -42, camY: 2.6, horizon: 860, dim: 0, mx: -999, my: -999, mOn: 0, speed: 1 };
+const cv = $('#field'); cv.width = W; cv.height = H; cv.style.width = W + 'px'; cv.style.height = H + 'px';
+const ctx = cv.getContext('2d');
+const HZ = LAND ? 560 : 860, XS = W / 1080;
+const FIELD = { camZ: -42, camY: 2.6, horizon: HZ, dim: 0, mx: -999, my: -999, mOn: 0, speed: 1 };
 // seeded random so every replay looks identical
 let seed = 7; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
 function flowerSprite(tint) {
@@ -414,7 +467,7 @@ const SPR = ['#ffffff', '#ffd6e6', '#dcd6ff', '#cff3ff', '#ffe6cc', '#ffffff'].m
 const N = 5600, FL = [];
 for (let i = 0; i < N; i++) {
   const z = -40 + Math.pow(rnd(), .85) * 105, leaf = rnd() < .1;
-  FL.push({ x: (rnd() * 2 - 1) * (z > 0 ? z * .5 + 4 : 5), z, s: leaf ? .26 + rnd() * .22 : .12 + Math.pow(rnd(), 1.8) * .2, sq: .45 + rnd() * .5, rot: rnd() * 6.28, spr: leaf ? -1 : Math.floor(rnd() * SPR.length), ph: rnd() * 6.28 });
+  FL.push({ x: (rnd() * 2 - 1) * (z > 0 ? z * .5 + 4 : 5) * XS, z, s: leaf ? .26 + rnd() * .22 : .12 + Math.pow(rnd(), 1.8) * .2, sq: .45 + rnd() * .5, rot: rnd() * 6.28, spr: leaf ? -1 : Math.floor(rnd() * SPR.length), ph: rnd() * 6.28 });
 }
 FL.sort((a, b) => b.z - a.z);
 const hill = (x, z, t) => .6 * Math.sin(x * .12 + z * .05 + .6) + x * .06 + .35 * Math.sin(z * .2 + t * .4);
@@ -422,13 +475,13 @@ let fieldT = 0, lastNow = performance.now();
 function drawField(now) {
   const dt = Math.min((now - lastNow) / 1000, .05); lastNow = now; fieldT += dt;
   if (+fieldWrap.style.opacity === 0 && fieldWrap.style.opacity !== '') return;
-  ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.clearRect(0, 0, 1080, 1920);
-  const f = 1150, cx = 540, hy = FIELD.horizon, cz = FIELD.camZ, cy = FIELD.camY;
+  ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.clearRect(0, 0, W, H);
+  const f = 1150, cx = W / 2, hy = FIELD.horizon, cz = FIELD.camZ, cy = FIELD.camY;
   for (const p of FL) {
     const dz = p.z - cz; if (dz < 2.2) continue;
     const y = hill(p.x, p.z, fieldT);
     let sx = cx + p.x / dz * f, sy = hy + (cy - y) / dz * f;
-    if (sx < -120 || sx > 1200 || sy > 2050 || sy < hy - 200) continue;
+    if (sx < -120 || sx > W + 120 || sy > H + 130 || sy < hy - 200) continue;
     let size = p.s / dz * f * 1.1;
     if (FIELD.mOn > 0) {
       const ddx = sx - FIELD.mx, ddy = sy - FIELD.my, d = Math.hypot(ddx, ddy), R = 170;
@@ -448,8 +501,8 @@ const fieldWrap = $('#fieldWrap');
 /* stars */
 (function () {
   const g = ctx; // drawn once into a separate layer under the field
-  const sc = document.createElement('canvas'); sc.width = 1080; sc.height = 1920; sc.style.cssText = 'position:absolute;inset:0;width:1080px;height:1920px';
-  const x = sc.getContext('2d'); for (let i = 0; i < 160; i++) { x.globalAlpha = .15 + rnd() * .45; x.fillStyle = '#fff'; x.beginPath(); x.arc(rnd() * 1080, 120 + rnd() * 680, .8 + rnd() * 1.6, 0, 6.28); x.fill(); }
+  const sc = document.createElement('canvas'); sc.width = W; sc.height = H; sc.style.cssText = `position:absolute;inset:0;width:${W}px;height:${H}px`;
+  const x = sc.getContext('2d'); for (let i = 0; i < 160; i++) { x.globalAlpha = .15 + rnd() * .45; x.fillStyle = '#fff'; x.beginPath(); x.arc(rnd() * W, 110 + rnd() * (HZ - 180), .8 + rnd() * 1.6, 0, 6.28); x.fill(); }
   fieldWrap.insertBefore(sc, cv);
 })();
 
@@ -489,7 +542,7 @@ function reset() {
   $$('.bp').forEach(p => pillOn(p, false));
   renderBrief();
   $$('.prow').forEach(r => { r.querySelector('.bgh').style.opacity = 0; });
-  Object.assign(FIELD, { camZ: -42, camY: 2.6, horizon: 860, dim: 0, mx: -999, my: -999, mOn: 0 });
+  Object.assign(FIELD, { camZ: -42, camY: 2.6, horizon: HZ, dim: 0, mx: -999, my: -999, mOn: 0 });
 }
 
 /* stage-space position of an element (measured with every scene laid out flat) */
@@ -513,10 +566,10 @@ function build() {
     arr1: pos($('#arr1')), rows: $$('.prow').map(r => pos(r, .45, .5)), rowBtn: $$('.prow .pb').map(b => pos(b)),
     svc: pos($$('#svcPills .bp')[3]), q0: pos($$('#qgrid .in')[0], .2), q1: pos($$('#qgrid .in')[1], .2),
     bud: pos($$('#budPills .bp')[1]), dl: pos($$('#dlPills .bp')[2]), send: pos($('#bsend')), price: pos($('#bprice'), 0, .5),
-    tg: pos($('#cpTG')), ch: pos($('#cpCh'))
+    tg: pos($('#cpTG')), ch: pos($('#cpCh')), down: pos($('#downc'))
   };
   const cur = $('#cursor'), ring = $('#cursor .ring');
-  const CUR = { x: 1180, y: 1500 };
+  const CUR = { x: W + 100, y: H * .78 };
   const moveC = () => gsap.set(cur, { x: CUR.x, y: CUR.y });
   const go = (x, y, d = .5, ease = 'power3.inOut') => ({ targets: CUR, vars: { x, y, duration: d, ease, onUpdate: moveC } });
   const click = t => {
@@ -526,11 +579,11 @@ function build() {
 
   // callouts + leader lines
   const lineTo = (el, x1, y1, x2, y2) => gsap.set(el, { left: x1, top: y1, width: Math.hypot(x2 - x1, y2 - y1), rotation: Math.atan2(y2 - y1, x2 - x1) * 180 / Math.PI, transformOrigin: '0 50%' });
-  gsap.set('#call1', { left: 470, top: 1150 });
-  lineTo('#lead1', 640, 1214, 860, 1318);
-  const c2y = P.price.y - 190;
-  gsap.set('#call2', { left: 330, top: c2y });
-  lineTo('#lead2', 560, c2y + 64, 680, P.price.y - 20);
+  gsap.set('#call1', LAND ? { left: 1180, top: 770 } : { left: 470, top: 1150 });
+  LAND ? lineTo('#lead1', 1330, 834, 1560, 885) : lineTo('#lead1', 640, 1214, 860, 1318);
+  const c2y = LAND ? P.price.y + 150 : P.price.y - 190, c2x = LAND ? P.price.x - 560 : 330;
+  gsap.set('#call2', { left: c2x, top: c2y });
+  LAND ? lineTo('#lead2', c2x + 470, c2y + 30, P.price.x - 10, P.price.y + 10) : lineTo('#lead2', 560, c2y + 64, 680, P.price.y - 20);
 
   tl = gsap.timeline({ paused: true, defaults: { ease: 'power3.out' } });
   const T = (tween, at) => tl.to(tween.targets, tween.vars, at);
@@ -540,10 +593,10 @@ function build() {
 
   // ---------- initial state (time 0) ----------
   tl.set(cur, { x: CUR.x, y: CUR.y, opacity: 0 }, 0)
-    .set('#s2', { y: 1920, opacity: 1 }, 0).set('#s3', { y: 1920 }, 0).set('#s5', { opacity: 0 }, 0)
+    .set('#s2', { y: H, opacity: 1 }, 0).set('#s3', { y: H }, 0).set('#s5', { opacity: 0 }, 0)
     .set('#fieldWrap', { y: 0, opacity: 1 }, 0)
     .set('#hdr', { opacity: 0, y: -30 }, 0)
-    .set('#heroIn', { scale: 2.5, transformOrigin: `50% ${P.kick.y - 560}px`, y: 960 - P.kick.y }, 0)
+    .set('#heroIn', { scale: 2.5, transformOrigin: `50% ${P.kick.y - HERO_TOP}px`, y: H / 2 - P.kick.y }, 0)
     .set('.title .ch', { yPercent: 115, opacity: 0 }, 0)
     .set('.slogan .ln > span', { yPercent: 110 }, 0)
     .set('#downc', { scale: 0, opacity: 0 }, 0)
@@ -574,26 +627,26 @@ function build() {
   tl.to('.title .ch', { yPercent: 0, opacity: 1, duration: 1, stagger: .035, ease: 'power4.out' }, 1.85);
   tl.to('#hdr', { opacity: 1, y: 0, duration: .7 }, 2.2);
   tl.to(cur, { opacity: 1, duration: .3 }, 2.5);
-  T(go(170, 1480, .01), 2.5);
+  T(go(W * .16, H * .77, .01), 2.5);
   tl.to(FIELD, { mOn: 1, duration: .3 }, 2.6);
-  T(go(900, 1330, 1.5, 'sine.inOut'), 2.6);
+  T(go(W * .83, H * (LAND ? .82 : .69), 1.5, 'sine.inOut'), 2.6);
   tl.to(CUR, { duration: 1.5, ease: 'sine.inOut', onUpdate() { FIELD.mx = CUR.x; FIELD.my = CUR.y; } }, 2.6);
   tl.fromTo('#lead1', { opacity: 0, scaleX: 0 }, { opacity: 1, scaleX: 1, duration: .5 }, 3.1);
   tl.fromTo('#call1', { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: .5 }, 3.2);
   tl.to('.slogan .ln > span', { yPercent: 0, duration: .9, stagger: .12, ease: 'power4.out' }, 3.45);
   tl.to('#downc', { scale: 1, opacity: 1, duration: .6, ease: 'back.out(1.8)' }, 3.9);
-  T(go(540, P.title.y + 330, .7), 4.15);
+  T(go(P.down.x + 10, P.down.y + 12, .7), 4.15);
   tl.to(FIELD, { mOn: 0, duration: .5 }, 4.2);
   tl.to(['#call1', '#lead1'], { opacity: 0, duration: .3 }, 4.6);
 
   /* ===== 00:05 – 00:12 · works breakdown ===== */
   click(4.9);
-  tl.to(['#s1', '#fieldWrap'], { y: -1920, duration: .95, ease: 'power3.inOut' }, 5.0);
+  tl.to(['#s1', '#fieldWrap'], { y: -H, duration: .95, ease: 'power3.inOut' }, 5.0);
   tl.to('#s2', { y: 0, duration: .95, ease: 'power3.inOut' }, 5.0);
-  T(go(760, 1500, .7), 5.4);
+  T(go(W * .7, H * .78, .7), 5.4);
   tl.to(['#card2', '#card3'], { opacity: 0, y: 120, filter: 'blur(14px)', duration: .6, stagger: .06, ease: 'power2.in' }, 6.05);
   tl.to('#wTitle', { opacity: 0, y: -60, duration: .5, ease: 'power2.in' }, 6.1);
-  tl.to('#card1', { y: 250, rotationX: 24, rotationY: -32, rotationZ: 6, scale: .82, duration: 1, ease: 'expo.inOut' }, 6.25);
+  tl.to('#card1', { x: C1.dx, y: C1.dy, rotationX: 24, rotationY: -32, rotationZ: 6, scale: LAND ? 1 : .82, duration: 1, ease: 'expo.inOut' }, 6.25);
   tl.to(cur, { opacity: 0, duration: .25 }, 6.3);
   tl.to('#ly1', { z: -170, duration: .9, ease: 'expo.out' }, 7.2);
   tl.to('#ly2', { z: 110, duration: .9, ease: 'expo.out' }, 7.25);
@@ -608,19 +661,19 @@ function build() {
     .to('#card1', { scale: 1, duration: .5, ease: 'elastic.out(1,.45)' }, 9.78);
   tl.fromTo('#snap1', { opacity: .9, scale: .985 }, { opacity: 0, scale: 1.04, duration: .5, ease: 'power2.out' }, 9.7);
   tl.to(cur, { opacity: 1, duration: .2 }, 9.75);
-  T(go(940, 1650, .01), 9.75);
-  T(go(P.arr1.x, P.arr1.y + 250, .5), 9.8);
+  T(go(W * .87, H * .86, .01), 9.75);
+  T(go(P.arr1.x + C1.dx, P.arr1.y + C1.dy, .5), 9.8);
   tl.to('#arr1', { backgroundColor: '#fff', color: '#050505', borderColor: '#fff', rotation: 45, duration: .25 }, 10.15);
   click(10.35);
   tl.to('#gBack', { opacity: 1, duration: .35 }, 10.45);
   tl.fromTo('#gPanel', { opacity: 0, y: 120, scale: .96 }, { opacity: 1, y: 0, scale: 1, duration: .6, ease: 'expo.out' }, 10.5);
   tl.to('.gitem', { y: 0, opacity: 1, duration: .55, stagger: .1 }, 10.7);
-  T(go(800, 820, .7), 10.7);
+  T(go(W * .74, H * .43, .7), 10.7);
   tl.to('#gPanel', { opacity: 0, y: 60, duration: .3, ease: 'power2.in' }, 11.65);
   tl.to('#gBack', { opacity: 0, duration: .3 }, 11.7);
 
   /* ===== 00:12 – 00:16 · price + language switch ===== */
-  tl.to('#s2', { y: -1920, duration: .8, ease: 'power3.inOut' }, 11.95);
+  tl.to('#s2', { y: -H, duration: .8, ease: 'power3.inOut' }, 11.95);
   tl.to('#s3', { y: 0, duration: .8, ease: 'power3.inOut' }, 11.95);
   T(go(P.rows[0].x, P.rows[0].y, .5), 12.4);
   const rows = $$('.prow');
@@ -696,7 +749,7 @@ function build() {
   tl.to('#s3', { opacity: 0, duration: .5 }, 23.7);
   tl.to('#hdr', { opacity: 0, duration: .4 }, 23.7);
   tl.set('#fieldWrap', { y: 0, opacity: 0 }, 23.8);
-  tl.set(FIELD, { camZ: -14, camY: 3.4, horizon: 620, dim: .55 }, 23.8);
+  tl.set(FIELD, { camZ: -14, camY: 3.4, horizon: LAND ? 380 : 620, dim: .55 }, 23.8);
   tl.to('#fieldWrap', { opacity: 1, duration: .9 }, 23.85);
   tl.to(FIELD, { camZ: 0, duration: 4.5, ease: 'power2.out' }, 23.85);
   tl.to('#s5', { opacity: 1, duration: .3 }, 23.85);
@@ -704,7 +757,7 @@ function build() {
   tl.to('#ctas', { opacity: 1, y: 0, duration: .7 }, 24.55);
   tl.to('.cp', { opacity: 1, y: 0, duration: .6, stagger: .1, ease: 'back.out(1.5)' }, 24.85);
   tl.to(cur, { opacity: 1, duration: .25 }, 25.4);
-  T(go(900, 1700, .01), 25.4);
+  T(go(W * .83, H * .88, .01), 25.4);
   T(go(P.tg.x + 60, P.tg.y + 8, .9), 25.45);
   tl.to('#cpTG .fill', { scaleY: 1, duration: .35, ease: 'power3.out' }, 26.3);
   tl.to('#cpTG', { color: '#050505', borderColor: '#fff', duration: .2 }, 26.3);
