@@ -226,6 +226,30 @@ img{display:block;max-width:100%}
 .lb.open{opacity:1;visibility:visible}
 .lb img{max-width:min(1400px,100%);max-height:100%;border-radius:14px;border:1px solid var(--line2);box-shadow:0 40px 120px -30px #000}
 
+/* ---------- предложка ---------- */
+#mIdea .m-panel{width:min(720px,100%)}
+#mIdea .m-head h3{font-size:clamp(28px,3.4vw,46px)}
+.id-form{display:flex;flex-direction:column;gap:30px}
+.id-form .bf-in{font-size:16px}
+.id-ta{min-height:110px!important;overflow:auto!important;border:1px solid var(--line2)!important;border-radius:16px!important;padding:14px 16px!important;background:rgba(255,255,255,.02)!important;transition:border-color .3s}
+.id-ta:focus{border-color:#fff!important}
+.id-cnt{font:500 12px/1 var(--ui);color:var(--dim);text-align:right;margin-top:8px}
+.id-hp{position:absolute!important;left:-9999px;width:1px;height:1px;opacity:0}
+.id-acts{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;padding-top:22px;border-top:1px solid var(--line)}
+.id-send{height:48px;padding:0 22px}
+.id-send[disabled]{opacity:.45;pointer-events:none}
+.id-bot{font-size:14px;color:var(--muted);display:inline-flex;align-items:center;gap:8px;transition:color .3s}
+.id-bot:hover{color:#fff}
+.id-bot svg{width:13px;height:13px}
+.id-st{font-size:14px;line-height:1.5;min-height:21px;color:var(--muted)}
+.id-st.ok{color:#7fd99a}.id-st.err{color:#ff8a80}
+.id-done{display:none;flex-direction:column;align-items:flex-start;gap:14px;padding:10px 0 6px}
+.id-done b{font:700 clamp(26px,3vw,38px)/1.05 var(--display);letter-spacing:-.045em;text-transform:lowercase}
+.id-done p{color:var(--muted);font-size:15px;max-width:460px}
+#mIdea.sent .id-form{display:none}#mIdea.sent .id-done{display:flex}
+.foot .idea-l{color:#fff;border-bottom:1px solid rgba(255,255,255,.3);cursor:pointer;transition:border-color .3s}
+.foot .idea-l:hover{border-color:#fff}
+
 /* ---------- brief builder (inside a modal) — same language as the site: lines, pills, one panel ---------- */
 #mBrief .m-head h3{font-size:clamp(28px,3.4vw,46px)}
 .bf{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(300px,1fr);gap:clamp(28px,4vw,56px);align-items:start}
@@ -452,11 +476,13 @@ img{display:block;max-width:100%}
         <button class="pill main" type="button" data-brief="-1"><span data-t="pill_brief">Заполнить ТЗ</span><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 11.5 11.5 4.5M5.5 4.5h6v6"/></svg></button>
         <a class="pill" href="https://t.me/kashewars" target="_blank" rel="noopener">Telegram · @kashewars<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 11.5 11.5 4.5M5.5 4.5h6v6"/></svg></a>
         <a class="pill" href="https://t.me/kashewars_portfolio" target="_blank" rel="noopener"><span data-t="pill_ch">Канал</span><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 11.5 11.5 4.5M5.5 4.5h6v6"/></svg></a>
+        <button class="pill" type="button" data-idea><span data-t="pill_idea">Предложка</span><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 11.5 11.5 4.5M5.5 4.5h6v6"/></svg></button>
         <a class="pill" href="https://funpay.com/users/6851863/" target="_blank" rel="noopener">FunPay <span class="star">★ 5.0</span><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 11.5 11.5 4.5M5.5 4.5h6v6"/></svg></a>
       </div>
     </div>
     <footer class="foot wrap" style="width:100%;padding-left:0;padding-right:0">
       <span>© 2026 Ökǒmomorîrěmnant · <span data-t="foot_status">принимаю заказы</span></span>
+      <span><button class="idea-l" type="button" data-idea data-t="foot_idea">идеи, реклама, помощь — в предложку</button></span>
       <span data-t="foot_r">боты · парсеры · сайты · моды</span>
     </footer>
   </section>
@@ -469,6 +495,36 @@ img{display:block;max-width:100%}
     <div class="m-head"><div><div class="wcount" id="mwCount"></div><h3 id="mwTitle"></h3><p id="mwDesc"></p></div>
       <button class="x" type="button" data-close aria-label="close"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3.5 3.5l9 9M12.5 3.5l-9 9"/></svg></button></div>
     <div class="items" id="mwItems"></div>
+  </div>
+</div>
+
+<!-- предложка -->
+<div class="modal" id="mIdea" role="dialog" aria-modal="true" aria-labelledby="miTitle" aria-hidden="true" inert>
+  <div class="m-back" data-close></div>
+  <div class="m-panel" data-lenis-prevent>
+    <div class="m-head"><div><div class="wcount" data-ti="id_eyebrow"></div><h3 id="miTitle" data-ti="id_title"></h3><p data-ti="id_note"></p></div>
+      <button class="x" type="button" data-close aria-label="close"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3.5 3.5l9 9M12.5 3.5l-9 9"/></svg></button></div>
+    <form class="id-form" id="idForm" novalidate>
+      <div><div class="bf-step"><span class="bf-n">01</span><span data-ti="id_s1"></span></div>
+        <div class="bf-types" id="idTypes" role="radiogroup">
+          <button type="button" class="bf-type on" data-v="idea" role="radio" aria-checked="true" data-ti="id_t_idea"></button>
+          <button type="button" class="bf-type" data-v="ads" role="radio" aria-checked="false" data-ti="id_t_ads"></button>
+          <button type="button" class="bf-type" data-v="help" role="radio" aria-checked="false" data-ti="id_t_help"></button>
+          <button type="button" class="bf-type" data-v="other" role="radio" aria-checked="false" data-ti="id_t_other"></button>
+        </div></div>
+      <div><div class="bf-step"><span class="bf-n">02</span><span data-ti="id_s2"></span></div>
+        <textarea id="idText" class="bf-in id-ta" maxlength="2000" rows="4" data-tph="id_ph_text" aria-labelledby="miTitle"></textarea>
+        <div class="id-cnt"><span id="idCnt">0</span> / 2000</div></div>
+      <div class="bf-f"><div class="bf-step"><span class="bf-n">03</span><span data-ti="id_s3"></span></div>
+        <input id="idContact" class="bf-in" maxlength="64" autocomplete="off" spellcheck="false" data-tph="id_ph_contact" aria-label="contact"></div>
+      <input class="id-hp" id="idHp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+      <div class="id-acts">
+        <a class="id-bot" id="idBot" href="https://t.me/kashewars" target="_blank" rel="noopener"><span data-ti="id_bot"></span><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 11.5 11.5 4.5M5.5 4.5h6v6"/></svg></a>
+        <button class="btn-s w id-send" id="idSend" type="submit"><span data-ti="id_send"></span><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 11.5 11.5 4.5M5.5 4.5h6v6"/></svg></button>
+      </div>
+      <div class="id-st" id="idSt" role="status" aria-live="polite"></div>
+    </form>
+    <div class="id-done"><b data-ti="id_ok_t"></b><p data-ti="id_ok_d"></p><button class="btn-s" type="button" id="idAgain" data-ti="id_again"></button></div>
   </div>
 </div>
 
@@ -557,6 +613,14 @@ const UI = {
     s4_t: 'Сдаю', s4_d: 'Передаю всё, что нужно для запуска, вместе с исходным кодом.',
     badges: ['простая задача — около дня', 'безопасная сделка на FunPay', 'цена и срок — до старта', 'исходники в комплекте', 'CSV · Excel · Google Sheets'],
     cta_title: 'есть проект?', pill_brief: 'Заполнить ТЗ', pill_ch: 'Канал',
+    pill_idea: 'Предложка', foot_idea: 'идеи, реклама, помощь — в предложку',
+    id_eyebrow: 'предложка', id_title: 'есть идея?', id_note: 'Идея для сайта или бота, реклама, сотрудничество, нужна помощь — пиши. Сообщение сразу прилетит мне в Telegram.',
+    id_s1: 'о чём', id_t_idea: 'идея', id_t_ads: 'реклама', id_t_help: 'помощь', id_t_other: 'другое',
+    id_s2: 'сообщение', id_ph_text: 'Опиши в паре предложений…', id_s3: 'куда ответить — необязательно',
+    id_ph_contact: '@username в Telegram или почта', id_bot: 'или напиши боту в Telegram', id_send: 'Отправить',
+    id_sending: 'Отправляю…', id_short: 'Напиши хотя бы пару слов', id_err: 'Не отправилось. Попробуй ещё раз или напиши боту в Telegram.',
+    id_rate: 'Слишком много сообщений подряд, попробуй через 10 минут.', id_copied: 'Текст скопирован — вставь его в чат',
+    id_ok_t: 'получил, спасибо!', id_ok_d: 'Сообщение уже у меня в Telegram. Если оставил контакт — отвечу туда.', id_again: 'Написать ещё',
     foot_r: 'боты · парсеры · сайты · моды', toast_copied: 'Скопировано',
     shot: 'скрин', demo: 'открыть демо', more: 'Нужно похожее'
   },
@@ -578,6 +642,14 @@ const UI = {
     s4_t: 'I hand over', s4_d: 'You get everything needed to launch, source code included.',
     badges: ['simple task — about a day', 'safe deal on FunPay', 'price & deadline before start', 'source code included', 'CSV · Excel · Google Sheets'],
     cta_title: 'got a project?', pill_brief: 'Fill in a brief', pill_ch: 'Channel',
+    pill_idea: 'Suggestions', foot_idea: 'ideas, ads, help — send a suggestion',
+    id_eyebrow: 'suggestion box', id_title: 'got an idea?', id_note: 'An idea for the site or a bot, advertising, a collab, or you need help — write it here. It goes straight to my Telegram.',
+    id_s1: 'topic', id_t_idea: 'idea', id_t_ads: 'ads', id_t_help: 'help', id_t_other: 'other',
+    id_s2: 'message', id_ph_text: 'A couple of sentences…', id_s3: 'where to reply — optional',
+    id_ph_contact: 'Telegram @username or email', id_bot: 'or message the bot on Telegram', id_send: 'Send',
+    id_sending: 'Sending…', id_short: 'Write at least a few words', id_err: 'Couldn\u2019t send. Try again or message the bot on Telegram.',
+    id_rate: 'Too many messages in a row, try again in 10 minutes.', id_copied: 'Text copied — paste it into the chat',
+    id_ok_t: 'got it, thanks!', id_ok_d: 'Your message is already in my Telegram. If you left a contact, I\u2019ll reply there.', id_again: 'Write another',
     foot_r: 'bots · scrapers · websites · mods', toast_copied: 'Copied',
     shot: 'screenshot', demo: 'open demo', more: 'Want something similar'
   },
@@ -599,6 +671,14 @@ const UI = {
     s4_t: 'Lo entrego', s4_d: 'Recibes todo lo necesario para lanzarlo, con el código fuente.',
     badges: ['tarea sencilla — un día aprox.', 'transacción segura en FunPay', 'precio y plazo antes de empezar', 'código fuente incluido', 'CSV · Excel · Google Sheets'],
     cta_title: '¿tienes un proyecto?', pill_brief: 'Rellenar briefing', pill_ch: 'Canal',
+    pill_idea: 'Sugerencias', foot_idea: 'ideas, publicidad, ayuda — envía una sugerencia',
+    id_eyebrow: 'buzón de sugerencias', id_title: '¿tienes una idea?', id_note: 'Una idea para la web o un bot, publicidad, colaboración o necesitas ayuda — escríbelo aquí. Me llega directo a Telegram.',
+    id_s1: 'tema', id_t_idea: 'idea', id_t_ads: 'publicidad', id_t_help: 'ayuda', id_t_other: 'otro',
+    id_s2: 'mensaje', id_ph_text: 'En un par de frases…', id_s3: 'dónde responderte — opcional',
+    id_ph_contact: '@usuario de Telegram o email', id_bot: 'o escribe al bot en Telegram', id_send: 'Enviar',
+    id_sending: 'Enviando…', id_short: 'Escribe al menos unas palabras', id_err: 'No se pudo enviar. Inténtalo de nuevo o escribe al bot en Telegram.',
+    id_rate: 'Demasiados mensajes seguidos, prueba en 10 minutos.', id_copied: 'Texto copiado — pégalo en el chat',
+    id_ok_t: '¡recibido, gracias!', id_ok_d: 'Tu mensaje ya está en mi Telegram. Si dejaste un contacto, te respondo allí.', id_again: 'Escribir otro',
     foot_r: 'bots · scrapers · webs · mods', toast_copied: 'Copiado',
     shot: 'captura', demo: 'abrir demo', more: 'Quiero algo parecido'
   },
@@ -620,6 +700,14 @@ const UI = {
     s4_t: '納品', s4_d: '公開に必要なものをすべて、ソースコードと一緒にお渡しします。',
     badges: ['簡単な作業は約1日', 'FunPayで安全な取引', '着手前に価格と納期を提示', 'ソースコード付き', 'CSV · Excel · Google Sheets'],
     cta_title: 'つくりたいものは？', pill_brief: '依頼フォーム', pill_ch: 'チャンネル',
+    pill_idea: '目安箱', foot_idea: 'アイデア・広告・相談は目安箱へ',
+    id_eyebrow: '目安箱', id_title: 'アイデアある？', id_note: 'サイトやボットのアイデア、広告、コラボ、相談など何でもどうぞ。メッセージはすぐ私のTelegramに届きます。',
+    id_s1: '内容', id_t_idea: 'アイデア', id_t_ads: '広告', id_t_help: '相談', id_t_other: 'その他',
+    id_s2: 'メッセージ', id_ph_text: '数行で書いてください…', id_s3: '返信先（任意）',
+    id_ph_contact: 'Telegramの@ユーザー名 またはメール', id_bot: 'Telegramのボットに送る', id_send: '送信',
+    id_sending: '送信中…', id_short: '少しだけでも書いてください', id_err: '送信できませんでした。もう一度試すか、Telegramのボットに送ってください。',
+    id_rate: '連続送信が多すぎます。10分後にお試しください。', id_copied: 'テキストをコピーしました。チャットに貼り付けてください',
+    id_ok_t: '受け取りました！', id_ok_d: 'メッセージはもう私のTelegramに届いています。連絡先があればそちらに返信します。', id_again: 'もう一度送る',
     foot_r: 'ボット · スクレイパー · Web · MOD', toast_copied: 'コピーしました',
     shot: 'スクリーンショット', demo: 'デモを開く', more: '似たものを依頼'
   }
@@ -689,6 +777,7 @@ function applyStatic() {
   $$('[data-t]').forEach(el => { el.textContent = T(el.dataset.t); });
   $$('[data-ti]').forEach(el => { el.textContent = T(el.dataset.ti); });
   $$('[data-tih]').forEach(el => { el.innerHTML = T(el.dataset.tih); });
+  $$('[data-tph]').forEach(el => { el.placeholder = T(el.dataset.tph); });
   $('[data-t="price_note"]').textContent = T('price_note');
   $('[data-t="how_note"]').textContent = T('how_p');
   $('[data-t="cta_sub"]').textContent = T('c_p');
@@ -1069,6 +1158,55 @@ function renderAll() {
   [applyStatic, renderWorks, renderPrice, renderHow, renderBrief].forEach(fn => { try { fn(); } catch (err) { console.error(fn.name, err); } });
   if (curGroup >= 0 && mWorks.classList.contains('open')) fillWorks(curGroup);
 }
+/* =========================================================
+   ПРЕДЛОЖКА → Telegram через свой бот (Cloudflare Worker)
+   IDEA_API — адрес воркера (https://….workers.dev), IDEA_BOT — юзернейм бота без @.
+   Пока IDEA_API пустой, «Отправить» копирует текст и открывает Telegram.
+   ========================================================= */
+const IDEA_API = 'https://predlozhka.tigra5354.workers.dev';
+const IDEA_BOT = 'kashewars_bot';
+const mIdea = $('#mIdea'), idText = $('#idText'), idSt = $('#idSt'), idSend = $('#idSend');
+let idType = 'idea';
+if (IDEA_BOT) $('#idBot').href = 'https://t.me/' + IDEA_BOT;
+const idStatus = (k, cls) => { idSt.textContent = k ? T(k) : ''; idSt.className = 'id-st' + (cls ? ' ' + cls : ''); };
+$$('[data-idea]').forEach(b => b.addEventListener('click', () => {
+  if (document.body.classList.contains('menu-open') && typeof closeMenu === 'function') closeMenu();
+  mIdea.classList.remove('sent'); idStatus(''); openModal(mIdea);
+}));
+$('#idTypes').addEventListener('click', e => {
+  const b = e.target.closest('.bf-type'); if (!b) return;
+  idType = b.dataset.v;
+  $$('#idTypes .bf-type').forEach(x => { const on = x === b; x.classList.toggle('on', on); x.setAttribute('aria-checked', on); });
+});
+idText.addEventListener('input', () => { $('#idCnt').textContent = idText.value.length; if (idSt.classList.contains('err')) idStatus(''); });
+$('#idAgain').addEventListener('click', () => { mIdea.classList.remove('sent'); idText.focus(); });
+$('#idForm').addEventListener('submit', async e => {
+  e.preventDefault();
+  const text = idText.value.trim(), contact = $('#idContact').value.trim();
+  if (text.length < 3) { idStatus('id_short', 'err'); idText.focus(); return; }
+  if (!IDEA_API) {
+    const full = `[${T('id_t_' + idType)}] ${text}${contact ? '\n' + contact : ''}`;
+    try { await navigator.clipboard.writeText(full); } catch (err) {}
+    toast(T('id_copied'));
+    window.open(IDEA_BOT ? 'https://t.me/' + IDEA_BOT : 'https://t.me/kashewars', '_blank', 'noopener');
+    return;
+  }
+  idSend.disabled = true; idStatus('id_sending');
+  try {
+    const r = await fetch(IDEA_API.replace(/\/$/, '') + '/submit', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ type: idType, text, contact, lang: LANG, website: $('#idHp').value })
+    });
+    const j = await r.json().catch(() => ({}));
+    if (r.ok && j.ok) {
+      idText.value = ''; $('#idCnt').textContent = '0'; idStatus('');
+      mIdea.classList.add('sent');
+      gsap.fromTo('#mIdea .id-done > *', { y: 16, opacity: 0 }, { y: 0, opacity: 1, duration: .6, stagger: .07, ease: 'expo.out' });
+    } else idStatus(r.status === 429 ? 'id_rate' : 'id_err', 'err');
+  } catch (err) { idStatus('id_err', 'err'); }
+  idSend.disabled = false;
+});
+
 function setLang(l) {
   if (l === LANG || !LANGS.includes(l)) return;
   LANG = l; store.set('lang', l);
