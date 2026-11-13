@@ -336,3 +336,54 @@ window.DATA = {
     ]
   }
 };
+
+/* ---------- Español (main site language set: ru / en / es / ja) ---------- */
+window.I18N.es = {
+  meta_title: 'Ökǒmomorîrěmnant — bots, scrapers, webs y mods',
+  price_from: 'desde', price_to: 'hasta',
+  status_open: 'Acepto pedidos',
+  cat_all: 'Todo', cat_discord: 'Discord', cat_telegram: 'Telegram', cat_parsers: 'Scrapers', cat_web: 'Webs', cat_mods: 'Modding', cat_games: 'Juegos', cat_ai: 'IA',
+  how_p: 'Me describes la tarea, te hago un par de preguntas y te digo el precio. Después, simplemente lo hago.',
+  p1_t: 'Me escribes', p1_d: 'Describe la tarea en Telegram o en FunPay. Los ejemplos y capturas aceleran mucho el trabajo.',
+  p2_t: 'Lo acordamos', p2_d: 'Aclaro los detalles y te doy precio y plazo. Empiezo cuando todo está claro para ambos.',
+  c_p: 'Donde antes respondo es en Telegram. En FunPay puedes hacer el pedido con transacción segura.',
+  m_demo: 'Abrir demo', m_order: 'Quiero algo parecido', m_inside: 'Qué incluye', m_stack: 'Stack',
+  nav_brief: 'Briefing', bf_eyebrow: 'Generador de briefing', bf_title: 'Describe la tarea aquí.<br><span class="muted">Envíala con un clic.</span>',
+  bf_note: 'Responde unas preguntas y llegará un briefing listo a Telegram, sin escribir nada desde cero.',
+  bf_s1: 'Qué necesitas', bf_s2: 'Sobre la tarea', bf_s3: 'Presupuesto', bf_s4: 'Plazo', bf_s5: 'Algo más',
+  bf_ph: 'Basta con una respuesta corta', bf_extra_ph: 'Enlaces a ejemplos, deseos — todo lo que no cupo arriba',
+  bf_pick: 'Elige qué necesitas y aparecerán preguntas para esa tarea concreta.', bf_b_open: 'Aún no lo sé',
+  bf_d: ['Sin prisa', '1–2 semanas', 'En una semana', 'Urgente, 1–2 días'], bf_urgent: 'urgente ×1.5',
+  bf_est: 'Estimación', bf_est_none: 'Nada elegido', bf_est_note: 'El precio exacto te lo digo tras el briefing, antes de empezar.',
+  bf_preview: 'Vista previa del mensaje', bf_filled: '{n} de {m}', bf_send: 'Enviar por Telegram', bf_copy: 'Copiar', bf_reset: 'Borrar',
+  bf_hint: 'Se abrirá el chat con @kashewars con el texto ya escrito. Si no aparece, pulsa Ctrl+V: ya está copiado.',
+  bf_hi: '¡Hola! Quiero encargar «{t}» (lo vi en tu portafolio).', bf_l_budget: 'Presupuesto', bf_l_deadline: 'Plazo', bf_l_extra: 'Además',
+  toast_bf_send: 'Abriendo Telegram — el briefing está en el chat y copiado', toast_bf_copy: 'Briefing copiado', toast_bf_reset: 'Respuestas borradas', toast_bf_pick: 'Primero elige qué necesitas'
+};
+(function () {
+  const S = [
+    ['Servidor de Discord llave en mano', 'Canales y categorías, roles y permisos, diseño, bienvenidas, tickets y autoroles. Para clanes, streamers y comunidades. De aquí llegan la mayoría de mis pedidos.', ['Temática del servidor:', 'Canales y categorías:', 'Roles y permisos:', 'Bots (tickets, bienvenida, moderación):', 'Diseño (icono, banner):']],
+    ['Bot de Discord a medida', 'Moderación, tickets, niveles, minijuegos o cualquier lógica propia. El código fuente es tuyo.', ['Qué debe hacer el bot:', 'Comandos y botones:', '¿Hace falta base de datos?', 'Dónde funcionará (¿hay VPS?):']],
+    ['Protección del servidor', 'Antiraid, antispam y filtro de publicidad, registros de acciones y permisos correctos en los roles. Normalmente en media hora.', ['Cuántos miembros tiene:', 'Qué te preocupa (raids, spam, publicidad):', '¿Necesitas logs y adónde enviarlos?']],
+    ['Bot de Telegram', 'Menús y botones, solicitudes y reservas, catálogo, avisos al administrador. Un bot sencillo, en un día aproximadamente.', ['Para qué es el bot (reservas, solicitudes, catálogo):', 'Flujo y botones:', 'Adónde enviar las solicitudes:', '¿Tienes servidor para el bot?']],
+    ['Tienda y autopublicación', 'Tienda en Telegram con entrega automática: pagas y lo recibes al momento. Publicaciones programadas en el canal, con botones.', ['Qué vendes:', 'Método de pago:', 'Cómo entregar el producto:', 'Autopublicación: canal y horario:']],
+    ['Scrapers', 'Extraigo datos de webs a una hoja de cálculo, CSV o base de datos. Puede ejecutarse según horario y avisar por Telegram.', ['Web(s) a extraer:', 'Qué datos recoger:', 'Formato (Excel, CSV, Google Sheets, BD):', 'Con qué frecuencia ejecutarlo:']],
+    ['Webs y landing pages', 'Webs de una página con animaciones vivas, adaptadas al móvil y publicadas en hosting. Ejemplos arriba, en «Trabajos».', ['Tipo de web (landing, portafolio, tienda):', 'Ejemplos que te gustan:', '¿Tienes textos e imágenes?', '¿Necesitas dominio y hosting?']],
+    ['BeamNG.drive: física y motores', 'Calibro JBeam: motores, cajas, turbos, suspensión y peso, para que el vehículo conduzca y se rompa como debe. Mecánicas en Lua: launch control, indicadores propios, electrónica.', ['Qué mod (vehículo, motor, suspensión, caja):', 'Qué falla ahora y qué debe pasar:', '¿Tienes los archivos jbeam originales?', '¿Hacen falta mecánicas en Lua?']],
+    ['Teardown: mods en Lua', 'Herramientas, armas y mecánicas propias en Lua: destrucción, física de objetos, interfaz y ajustes del mod.', ['Idea del mod:', 'Mecánica y controles:', '¿Tienes modelos y sonidos?']],
+    ['Mods de Minecraft', 'Mods para Fabric y Forge: nuevos objetos, bloques y mecánicas, equilibrio y compatibilidad con otros mods.', ['Loader y versión (Fabric/Forge, 1.20/1.21):', 'Qué añadir (objetos, bloques, mecánicas):', 'Con qué mods debe ser compatible:']],
+    ['Minecraft', 'Plugins para Paper/Spigot 1.16–1.21 con código fuente y configuración del servidor: Geyser, LuckPerms, Velocity.', ['Núcleo y versión (Paper/Spigot):', '¿Plugin o configuración del servidor?', 'Qué debe funcionar:']],
+    ['Roblox Studio', 'Sistemas en Luau: guardado, tienda, interfaz. Arreglo mecánicas rotas y errores en Output.', ['Tipo de juego:', 'Qué sistema necesitas (guardado, tienda, UI):', 'Qué está roto (si es un arreglo):']],
+    ['Bots de IA y herramientas', 'Bot de Telegram con Claude o GPT que responde a tus clientes. Configuración de Claude Code y Cursor, servidores MCP propios.', ['Dónde funciona el bot (Telegram, web):', 'Qué preguntas responde:', '¿Tienes base de conocimiento (precios, FAQ)?']]
+  ];
+  const C = {
+    linkd: ['Web 3D de estudio', 'Web conceptual para un estudio 3D con scroll horizontal: una esfera de teclas, cadenas cromadas que atraviesan todas las pantallas y vistas previas 3D en vivo. Mantén pulsada la esfera para oír el bajo.',
+      ['Todo el 3D es procedural: teclas, cadenas, la estrella de púas — sin archivos de modelos', 'El scroll vertical mueve una franja horizontal y el WebGL la sigue 1:1', '13 tarjetas con miniescenas en vivo renderizadas a texturas', 'Bajo sintetizado con Web Audio, estela de movimiento al hacer scroll rápido']],
+    vitrine: ['Landing conceptual', 'Escaparate de coleccionables digitales al estilo marketplace: campo de partículas vivo, placas de cristal con shaders, arte generativo y modal de inspección.',
+      ['Canvas 2D: más de 1.800 partículas con física de muelles y ondas de choque', '6 placas de cristal con shaders en vivo y parallax', '12 obras SVG generativas, sin un solo archivo de imagen', 'Botones magnéticos, inclinación 3D de tarjetas, scroll suave']],
+    paper: ['Scrollytelling 3D', 'Una historia en cuatro pantallas: el diploma arde, las habilidades se quedan. El scroll controla la cámara, el fuego, el color de la escena y el sonido.',
+      ['Three.js con postprocesado bloom', 'Modelos low-poly propios: un script de Python sin dependencias genera los .glb', 'Sonido sintetizado en el navegador con Web Audio', 'GSAP ScrollTrigger lleva la escena por cuatro actos']]
+  };
+  window.DATA.services.forEach((s, i) => { const v = S[i]; if (!v) return; s.t.es = v[0]; s.d.es = v[1]; if (s.brief) s.brief.es = v[2]; });
+  window.DATA.cases.forEach(c => { const v = C[c.id]; if (!v) return; c.type.es = v[0]; c.d.es = v[1]; c.pts.es = v[2]; });
+})();
