@@ -93,9 +93,9 @@ const material = new THREE.ShaderMaterial({
       float y = hill(b, uT);
       // cursor: flowers part around it and hop up a little
       vec2 dm = b - uMouse; float d = length(dm);
-      float f = uMouseOn * smoothstep(2.8, 0., d);
-      b += (dm / max(d, 1e-3)) * f * 1.4;
-      y += f * (.9 + r4 * .6) * (1. - leaf * .6);
+      float f = uMouseOn * smoothstep(1.7, 0., d);
+      b += (dm / max(d, 1e-3)) * f * .7;
+      y += f * (.28 + r4 * .2) * (1. - leaf * .6);
       // growing in: nearer flowers first, each with its own delay
       float g = clamp(uGrow * 1.8 - r4 * .55 - clamp((8. - aOff.y) / 54., 0., 1.) * .45, 0., 1.);
       float grow = 1. - pow(1. - g, 3.);

@@ -25,7 +25,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 <script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
-<script src="i18n.js?v=44faa15954"></script>
+<script src="i18n.js?v=55cd91ac83"></script>
 <style>
 :root{
   --bg:#050505; --bg2:#0A0A0A; --card:#111111; --card2:#161617; --line:rgba(255,255,255,.08); --line2:rgba(255,255,255,.14);
@@ -225,64 +225,54 @@ img{display:block;max-width:100%}
 .lb.open{opacity:1;visibility:visible}
 .lb img{max-width:min(1400px,100%);max-height:100%;border-radius:14px;border:1px solid var(--line2);box-shadow:0 40px 120px -30px #000}
 
-/* ---------- brief builder (inside a modal) ---------- */
-.bf{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(0,1fr);border:1px solid var(--line);border-radius:20px;overflow:clip;background:var(--bg2)}
-.bf-form{padding:28px 30px 32px;display:flex;flex-direction:column;gap:12px;min-width:0}
-.bf-side{border-left:1px solid var(--line);padding:28px 28px 32px;min-width:0;display:flex;flex-direction:column;gap:12px;position:sticky;top:0;align-self:start}
-.bf-step{display:flex;align-items:center;gap:10px;font:500 11px/1 var(--ui);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-top:16px}
-.bf-step:first-child{margin-top:0}
-.bf-step .bf-n{color:#fff}
-.bf-step .bf-c{margin-left:auto;letter-spacing:.04em;color:var(--dim);text-transform:none}
-.bf-types{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}
-.bf-type{text-align:left;padding:12px 14px;border-radius:14px;background:rgba(255,255,255,.025);border:1px solid var(--line);display:flex;flex-direction:column;gap:7px;transition:border-color .3s,background .3s,transform .2s}
-.bf-type:hover{border-color:var(--line2);background:rgba(255,255,255,.05)}
-.bf-type:active{transform:scale(.98)}
-.bf-type.on{border-color:#fff;background:rgba(255,255,255,.08);box-shadow:0 0 0 3px rgba(255,255,255,.08)}
-.bf-t{font-size:14px;font-weight:500;line-height:1.3}
-.bf-p{font-size:12px;color:var(--muted);display:flex;align-items:center;gap:7px}
-.bf-dot{width:6px;height:6px;border-radius:50%;background:rgb(var(--c));flex:none}
-.bf-qs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
-.bf-qs > .bf-step,.bf-qs > .bf-empty{grid-column:1/-1}
-.bf-f{display:flex;flex-direction:column;gap:8px;min-width:0}
-.bf-f label{font-size:13px;color:#d0d0d4;display:flex;gap:9px;align-items:flex-start;line-height:1.35;cursor:text}
-.bf-ck{width:16px;height:16px;border-radius:5px;border:1px solid var(--line2);flex:none;display:grid;place-items:center;transition:background .25s,border-color .25s}
-.bf-ck svg{opacity:0;transform:scale(.5);transition:opacity .25s,transform .3s cubic-bezier(.3,1.6,.5,1)}
-.bf-f.ok .bf-ck{background:#fff;border-color:#fff}
-.bf-f.ok .bf-ck svg{opacity:1;transform:none}
-.bf-in{display:block;width:100%;background:#050505;border:1px solid var(--line);border-radius:12px;padding:11px 14px;font:inherit;font-size:14px;line-height:1.45;color:#fff;resize:none;outline:none;min-height:44px;overflow:hidden;transition:border-color .25s,box-shadow .25s}
-.bf-in::placeholder{color:#55555a}
-.bf-in:focus{border-color:rgba(255,255,255,.5);box-shadow:0 0 0 4px rgba(255,255,255,.06)}
-textarea.bf-in.big{min-height:72px}
-.bf-empty{border:1px dashed var(--line2);border-radius:14px;padding:18px;color:var(--muted);font-size:14px;line-height:1.5}
-.bf-row2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:0 28px}
-.bf-opts{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
-.bf-opt{height:34px;padding:0 13px;border-radius:999px;font-size:13px;color:var(--muted);border:1px solid var(--line);white-space:nowrap;display:inline-flex;align-items:center;transition:color .25s,border-color .25s,background .25s}
+/* ---------- brief builder (inside a modal) — same language as the site: lines, pills, one panel ---------- */
+#mBrief .m-head h3{font-size:clamp(28px,3.4vw,46px)}
+.bf{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(300px,1fr);gap:clamp(28px,4vw,56px);align-items:start}
+.bf-form{display:flex;flex-direction:column;gap:34px;min-width:0}
+.bf-step{display:flex;align-items:baseline;gap:12px;font:500 12px/1 var(--ui);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:14px}
+.bf-step .bf-n{color:#fff;font-family:var(--display);font-weight:700;letter-spacing:0}
+.bf-step .bf-c{margin-left:auto;letter-spacing:0;text-transform:none;color:var(--dim)}
+.bf-types{display:flex;flex-wrap:wrap;gap:8px}
+.bf-type{height:40px;padding:0 16px;border-radius:999px;border:1px solid var(--line2);font-size:14px;color:#d6d6da;white-space:nowrap;transition:background .3s,color .3s,border-color .3s,transform .2s}
+.bf-type:hover{border-color:rgba(255,255,255,.35);color:#fff}
+.bf-type:active{transform:scale(.97)}
+.bf-type.on{background:#fff;color:#050505;border-color:#fff}
+.bf-qs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px 30px}
+.bf-qs > .bf-step,.bf-qs > .bf-empty{grid-column:1/-1;margin-bottom:-8px}
+.bf-f{display:flex;flex-direction:column;gap:4px;min-width:0}
+.bf-f label{font-size:13px;color:var(--muted);display:flex;gap:8px;align-items:center;line-height:1.35;cursor:text;transition:color .3s}
+.bf-f.ok label{color:#fff}
+.bf-ck{width:6px;height:6px;border-radius:50%;background:var(--line2);flex:none;transition:background .3s,box-shadow .3s}
+.bf-f.ok .bf-ck{background:#fff;box-shadow:0 0 8px rgba(255,255,255,.7)}
+.bf-in{display:block;width:100%;background:transparent;border:0;border-bottom:1px solid var(--line2);border-radius:0;padding:8px 0 10px;font:inherit;font-size:15px;line-height:1.45;color:#fff;resize:none;outline:none;min-height:40px;overflow:hidden;transition:border-color .3s}
+.bf-in::placeholder{color:#4a4a4f}
+.bf-in:focus{border-bottom-color:#fff}
+.bf-empty{color:var(--dim);font-size:14px;line-height:1.5;padding:4px 0}
+.bf-row2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:34px 30px}
+.bf-opts{display:flex;flex-wrap:wrap;gap:8px}
+.bf-opt{height:36px;padding:0 14px;border-radius:999px;font-size:13.5px;color:#cfcfd3;border:1px solid var(--line);white-space:nowrap;display:inline-flex;align-items:center;transition:color .3s,border-color .3s,background .3s}
 .bf-opt:hover{color:#fff;border-color:var(--line2)}
 .bf-opt.on{background:#fff;color:#050505;border-color:#fff}
 .bf-opt .x2{font-size:10px;opacity:.6;margin-left:6px}
-.bf-opt:disabled{opacity:.35;cursor:default}
-.bf-est{font:500 11px/1 var(--ui);letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
-.bf-price{font:700 34px/1.15 var(--display);letter-spacing:-.04em;min-height:42px;display:flex;align-items:center;font-variant-numeric:tabular-nums}
-.bf-bar0{width:90px;height:8px;border-radius:4px;background:#222}
-.bf-sub{font-size:14px;color:var(--muted);min-height:22px;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.bf-opt:disabled{opacity:.3;cursor:default}
+.bf-side{position:sticky;top:0;display:flex;flex-direction:column;gap:14px;padding:26px;border:1px solid var(--line);border-radius:20px;background:var(--card)}
+.bf-est{font:500 12px/1 var(--ui);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);display:flex;justify-content:space-between;gap:10px}
+.bf-est span:nth-child(2){color:var(--dim);letter-spacing:0;text-transform:none}
+.bf-price{font:700 clamp(28px,2.6vw,36px)/1.1 var(--display);letter-spacing:-.045em;min-height:40px;display:flex;align-items:center;font-variant-numeric:tabular-nums}
+.bf-bar0{width:80px;height:6px;border-radius:3px;background:#222}
+.bf-sub{font-size:13.5px;color:var(--muted);display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:-6px}
 .bf-urg{font-size:11px;color:#f5c66b;border:1px solid rgba(245,198,107,.35);border-radius:999px;padding:2px 8px}
-.bf-note{font-size:12px;color:var(--dim);line-height:1.5}
-.bf-ph{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:6px;padding-top:14px;border-top:1px solid var(--line)}
-.bf-prog{height:2px;border-radius:2px;background:#222;overflow:hidden}
-.bf-prog i{display:block;height:100%;width:0;background:#fff;transition:width .55s var(--ease)}
-.bf-chat{border-radius:16px;padding:14px 12px;border:1px solid var(--line);max-height:300px;overflow:auto;background:radial-gradient(120% 80% at 100% 0%,rgba(43,82,120,.25),transparent 60%),#0d0f13;scrollbar-width:thin}
-.bf-bubble{margin-left:auto;max-width:96%;width:fit-content;background:#2b5278;color:#fff;border-radius:16px 16px 5px 16px;padding:9px 12px 22px;font-size:13.5px;line-height:1.5;white-space:pre-wrap;overflow-wrap:anywhere;position:relative}
-.bf-bubble b{font-weight:600;color:#bfe0ff}
-.bf-bubble .tm{position:absolute;right:10px;bottom:5px;font-size:11px;color:#8fb6dc}
-.bf-bubble.ph{background:rgba(255,255,255,.04);color:var(--muted);padding-bottom:9px;border-radius:16px;margin:0;max-width:none;width:auto;white-space:normal}
-.bf-send{display:flex;align-items:center;justify-content:center;gap:10px;height:50px;border-radius:999px;background:#fff;color:#050505;font:600 15px/1 var(--ui);transition:opacity .3s,transform .4s var(--ease)}
+.bf-line{height:1px;background:var(--line);margin:4px 0}
+.bf-msg{max-height:240px;overflow:auto;white-space:pre-wrap;overflow-wrap:anywhere;font-size:13.5px;line-height:1.6;color:#bdbdc2;scrollbar-width:thin}
+.bf-msg b{color:#fff;font-weight:500}
+.bf-msg.ph{color:var(--dim)}
+.bf-send{display:flex;align-items:center;justify-content:center;gap:10px;height:52px;border-radius:999px;background:#fff;color:#050505;font:600 15px/1 var(--ui);transition:opacity .3s,transform .4s var(--ease)}
 .bf-send svg{width:16px;height:16px}
 .bf-send:hover{transform:translateY(-1px)}
-.bf-send.off{opacity:.4}
-.bf-acts{display:flex;gap:8px}
-.bf-acts button{flex:1;height:40px;border-radius:999px;border:1px solid var(--line2);font-size:13.5px;font-weight:500;transition:background .3s,color .3s}
-.bf-acts button:hover{background:#fff;color:#050505}
-.bf-hint{font-size:12px;line-height:1.55;color:var(--dim)}
+.bf-send.off{opacity:.35}
+.bf-acts{display:flex;justify-content:center;gap:22px}
+.bf-acts button{font-size:13px;color:var(--muted);transition:color .3s}
+.bf-acts button:hover{color:#fff}
 .bf.pulse .bf-types{animation:bfPulse .8s ease}
 @keyframes bfPulse{30%{transform:translateX(-5px)}60%{transform:translateX(4px)}}
 
@@ -298,7 +288,7 @@ textarea.bf-in.big{min-height:72px}
   .prow .pbtn{grid-column:3;justify-self:end;height:34px;font-size:13px}
   .steps{grid-template-columns:repeat(2,minmax(0,1fr));row-gap:40px}
   .bf{grid-template-columns:minmax(0,1fr)}
-  .bf-side{border-left:0;border-top:1px solid var(--line);position:static}
+  .bf-side{position:static}
 }
 @media (max-width:860px){
   .nav .lnk,.nav .langs{display:none}
@@ -320,10 +310,8 @@ textarea.bf-in.big{min-height:72px}
   .hint,.scrollnum{display:none}
   .pill{height:48px;padding:0 18px;font-size:14px}
   .foot{justify-content:center;text-align:center}
-  .bf-form,.bf-side{padding:20px 16px 24px}
+  .bf-side{padding:20px 18px}
   .bf-qs,.bf-row2{grid-template-columns:minmax(0,1fr)}
-  .bf-row2{row-gap:6px}
-  .bf-types{grid-template-columns:repeat(2,minmax(0,1fr))}
   .m-panel{border-radius:20px}
 }
 @media (hover:none){
@@ -435,27 +423,23 @@ textarea.bf-in.big{min-height:72px}
       <button class="x" type="button" data-close aria-label="close"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3.5 3.5l9 9M12.5 3.5l-9 9"/></svg></button></div>
     <div id="bf" class="bf">
       <div class="bf-form">
-        <div class="bf-step"><span class="bf-n">01</span><span data-ti="bf_s1"></span></div>
-        <div id="bfTypes" class="bf-types" role="radiogroup"></div>
+        <div><div class="bf-step"><span class="bf-n">01</span><span data-ti="bf_s1"></span></div><div id="bfTypes" class="bf-types" role="radiogroup"></div></div>
         <div id="bfQs" class="bf-qs"></div>
         <div class="bf-row2">
           <div><div class="bf-step"><span class="bf-n">03</span><span data-ti="bf_s3"></span></div><div id="bfBudget" class="bf-opts"></div></div>
           <div><div class="bf-step"><span class="bf-n">04</span><span data-ti="bf_s4"></span></div><div id="bfDead" class="bf-opts"></div></div>
         </div>
-        <div class="bf-step"><span class="bf-n">05</span><span data-ti="bf_s5"></span></div>
-        <textarea id="bfExtra" class="bf-in big" rows="2" maxlength="800" aria-label="extra"></textarea>
+        <div><div class="bf-step"><span class="bf-n">05</span><span data-ti="bf_s5"></span></div><textarea id="bfExtra" class="bf-in" rows="1" maxlength="800" aria-label="extra"></textarea></div>
       </div>
       <aside class="bf-side">
-        <div class="bf-est" data-ti="bf_est"></div>
+        <div class="bf-est"><span data-ti="bf_est"></span></div>
         <div id="bfPrice" class="bf-price"><span class="bf-bar0"></span></div>
         <div id="bfSub" class="bf-sub"></div>
-        <div class="bf-note" data-ti="bf_est_note"></div>
-        <div class="bf-ph"><span class="bf-est" data-ti="bf_preview"></span><span id="bfFilled" class="bf-est"></span></div>
-        <div class="bf-prog"><i id="bfBar"></i></div>
-        <div class="bf-chat"><div id="bfMsg" class="bf-bubble ph"></div></div>
+        <div class="bf-line"></div>
+        <div class="bf-est"><span data-ti="bf_preview"></span><span id="bfFilled"></span></div>
+        <div id="bfMsg" class="bf-msg ph" data-lenis-prevent></div>
         <a id="bfSend" class="bf-send off" href="https://t.me/kashewars" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21.5 4.5 2.8 11.6c-.8.3-.8 1.4 0 1.7l4.6 1.6 1.8 5.6c.2.7 1.1.9 1.6.4l2.6-2.5 4.7 3.5c.6.4 1.4.1 1.6-.6L22.9 5.8c.2-.9-.6-1.6-1.4-1.3Z"/><path d="m7.4 14.9 10.1-6.6-7.4 7.8"/></svg><span data-ti="bf_send"></span></a>
         <div class="bf-acts"><button id="bfCopy" type="button" data-ti="bf_copy"></button><button id="bfReset" type="button" data-ti="bf_reset"></button></div>
-        <p class="bf-hint" data-ti="bf_hint"></p>
       </aside>
     </div>
   </div>
@@ -752,24 +736,12 @@ function intro() {
   const chars = $$('.ch', heroTitle);
   gsap.timeline({ delay: .15 })
     .from('.kicker', { y: 16, opacity: 0, duration: .8, ease: 'power3.out' })
-    .from(chars, { yPercent: 110, opacity: 0, rotate: 6, duration: 1.1, ease: 'power4.out', stagger: .035 }, .1)
+    .fromTo(chars, { yPercent: 110, opacity: 0, rotate: 6 }, { yPercent: 0, opacity: 1, rotate: 0, duration: 1.1, ease: 'power4.out', stagger: .035, clearProps: 'transform,opacity' }, .1)
     .from('.slogan', { y: 20, opacity: 0, duration: .9, ease: 'power3.out' }, .55)
     .from('.down', { scale: .6, opacity: 0, duration: .8, ease: 'back.out(1.8)' }, .8)
     .from('.hdr', { y: -20, opacity: 0, duration: .8, ease: 'power3.out' }, .3)
     .from('.hint, .scrollnum', { opacity: 0, duration: .8 }, 1);
 }
-// magnetic title letters
-if (HOVER && !REDUCED) {
-  heroTitle.addEventListener('pointermove', e => {
-    $$('.ch', heroTitle).forEach(c => {
-      const r = c.getBoundingClientRect(), dx = e.clientX - (r.left + r.width / 2), dy = e.clientY - (r.top + r.height / 2);
-      const d = Math.hypot(dx, dy), f = Math.max(0, 1 - d / 160);
-      gsap.to(c, { y: -f * 14, duration: .5, ease: 'power3.out', overwrite: true });
-    });
-  });
-  heroTitle.addEventListener('pointerleave', () => gsap.to($$('.ch', heroTitle), { y: 0, duration: .8, ease: 'elastic.out(1,.5)', overwrite: true }));
-}
-
 /* =========================================================
    TOAST + CLIPBOARD
    ========================================================= */
@@ -873,12 +845,12 @@ function bfText() {
 const BF_CHECK = '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#050505" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>';
 const bfGrow = el => { el.style.height = 'auto'; el.style.height = el.scrollHeight + 2 + 'px'; };
 function renderBfTypes() {
-  bfTypes.innerHTML = PRICE_ORDER.map(i => { const s = SERVICES[i]; return `<button type="button" role="radio" aria-checked="${i === BF.s}" class="bf-type ${i === BF.s ? 'on' : ''}" data-s="${i}" style="--c:${CAT_C[s.cat] || '172,173,174'}"><span class="bf-t">${esc(L(s.t))}</span><span class="bf-p"><span class="bf-dot"></span>${s.price ? esc(fromP(s.price[0])) : ''}</span></button>`; }).join('');
+  bfTypes.innerHTML = PRICE_ORDER.map(i => { const s = SERVICES[i]; return `<button type="button" role="radio" aria-checked="${i === BF.s}" class="bf-type ${i === BF.s ? 'on' : ''}" data-s="${i}">${esc(L(s.t))}</button>`; }).join('');
 }
 function renderBfQs(anim) {
   const qs = bfQ(), ans = BF.a[BF.s] || [];
   const head = `<div class="bf-step"><span class="bf-n">02</span><span>${esc(T('bf_s2'))}</span>${qs.length ? `<span class="bf-c">${esc(L(SERVICES[BF.s].t))}</span>` : ''}</div>`;
-  bfQs.innerHTML = head + (qs.length ? qs.map((q, i) => `<div class="bf-f ${String(ans[i] || '').trim() ? 'ok' : ''}"><label for="bfq${i}"><span class="bf-ck">${BF_CHECK}</span><span>${esc(bfLbl(q))}</span></label><textarea id="bfq${i}" class="bf-in" rows="1" maxlength="400" data-q="${i}" placeholder="${esc(T('bf_ph'))}">${esc(ans[i] || '')}</textarea></div>`).join('')
+  bfQs.innerHTML = head + (qs.length ? qs.map((q, i) => `<div class="bf-f ${String(ans[i] || '').trim() ? 'ok' : ''}"><label for="bfq${i}"><span class="bf-ck"></span><span>${esc(bfLbl(q))}</span></label><textarea id="bfq${i}" class="bf-in" rows="1" maxlength="400" data-q="${i}" placeholder="${esc(T('bf_ph'))}">${esc(ans[i] || '')}</textarea></div>`).join('')
     : `<div class="bf-empty">${esc(T('bf_pick'))}</div>`);
   $$('textarea', bfQs).forEach(bfGrow);
   if (anim && !REDUCED) gsap.from($$('.bf-f', bfQs), { y: 14, opacity: 0, duration: .5, stagger: .05, ease: 'power3.out', clearProps: 'transform,opacity' });
@@ -898,13 +870,11 @@ function bfOut() {
   } else { pr.innerHTML = '<span class="bf-bar0"></span>'; sub.textContent = T('bf_est_none'); }
   const n = qs.filter((q, i) => String(ans[i] || '').trim()).length + (BF.b >= 0) + (BF.d >= 0), m = qs.length + 2;
   $('#bfFilled').textContent = s ? T('bf_filled').replace('{n}', n).replace('{m}', m) : '';
-  $('#bfBar').style.width = s ? Math.round(n / m * 100) + '%' : '0%';
   const text = bfText();
   if (text) {
-    const tm = new Date().toLocaleTimeString(LANG === 'ru' ? 'ru-RU' : LANG, { hour: '2-digit', minute: '2-digit' });
-    msg.className = 'bf-bubble';
-    msg.innerHTML = text.split('\n').map(l => { const i = l.indexOf(': '); return i > 0 && i < 90 ? `<b>${esc(l.slice(0, i + 1))}</b>${esc(l.slice(i + 1))}` : esc(l); }).join('\n') + `<span class="tm">${tm} ✓✓</span>`;
-  } else { msg.className = 'bf-bubble ph'; msg.textContent = T('bf_pick'); }
+    msg.className = 'bf-msg';
+    msg.innerHTML = text.split('\n').map(l => { const i = l.indexOf(': '); return i > 0 && i < 90 ? `<b>${esc(l.slice(0, i + 1))}</b>${esc(l.slice(i + 1))}` : esc(l); }).join('\n');
+  } else { msg.className = 'bf-msg ph'; msg.textContent = T('bf_pick'); }
   send.href = text ? `${TG}?text=${encodeURIComponent(text)}` : TG;
   send.classList.toggle('off', !text);
 }
@@ -981,6 +951,6 @@ onScroll();
 addEventListener('load', () => ScrollTrigger.refresh());
 })();
 </script>
-<script type="module" src="assets/field.js?v=44faa15954"></script>
+<script type="module" src="assets/field.js?v=55cd91ac83"></script>
 </body>
 </html>
