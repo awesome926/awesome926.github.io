@@ -17,7 +17,7 @@
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://awesome926.github.io/assets/og-2026.jpg">
-<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="icon" type="image/svg+xml" href="favicon.svg?v=ad0beeb3">
 <link rel="canonical" href="https://awesome926.github.io/">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -25,8 +25,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 <script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
-<script src="assets/music.js?v=1539f140ba"></script>
-<script src="i18n.js?v=1539f140ba"></script>
+<script src="assets/music.js?v=75b78b5f7e"></script>
+<script src="i18n.js?v=75b78b5f7e"></script>
 <style>
 :root{
   --bg:#050505; --bg2:#0A0A0A; --card:#111111; --card2:#161617; --line:rgba(255,255,255,.08); --line2:rgba(255,255,255,.14);
@@ -106,6 +106,7 @@ img{display:block;max-width:100%}
 .hero-title{font:800 120px/.9 var(--display);letter-spacing:-.055em;text-transform:lowercase;white-space:nowrap;margin:26px 0 24px;text-shadow:0 10px 60px rgba(0,0,0,.6)}
 .hero-title .ch{display:inline-block;will-change:transform}
 .slogan{font-size:clamp(16px,1.6vw,20px);line-height:1.5;color:var(--muted);max-width:640px;margin:0 auto}
+.slogan{text-shadow:0 2px 18px #000,0 0 6px rgba(0,0,0,.9)}
 .slogan b{display:block;color:#fff;font-weight:500}
 .down{margin:38px auto 0;width:64px;height:64px;border-radius:50%;border:1px solid rgba(255,255,255,.55);display:grid;place-items:center;background:rgba(5,5,5,.6);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);transition:background .4s,color .4s,border-color .4s,transform .5s var(--ease)}
 .down svg{width:20px;height:20px;animation:bob 2.2s var(--ease) infinite}
@@ -132,7 +133,7 @@ img{display:block;max-width:100%}
 .wcard:hover .fan img:nth-child(1){transform:translate(-100%,-50%) rotate(-13deg);filter:brightness(.9)}
 .wcard:hover .fan img:nth-child(2){transform:translate(0%,-50%) rotate(13deg);filter:brightness(.9)}
 .wcard:hover .fan img:nth-child(3){transform:translate(-50%,-62%) scale(1.04)}
-.wcount{font:500 12px/1 var(--ui);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.wcount{font:500 13px/1 var(--ui);color:var(--muted)}
 .wtitle{font:700 clamp(24px,2.3vw,32px)/1.05 var(--display);letter-spacing:-.04em;text-transform:lowercase;margin:12px 0 10px}
 .wdesc{color:var(--muted);font-size:15px;line-height:1.55;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;padding-right:62px}
 .wcard .arrow-c{position:absolute;right:18px;bottom:22px}
@@ -146,7 +147,7 @@ img{display:block;max-width:100%}
 .prow:hover{background:var(--card)}
 .pname{transition:transform .6s var(--ease)}
 .prow:hover .pname{transform:translateX(8px)}
-.pcat{display:block;font:500 11px/1 var(--ui);letter-spacing:.1em;text-transform:uppercase;color:var(--dim);margin-bottom:9px}
+.pcat{display:block;font:500 12px/1 var(--ui);color:var(--dim);margin-bottom:9px}
 .pt{font:600 clamp(18px,1.6vw,23px)/1.2 var(--display);letter-spacing:-.03em;text-transform:lowercase}
 .pd{color:var(--muted);font-size:14.5px;line-height:1.55}
 .pp{font:500 17px/1.2 var(--ui);white-space:nowrap;text-align:right}
@@ -205,7 +206,7 @@ img{display:block;max-width:100%}
 .item .shot{position:relative;aspect-ratio:16/10;overflow:hidden;background:#0c0c0d;cursor:zoom-in}
 .item .shot img{width:100%;height:100%;object-fit:cover;object-position:top;transition:transform 1s var(--ease)}
 .item:hover .shot img{transform:scale(1.035)}
-.item .tag{position:absolute;left:12px;top:12px;font:500 11px/1 var(--ui);letter-spacing:.06em;text-transform:uppercase;padding:7px 10px;border-radius:999px;background:rgba(5,5,5,.7);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);border:1px solid var(--line2)}
+.item .tag{position:absolute;left:12px;top:12px;font:500 12px/1 var(--ui);padding:7px 10px;border-radius:999px;background:rgba(5,5,5,.7);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);border:1px solid var(--line2)}
 .item .body{padding:20px 20px 22px;display:flex;flex-direction:column;gap:10px;flex:1}
 .item h4{font:600 21px/1.15 var(--display);letter-spacing:-.03em;text-transform:lowercase}
 .item p{color:var(--muted);font-size:14.5px;line-height:1.55}
@@ -254,7 +255,7 @@ img{display:block;max-width:100%}
 #mBrief .m-head h3{font-size:clamp(28px,3.4vw,46px)}
 .bf{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(300px,1fr);gap:clamp(28px,4vw,56px);align-items:start}
 .bf-form{display:flex;flex-direction:column;gap:34px;min-width:0}
-.bf-step{display:flex;align-items:baseline;gap:12px;font:500 12px/1 var(--ui);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:14px}
+.bf-step{display:flex;align-items:baseline;gap:12px;font:500 13px/1 var(--ui);color:var(--muted);margin-bottom:14px}
 .bf-step .bf-n{color:#fff;font-family:var(--display);font-weight:700;letter-spacing:0}
 .bf-step .bf-c{margin-left:auto;letter-spacing:0;text-transform:none;color:var(--dim)}
 .bf-types{display:flex;flex-wrap:wrap;gap:8px}
@@ -281,7 +282,7 @@ img{display:block;max-width:100%}
 .bf-opt .x2{font-size:10px;opacity:.6;margin-left:6px}
 .bf-opt:disabled{opacity:.3;cursor:default}
 .bf-side{position:sticky;top:0;display:flex;flex-direction:column;gap:14px;padding:26px;border:1px solid var(--line);border-radius:20px;background:var(--card)}
-.bf-est{font:500 12px/1 var(--ui);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);display:flex;justify-content:space-between;gap:10px}
+.bf-est{font:500 13px/1 var(--ui);color:var(--muted);display:flex;justify-content:space-between;gap:10px}
 .bf-est span:nth-child(2){color:var(--dim);letter-spacing:0;text-transform:none}
 .bf-price{font:700 clamp(28px,2.6vw,36px)/1.1 var(--display);letter-spacing:-.045em;min-height:40px;display:flex;align-items:center;font-variant-numeric:tabular-nums}
 .bf-bar0{width:80px;height:6px;border-radius:3px;background:#222}
@@ -408,7 +409,7 @@ img{display:block;max-width:100%}
 <canvas id="field" aria-hidden="true"></canvas>
 
 <header class="hdr" id="hdr">
-  <a class="logo" href="#top" data-go="#top" aria-label="Ökǒmomorîrěmnant"><img src="favicon.svg" alt=""><span>ökǒmomorîrěmnant</span></a>
+  <a class="logo" href="#top" data-go="#top" aria-label="Ökǒmomorîrěmnant"><img src="favicon.svg?v=ad0beeb3" alt=""><span>ökǒmomorîrěmnant</span></a>
   <nav class="nav" aria-label="main">
     <a class="lnk" href="#work" data-go="#work" data-t="nav_work">Работы</a>
     <a class="lnk" href="#price" data-go="#price" data-t="nav_price">Цены</a>
@@ -596,31 +597,31 @@ window.FIELD = window.FIELD || { scroll: 0, cta: 0, active: true };
    ========================================================= */
 const UI = {
   ru: {
-    music_hint: 'Нажми ▶ — трек играет прямо здесь',
+    music_hint: 'Нажми ▶, трек играет прямо здесь',
     meta_title: 'Ökǒmomorîrěmnant — боты, парсеры, сайты и моды',
     nav_work: 'Работы', nav_price: 'Цены', nav_how: 'Как работаю', nav_promo: 'Промо', nav_write: 'Написать',
     hero_kicker: 'принимаю заказы · FunPay ★ 5.0 · 40 отзывов',
     hero_l1: 'Боты, парсеры, сайты и моды под ключ.', hero_l2: 'Цену и срок называю до начала работы.',
     hint: 'Наведи курсор на поле',
     work_title: 'мои работы',
-    c1_t: 'сайты', c1_d: 'Лендинги и промо-сайты с WebGL, 3D и живыми анимациями. Все три демо открываются прямо в браузере.',
+    c1_t: 'сайты', c1_d: 'Лендинги и промо-сайты с WebGL и 3D. Все три демо открываются прямо в браузере.',
     c2_t: 'боты и парсеры', c2_d: 'Telegram- и Discord-боты, магазины с автовыдачей, ИИ-ассистенты и сбор данных в таблицы.',
     c3_t: 'discord и игры', c3_d: 'Серверы под ключ и защита, моды для BeamNG, Teardown и Minecraft, плагины и Roblox.',
-    price_title: 'сколько стоит', price_note: 'Это стартовые цены. Точную сумму называю, когда разберусь в задаче, — и всегда до начала работы.',
+    price_title: 'сколько стоит', price_note: 'Цены стартовые. Точную сумму называю, когда пойму задачу, и всегда до начала работы.',
     order: 'заказать', on_request: 'по запросу', upto: 'до',
     how_title: 'как я работаю',
     s3_t: 'Делаю', s3_d: 'Собираю и проверяю, чтобы всё работало так, как договорились.',
     s4_t: 'Сдаю', s4_d: 'Передаю всё, что нужно для запуска, вместе с исходным кодом.',
-    badges: ['простая задача — около дня', 'безопасная сделка на FunPay', 'цена и срок — до старта', 'исходники в комплекте', 'CSV · Excel · Google Sheets'],
+    badges: ['простая задача: около дня', 'безопасная сделка на FunPay', 'цена и срок до старта', 'исходники в комплекте', 'CSV · Excel · Google Sheets'],
     cta_title: 'есть проект?', pill_brief: 'Заполнить ТЗ', pill_ch: 'Канал',
     pill_idea: 'Предложка', foot_idea: 'идеи, реклама, помощь — в предложку',
-    id_eyebrow: 'предложка', id_title: 'есть идея?', id_note: 'Идея для сайта или бота, реклама, сотрудничество, нужна помощь — пиши. Сообщение сразу прилетит мне в Telegram.',
+    id_eyebrow: 'предложка', id_title: 'есть идея?', id_note: 'Идея для сайта или бота, реклама, сотрудничество, вопрос: пиши. Сообщение сразу придёт мне в Telegram.',
     id_s1: 'о чём', id_t_idea: 'идея', id_t_ads: 'реклама', id_t_help: 'помощь', id_t_other: 'другое',
     id_s2: 'сообщение', id_ph_text: 'Опиши в паре предложений…', id_s3: 'куда ответить — необязательно',
     id_ph_contact: '@username в Telegram или почта', id_bot: 'или напиши боту в Telegram', id_send: 'Отправить',
     id_sending: 'Отправляю…', id_short: 'Напиши хотя бы пару слов', id_err: 'Не отправилось. Попробуй ещё раз или напиши боту в Telegram.',
-    id_rate: 'Слишком много сообщений подряд, попробуй через 10 минут.', id_copied: 'Текст скопирован — вставь его в чат',
-    id_ok_t: 'получил, спасибо!', id_ok_d: 'Сообщение уже у меня в Telegram. Если оставил контакт — отвечу туда.', id_again: 'Написать ещё',
+    id_rate: 'Слишком много сообщений подряд, попробуй через 10 минут.', id_copied: 'Текст скопирован, вставь его в чат',
+    id_ok_t: 'получил, спасибо', id_ok_d: 'Сообщение уже у меня в Telegram. Если оставил контакт, отвечу туда.', id_again: 'Написать ещё',
     foot_r: 'боты · парсеры · сайты · моды', toast_copied: 'Скопировано',
     shot: 'скрин', demo: 'открыть демо', more: 'Нужно похожее'
   },
@@ -1225,6 +1226,6 @@ onScroll();
 addEventListener('load', () => ScrollTrigger.refresh());
 })();
 </script>
-<script type="module" src="assets/field.js?v=1539f140ba"></script>
+<script type="module" src="assets/field.js?v=75b78b5f7e"></script>
 </body>
 </html>
